@@ -68,10 +68,7 @@ void lireProg(char* chemin) {
     free(pBuffer);
 }
 
-int main(int argc, char* argv []) {
-
-    //lireProg("dist/Release/GNU-MacOSX/desassemblage");
-
+void desassemblageStatique(void* addr, unsigned long taille){
     printf("\n ============================= \n");
 
     /* ============================= Init datas */
@@ -86,12 +83,12 @@ int main(int argc, char* argv []) {
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
     /* ============================= Init EIP */
-    MyDisasm.EIP = &main;
+    MyDisasm.EIP = addr;
     MyDisasm.Archi = ARCHI_PROC;
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     MyDisasm.VirtualAddr = 0x100000000;
     /* ============================= Loop for Disasm */
-    while ((!Error) && (i < 15)) {
+    while ((!Error) && (i < taille)) {
         len = Disasm(&MyDisasm);
         if (len != UNKNOWN_OPCODE) {
             printf("0x%lx \t %s \t (0x%lx) \t \n",
@@ -105,8 +102,20 @@ int main(int argc, char* argv []) {
             Error = 1;
         }
     };
+}
 
-    printf("\n=========== fin 1 =========\n \n");
+int main(int argc, char* argv []) {
+    
+    /* ============================= Init datas */
+    DISASM MyDisasm;
+    int len, i = 0;
+    int Error = 0;
+
+    /* ===================== display the version and revision used */
+    (void) printf("Version : %s\n", BeaEngineVersion());
+    (void) printf("Revision : %s\n", BeaEngineRevision());
+    /* ============================= Init the Disasm structure (important !)*/
+    (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
     int fd = open("dist/Debug_Mac/GNU-MacOSX/desassembleur-code", O_RDONLY);
     struct stat stat_buf;
