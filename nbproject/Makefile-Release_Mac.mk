@@ -37,8 +37,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/dyndesass.o \
-	${OBJECTDIR}/LoaderMac.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/LoaderMach.o
 
 
 # C Compiler Flags
@@ -82,15 +82,15 @@ ${OBJECTDIR}/dyndesass.o: dyndesass.c
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
 
-${OBJECTDIR}/LoaderMac.o: LoaderMac.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMac.o LoaderMac.c
-
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/LoaderMach.o: LoaderMach.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
 
 # Subprojects
 .build-subprojects:

@@ -114,7 +114,11 @@ int main(int argc, char* argv []) {
     size_t size = stat_buf.st_size;
     void* debut = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
 
+    /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
+    
     void* pe = loaderMac(debut);
+    
+    /*=========================================================================*/
 
 
     MyDisasm.EIP = pe;

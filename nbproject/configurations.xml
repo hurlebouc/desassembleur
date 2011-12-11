@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>BeaEngine.h</itemPath>
       <itemPath>LinkedList.h</itemPath>
+      <itemPath>LoaderMach.h</itemPath>
       <itemPath>beaengine/basic_types.h</itemPath>
       <itemPath>dyndesass.h</itemPath>
       <itemPath>beaengine/export.h</itemPath>
@@ -19,6 +20,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>LinkedList.c</itemPath>
+      <itemPath>LoaderMach.c</itemPath>
       <itemPath>dyndesass.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>test7.c</itemPath>
@@ -34,8 +36,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>LoaderMac.c</itemPath>
-    <itemPath>LoaderMac.h</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>beaengine</Elem>
