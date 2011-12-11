@@ -35,6 +35,7 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>LoaderMac.c</itemPath>
+    <itemPath>LoaderMac.h</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>beaengine</Elem>

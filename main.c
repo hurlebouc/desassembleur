@@ -6,7 +6,11 @@
 #ifndef BEAENGINE
 #define BEAENGINE
 #include "BeaEngine.h"
-#include "dyndesass.h"
+#endif
+
+#ifndef MACH
+#define MACH
+#include "LoaderMac.h"
 #endif
 
 //#include <mach-o/loader.h>
@@ -37,12 +41,12 @@ void lireProg(char* chemin) {
     long FileSize = ftell(FileHandle);
     (void) rewind(FileHandle);
     char* pBuffer = malloc(FileSize);
-    (void) fread(pBuffer, FileSize, sizeof(char), FileHandle);
+    (void) fread(pBuffer, FileSize, sizeof (char), FileHandle);
     (void) fclose(FileHandle);
 
     prog.EIP = pBuffer;
     prog.VirtualAddr = pBuffer;
-    
+
     prog.Archi = ARCHI_PROC;
     prog.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
 
@@ -82,17 +86,17 @@ int main(int argc, char* argv []) {
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
     /* ============================= Init EIP */
-    MyDisasm.EIP = & main;
+    MyDisasm.EIP = &main;
     MyDisasm.Archi = ARCHI_PROC;
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     MyDisasm.VirtualAddr = 0x100000000;
     /* ============================= Loop for Disasm */
-    while ((!Error) && (i < 370)) {
+    while ((!Error) && (i < 15)) {
         len = Disasm(&MyDisasm);
         if (len != UNKNOWN_OPCODE) {
-            printf("0x%lx \t %s \t (0x%lx) \t \n", 
-                    MyDisasm.VirtualAddr, 
-                    MyDisasm.CompleteInstr, 
+            printf("0x%lx \t %s \t (0x%lx) \t \n",
+                    MyDisasm.VirtualAddr,
+                    MyDisasm.CompleteInstr,
                     MyDisasm.Instruction.AddrValue);
             MyDisasm.EIP += (UIntPtr) len;
             MyDisasm.VirtualAddr += len;
@@ -101,20 +105,28 @@ int main(int argc, char* argv []) {
             Error = 1;
         }
     };
-    
+
     printf("\n=========== fin 1 =========\n \n");
-    
-    loaderMac("dist/Debug_Mac/GNU-MacOSX/desassembleur-code");
-    
-    
-/*
-    MyDisasm.EIP = & main;
+
+    int fd = open("dist/Debug_Mac/GNU-MacOSX/desassembleur-code", O_RDONLY);
+    struct stat stat_buf;
+    fstat(fd, &stat_buf);
+    size_t size = stat_buf.st_size;
+    void* debut = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
+
+    void* pe = loaderMac(debut);
+
+
+    MyDisasm.EIP = pe;
     MyDisasm.Archi = ARCHI_PROC;
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-    MyDisasm.VirtualAddr = 0x100000000;
+    MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
     MyDisasm.SecurityBlock = 40000;
     desassemblage_dynamique(&MyDisasm);
-*/
+    
+    munmap(debut, size);
+    close(fd);
+
     return 0;
 
 }
