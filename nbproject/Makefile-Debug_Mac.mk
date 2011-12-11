@@ -58,13 +58,13 @@ LDLIBSOPTIONS=lib/Darwin..Debug/libBeaEngine_s_d.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassemblage
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassemblage: lib/Darwin..Debug/libBeaEngine_s_d.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Darwin..Debug/libBeaEngine_s_d.a
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassemblage: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassemblage ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/LinkedList.o: LinkedList.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -92,7 +92,7 @@ ${OBJECTDIR}/main.o: main.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassemblage
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code
 
 # Subprojects
 .clean-subprojects:
