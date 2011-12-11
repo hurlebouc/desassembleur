@@ -10,7 +10,7 @@
 
 #ifndef MACH
 #define MACH
-#include "LoaderMac.h"
+#include "LoaderMach.h"
 #endif
 
 //#include <mach-o/loader.h>
