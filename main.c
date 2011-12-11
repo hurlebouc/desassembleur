@@ -6,6 +6,7 @@
 #ifndef BEAENGINE
 #define BEAENGINE
 #include "BeaEngine.h"
+#include "dyndesass.h"
 #endif
 
 //#include <mach-o/loader.h>
@@ -100,6 +101,20 @@ int main(int argc, char* argv []) {
             Error = 1;
         }
     };
+    
+    printf("\n=========== fin 1 =========\n \n");
+    
+    loaderMac("dist/Debug_Mac/GNU-MacOSX/desassembleur-code");
+    
+    
+/*
+    MyDisasm.EIP = & main;
+    MyDisasm.Archi = ARCHI_PROC;
+    MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    MyDisasm.VirtualAddr = 0x100000000;
+    MyDisasm.SecurityBlock = 40000;
+    desassemblage_dynamique(&MyDisasm);
+*/
     return 0;
 
 }

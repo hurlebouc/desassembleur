@@ -38,31 +38,35 @@ int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
  */
 
 void desassemblage_dynamique(DISASM* prog) {
-    
+
     LinkedList* pileAppel = newLinkedList();
     int erreur = 0;
-    void* finProg = prog->EIP+prog->SecurityBlock;
+    unsigned long finProg = prog->EIP + prog->SecurityBlock;
     int len;
 
     while (!erreur) {
         prog->SecurityBlock = finProg - prog->EIP;
         len = Disasm(prog);
-        if (len == UNKNOWN_OPCODE) {
+        //printf("SecurityBlock = %d et len = %d \n", prog->SecurityBlock, len);
+        if(prog->SecurityBlock < 0){
+            erreur = 1;
+            printf("Fin du bloc\n");
+        } else if (len == UNKNOWN_OPCODE) {
             erreur = 1;
             printf("Code inconnu\n");
         } else if (len == OUT_OF_BLOCK) {
             erreur = 1;
-            printf("Fin du bloc");
+            printf("Fin du bloc\n");
         } else {
-            void* adresseIni = prog->VirtualAddr;
+            unsigned long adresseIni = prog->VirtualAddr;
             printf("0x%lx \t %s \t (0x%lx)\n", adresseIni, prog->CompleteInstr, prog->Instruction.AddrValue);
-            void* pAdress = prog->Instruction.AddrValue;
-            void* IP = adresseIni + len;
+            unsigned long pAdress = prog->Instruction.AddrValue;
+            unsigned long IP = adresseIni + len;
             if (pAdress != 0) { // elimine le cas ou on est pas dans une branche
                 switch (prog->Instruction.BranchType) {
-                    
+
                     case CallType:
-                        addFirstLL(pileAppel, IP); // on empile
+                        addFirstLL(pileAppel, (void *) IP); // on empile
                         prog->VirtualAddr = prog->Instruction.AddrValue;
                         prog->EIP += prog->Instruction.AddrValue - (long) adresseIni;
                         break;
@@ -71,12 +75,16 @@ void desassemblage_dynamique(DISASM* prog) {
                         prog->VirtualAddr = prog->Instruction.AddrValue;
                         prog->EIP += prog->Instruction.AddrValue - (long) adresseIni;
                         break;
-                        
+
                     case RetType:
-                        prog->VirtualAddr = pileAppel->valeur;
+                        prog->VirtualAddr = (unsigned long) pileAppel->valeur;
                         removeFirstLL(pileAppel);
                         prog->EIP += prog->Instruction.AddrValue - (long) adresseIni;
                         break;
+
+                    default:
+                        prog->VirtualAddr += len;
+                        prog->EIP += len;
                 }
 
             } else {

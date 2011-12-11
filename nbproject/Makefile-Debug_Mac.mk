@@ -37,6 +37,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/dyndesass.o \
+	${OBJECTDIR}/LoaderMac.o \
 	${OBJECTDIR}/main.o
 
 
@@ -80,6 +81,11 @@ ${OBJECTDIR}/dyndesass.o: dyndesass.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
+
+${OBJECTDIR}/LoaderMac.o: LoaderMac.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMac.o LoaderMac.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}

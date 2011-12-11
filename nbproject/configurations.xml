@@ -34,6 +34,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>LoaderMac.c</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>beaengine</Elem>

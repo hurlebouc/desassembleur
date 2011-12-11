@@ -15,4 +15,4 @@
 
 //#include <mach-o/loader.h>
 
-void desassemble_dynamique(DISASM* prog);
+void desassemblage_dynamique(DISASM* prog);
