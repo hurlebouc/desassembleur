@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=desassemblage
+PROJECTNAME=desassembleur-code
 
 # Active Configuration
 DEFAULTCONF=Debug_Mac
