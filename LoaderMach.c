@@ -1,6 +1,6 @@
 #include "LoaderMacH.h"
 
-void* loaderMac(void* debut) {
+void* loaderMach(void* debut) {
     char *addr = debut;
 
 

@@ -125,7 +125,7 @@ int main(int argc, char* argv []) {
 
     /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
     
-    void* pe = loaderMac(debut);
+    void* pe = loaderMach(debut);
     
     /*=========================================================================*/
 

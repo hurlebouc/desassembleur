@@ -14,4 +14,4 @@
 #include <sys/stat.h>
 #include <string.h>
 
-void* loaderMac(void* debut);
+void* loaderMach(void* debut);
