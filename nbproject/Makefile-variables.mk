@@ -38,6 +38,22 @@ CND_ARTIFACT_PATH_Release_Linux=dist/Release_Linux/GNU-Linux-x86/desassembleur-c
 CND_PACKAGE_DIR_Release_Linux=dist/Release_Linux/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release_Linux=desassembleur-code.tar
 CND_PACKAGE_PATH_Release_Linux=dist/Release_Linux/GNU-Linux-x86/package/desassembleur-code.tar
+# Debug_Linux32 configuration
+CND_PLATFORM_Debug_Linux32=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug_Linux32=dist/Debug_Linux32/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug_Linux32=desassembleur-code
+CND_ARTIFACT_PATH_Debug_Linux32=dist/Debug_Linux32/GNU-Linux-x86/desassembleur-code
+CND_PACKAGE_DIR_Debug_Linux32=dist/Debug_Linux32/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug_Linux32=desassembleur-code.tar
+CND_PACKAGE_PATH_Debug_Linux32=dist/Debug_Linux32/GNU-Linux-x86/package/desassembleur-code.tar
+# Release_Linux32 configuration
+CND_PLATFORM_Release_Linux32=GNU-Linux-x86
+CND_ARTIFACT_DIR_Release_Linux32=dist/Release_Linux32/GNU-Linux-x86
+CND_ARTIFACT_NAME_Release_Linux32=desassembleur-code
+CND_ARTIFACT_PATH_Release_Linux32=dist/Release_Linux32/GNU-Linux-x86/desassembleur-code
+CND_PACKAGE_DIR_Release_Linux32=dist/Release_Linux32/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Release_Linux32=desassembleur-code.tar
+CND_PACKAGE_PATH_Release_Linux32=dist/Release_Linux32/GNU-Linux-x86/package/desassembleur-code.tar
 #
 # include compiler specific variables
 #

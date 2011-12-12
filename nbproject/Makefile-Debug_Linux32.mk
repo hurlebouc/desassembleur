@@ -22,7 +22,7 @@ AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
-CND_CONF=Debug_Linux
+CND_CONF=Debug_Linux32
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -55,13 +55,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=lib/Linux.gnu.Debug/libBeaEngine_s_d.a
+LDLIBSOPTIONS=lib/Linux.gnu.Debug_32/libBeaEngine_s_d.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Linux.gnu.Debug/libBeaEngine_s_d.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Linux.gnu.Debug_32/libBeaEngine_s_d.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}

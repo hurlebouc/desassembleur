@@ -22,7 +22,7 @@ AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
-CND_CONF=Debug_Linux
+CND_CONF=Release_Linux32
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -55,13 +55,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=lib/Linux.gnu.Debug/libBeaEngine_s_d.a
+LDLIBSOPTIONS=lib/Linux.gnu.Debug_32/libBeaEngine_s_d.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Linux.gnu.Debug/libBeaEngine_s_d.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Linux.gnu.Debug_32/libBeaEngine_s_d.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -70,27 +70,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: ${OBJECTFILES}
 ${OBJECTDIR}/LinkedList.o: LinkedList.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/LinkedList.o LinkedList.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LinkedList.o LinkedList.c
 
 ${OBJECTDIR}/test7.o: test7.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
 
 ${OBJECTDIR}/dyndesass.o: dyndesass.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/LoaderMach.o: LoaderMach.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
 
 # Subprojects
 .build-subprojects:

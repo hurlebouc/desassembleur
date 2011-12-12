@@ -29,6 +29,14 @@
                     <name>Release_Linux</name>
                     <type>1</type>
                 </confElem>
+                <confElem>
+                    <name>Debug_Linux32</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release_Linux32</name>
+                    <type>1</type>
+                </confElem>
             </confList>
         </data>
     </configuration>
