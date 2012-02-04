@@ -20,7 +20,6 @@ int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
     }
     return i;
 }
-
 /**
  * Cette fonction desassemble dynamiquement un binaire.
  * Par convention, le point d entree virtuel de _main sera en 0x100000000
@@ -28,9 +27,6 @@ int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
  * Le bloc de securite sera aussi initialise.
  * 
  * Tous les autres champs devront etre initialises a zero
- * 
- * On concidere pour le moment que seul un registre (rbp) fait office de pile
- * d appel.
  * 
  * On ce conciderera que les saut inconditionnels (sinon, il faut étudier les registres d etat)
  * 
@@ -48,10 +44,7 @@ void desassemblage_dynamique(DISASM* prog) {
         prog->SecurityBlock = finProg - prog->EIP;
         len = Disasm(prog);
         //printf("SecurityBlock = %d et len = %d \n", prog->SecurityBlock, len);
-        if (prog->SecurityBlock < 0) {
-            erreur = 1;
-            printf("Fin du bloc\n");
-        } else if (len == UNKNOWN_OPCODE) {
+        if (len == UNKNOWN_OPCODE) {
             erreur = 1;
             printf("Code inconnu\n");
         } else if (len == OUT_OF_BLOCK) {
@@ -76,13 +69,17 @@ void desassemblage_dynamique(DISASM* prog) {
 
                 case RetType:
                     prog->VirtualAddr = (unsigned long) pileAppel->valeur;
-                    removeFirstLL(pileAppel);
+                    removeFirstLL(pileAppel); // on depile
                     prog->EIP += prog->VirtualAddr - (long) adresseIni;
                     break;
 
                 default:
                     prog->VirtualAddr += len;
                     prog->EIP += len;
+            }
+            if (prog->EIP >= finProg) {
+                printf("fin de la lecture");
+                erreur = 1;
             }
         }
     }
