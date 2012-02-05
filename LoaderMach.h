@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <mach-o/loader.h>
+#include <mach-o/fat.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <string.h>

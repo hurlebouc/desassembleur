@@ -33,10 +33,11 @@ int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
  * @param prog
  */
 
-void desassemblage_dynamique(DISASM* prog) {
+void desassemblage_inconditionnel(DISASM* prog) {
 
     LinkedList* pileAppel = newLinkedList();
     int erreur = 0;
+    unsigned long debut = prog->EIP;
     unsigned long finProg = prog->EIP + prog->SecurityBlock;
     int len;
 
@@ -47,9 +48,11 @@ void desassemblage_dynamique(DISASM* prog) {
         if (len == UNKNOWN_OPCODE) {
             erreur = 1;
             printf("Code inconnu\n");
+            printf("arrete apres %ld octets\n", prog->EIP-debut);
         } else if (len == OUT_OF_BLOCK) {
             erreur = 1;
             printf("Fin du bloc\n");
+            printf("arrete apres %ld octets\n", prog->EIP-debut);
         } else {
             unsigned long adresseIni = prog->VirtualAddr;
             printf("(0x%lx) \t 0x%lx \t %s \t (0x%lx)\n", prog->EIP, adresseIni, prog->CompleteInstr, prog->Instruction.AddrValue);
@@ -79,8 +82,13 @@ void desassemblage_dynamique(DISASM* prog) {
             }
             if (prog->EIP >= finProg) {
                 printf("fin de la lecture");
+                printf("arrete apres %ld octets\n", prog->EIP-debut);
                 erreur = 1;
             }
         }
     }
+}
+
+void lectureLineaire(DISASM* prog, LinkedList* listePI){
+    
 }

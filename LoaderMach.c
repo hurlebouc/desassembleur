@@ -2,6 +2,13 @@
 
 void* loaderMach(void* debut) {
     char *addr = debut;
+    
+    struct fat_header* fat = addr;
+    if (fat->magic == FAT_CIGAM) { // du coup ça m apprend que mon processeur est un little-endian
+                                   // en effet, apres recherche, les intels sont little-endien, les motorola sont big-endian
+        printf("c est un fat binary : je ne peux de le desassembler\n(dans un prochaine version sans doute...)\n");
+        exit(EXIT_FAILURE);
+    }
 
 
     // The first bytes of a Mach-O file comprise its header
@@ -17,7 +24,7 @@ void* loaderMach(void* debut) {
     while (!fini) {
         struct load_command *lc = (struct load_command *) addr;
         if (lc->cmd == LC_SEGMENT_64) {
-            struct segment_command_64 *sc = (struct segment_command_64 *) lc;
+            struct segment_command_64 *sc = (struct segment_command_64 *) addr;
             void* addrSec = addr + sizeof (struct segment_command_64);
             if (strcmp(sc->segname, "__TEXT") == 0) {
                 while (!fini) { // il y a forcement un __text dans ce cas

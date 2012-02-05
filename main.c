@@ -121,6 +121,7 @@ int main(int argc, char* argv []) {
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
     int fd = open("/Users/Hubert/Desktop/truc", O_RDONLY);
+    //int fd = open("/bin/ls", O_RDONLY);
     struct stat stat_buf;
     fstat(fd, &stat_buf);
     size_t size = stat_buf.st_size;
@@ -138,7 +139,7 @@ int main(int argc, char* argv []) {
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
     MyDisasm.SecurityBlock = 40000;
-    desassemblage_dynamique(&MyDisasm);
+    desassemblage_inconditionnel(&MyDisasm);
     
     munmap(debut, size);
     close(fd);
