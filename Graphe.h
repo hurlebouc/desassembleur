@@ -13,6 +13,7 @@
 
 
 typedef struct _Graphe{
+    int interet;
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;

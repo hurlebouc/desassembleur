@@ -89,6 +89,42 @@ void desassemblage_inconditionnel(DISASM* prog) {
     }
 }
 
-void lectureLineaire(DISASM* prog, LinkedList* listePI){
+/**
+ * pi est un tebleau de Graphes.
+ */
+
+void reperageJump(DISASM* prog, Graphe pi[]){
     
 }
+
+void reperageAppels(DISASM* prog, Graphe pi[]){
+    
+}
+
+/**
+ * Cette fonction assemble les elements du tableau
+ * pour en faire un seul graphe
+ */
+
+Graphe* assembleGraphe(DISASM* prog, Graphe pi[]){
+    
+}
+
+Graphe* ControleFlow(DISASM* prog){
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long debut = prog->EIP;
+    unsigned long virtualAddr = prog->VirtualAddr;
+    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
+    reperageJump(prog, pi);
+    
+    prog->EIP = debut;
+    prog->SecurityBlock = taille;
+    prog->VirtualAddr = virtualAddr;
+    reperageAppels(prog, pi);
+    
+    prog->EIP = debut;
+    prog->SecurityBlock = taille;
+    prog->VirtualAddr = virtualAddr;
+    return assembleGraphe(prog, pi);
+}
+

@@ -4,6 +4,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define OPPUSH 85
@@ -24,12 +25,4 @@
 
 void desassemblage_inconditionnel(DISASM* prog);
 
-/**
- * listePI est la liste des points d interet, c est a dire les points 
- * etant soit depart soit arrive d un saut.
- * les elements de la liste sont du type Graphe
- */
-void lectureLineaire(DISASM* prog, LinkedList* listePI);
-
-
-Graphe* ControleFlow(LinkedList* listePI);
+Graphe* ControleFlow(DISASM* prog);
