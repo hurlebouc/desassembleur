@@ -41,7 +41,7 @@ void desassemblage_dynamique(DISASM* prog) {
     int len;
 
     while (!erreur) {
-        prog->SecurityBlock = finProg - prog->EIP;
+        prog->SecurityBlock = (unsigned int) (finProg - prog->EIP);
         len = Disasm(prog);
         //printf("SecurityBlock = %d et len = %d \n", prog->SecurityBlock, len);
         if (len == UNKNOWN_OPCODE) {

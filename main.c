@@ -13,6 +13,11 @@
 #include "LoaderMach.h"
 #endif
 
+#ifndef DYN
+#define DYN
+#include "dyndesass.h"
+#endif
+
 //#include <mach-o/loader.h>
 
 /**
@@ -44,8 +49,8 @@ void lireProg(char* chemin) {
     (void) fread(pBuffer, FileSize, sizeof (char), FileHandle);
     (void) fclose(FileHandle);
 
-    prog.EIP = pBuffer;
-    prog.VirtualAddr = pBuffer;
+    prog.EIP = (UIntPtr) pBuffer;
+    prog.VirtualAddr = (UInt64) pBuffer;
 
     prog.Archi = ARCHI_PROC;
     prog.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
@@ -83,7 +88,7 @@ void desassemblageStatique(void* addr, unsigned long taille){
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
     /* ============================= Init EIP */
-    MyDisasm.EIP = addr;
+    MyDisasm.EIP = (UIntPtr) addr;
     MyDisasm.Archi = ARCHI_PROC;
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     MyDisasm.VirtualAddr = 0x100000000;
@@ -108,8 +113,6 @@ int main(int argc, char* argv []) {
     
     /* ============================= Init datas */
     DISASM MyDisasm;
-    int len, i = 0;
-    int Error = 0;
 
     /* ===================== display the version and revision used */
     (void) printf("Version : %s\n", BeaEngineVersion());
@@ -117,7 +120,7 @@ int main(int argc, char* argv []) {
     /* ============================= Init the Disasm structure (important !)*/
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
-    int fd = open("dist/Debug_Mac/GNU-MacOSX/desassembleur-code", O_RDONLY);
+    int fd = open("/Users/Hubert/Desktop/truc", O_RDONLY);
     struct stat stat_buf;
     fstat(fd, &stat_buf);
     size_t size = stat_buf.st_size;
@@ -130,7 +133,7 @@ int main(int argc, char* argv []) {
     /*=========================================================================*/
 
 
-    MyDisasm.EIP = pe;
+    MyDisasm.EIP = (UIntPtr) pe;
     MyDisasm.Archi = ARCHI_PROC;
     MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
