@@ -94,7 +94,63 @@ void desassemblage_inconditionnel(DISASM* prog) {
  */
 
 void reperageJump(DISASM* prog, Graphe pi[]){
-    
+    int stop = 0;
+    unsigned long debut = prog->EIP;
+    unsigned long fin = prog->SecurityBlock + debut;
+    unsigned long debutVirtuel = prog->VirtualAddr;
+    while (!stop) {
+        prog->SecurityBlock = (int) (fin - prog->EIP);
+        int len = Disasm(prog);
+        switch (len) {
+            case UNKNOWN_OPCODE:
+                printf("opcode inconnu\n");
+                exit(EXIT_FAILURE);
+                break;
+                
+            case OUT_OF_BLOCK:
+                printf("depassement de bloc\n");
+                stop = 1;
+                break;
+                
+            default:
+                if (prog->Instruction.BranchType!=0) {
+                    int brancheType = prog->Instruction.BranchType;
+                    Graphe gIni = pi[prog->VirtualAddr - debutVirtuel];
+                    Graphe gTarget = pi[prog->Instruction.AddrValue - debutVirtuel];
+                    Graphe gSuivant = pi[prog->VirtualAddr - debutVirtuel + len];
+                    gIni.interet = 1;
+                    gTarget.interet = 1;
+                    
+                    if (brancheType == JmpType) {
+                        LinkedList* listeFils = newLinkedList();
+                        addFirstLL(listeFils, (void*) prog->Instruction.AddrValue); // on ajoute la cible du jump
+                        gIni.listeFils = listeFils;
+                        addFirstLL(gTarget.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de la cible
+                        
+                    } else if(prog->Instruction.BranchType != CallType && prog->Instruction.BranchType != RetType){
+                        gSuivant.interet = 1;
+                        LinkedList* listeFils = newLinkedList();
+                        addFirstLL(listeFils, (void*) prog->Instruction.AddrValue); // on ajoute la cible du jump
+                        addFirstLL(listeFils, (void*) (prog->VirtualAddr + len)); // on ajoute l'instruction suivante
+                        gIni.listeFils = listeFils;
+                        addFirstLL(gTarget.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de la cible
+                        addFirstLL(gSuivant.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de l'instruction suivante
+                    }
+                    pi[prog->VirtualAddr - debutVirtuel] = gIni;
+                    pi[prog->Instruction.AddrValue - debutVirtuel] = gTarget;
+                    pi[prog->VirtualAddr - debutVirtuel + len] = gSuivant;
+                }
+                
+                
+                prog->VirtualAddr += len;
+                prog->EIP += len;
+                if (prog->EIP >= fin) {
+                    printf("fin de la lecture");
+                    stop = 1;
+                }
+                break;
+        }
+    }
 }
 
 void reperageAppels(DISASM* prog, Graphe pi[]){
