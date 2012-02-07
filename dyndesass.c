@@ -105,6 +105,8 @@ void desassemblage_inconditionnel(DISASM* prog) {
 
 /**
  * pi est un tableau de Graphes.
+ * TODO : il a quelque chose de pourri au royaume du Danemark
+ * (dépasement de block)
  */
 
 void reperageJump(DISASM* prog, Graphe pi[]){
@@ -200,6 +202,8 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  * prog et g designent la meme chose
  * 
  * dans tous les cas, g sera un pi ou le debut du programme
+ * 
+ * cette fonction est reccursive
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
@@ -314,11 +318,10 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 /**
  * Cette fonction assemble les elements du tableau
  * pour en faire un seul graphe
- * Cette fonction est reccursive
  */
 
 Graphe* assembleGraphe(DISASM* prog, Graphe pi[]){
-    Graphe* g = pi;
+    Graphe* g = pi; // la premiere instruction est forcement non vide
     assembleGraphe_aux(prog, g);
     return g;
 }
