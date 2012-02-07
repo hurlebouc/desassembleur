@@ -20,6 +20,16 @@ int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
     }
     return i;
 }
+
+int Disasm2(DISASM* prog){
+    int len = Disasm(prog);
+    if (prog->VirtualAddr != 0) {
+        prog->VirtualAddr += len;
+    }
+    prog->EIP += len;
+    return len;
+}
+
 /**
  * Cette fonction desassemble dynamiquement un binaire.
  * Par convention, le point d entree virtuel de _main sera en 0x100000000
@@ -90,7 +100,7 @@ void desassemblage_inconditionnel(DISASM* prog) {
 }
 
 /**
- * pi est un tebleau de Graphes.
+ * pi est un tableau de Graphes.
  */
 
 void reperageJump(DISASM* prog, Graphe pi[]){
@@ -98,9 +108,15 @@ void reperageJump(DISASM* prog, Graphe pi[]){
     unsigned long debut = prog->EIP;
     unsigned long fin = prog->SecurityBlock + debut;
     unsigned long debutVirtuel = prog->VirtualAddr;
+    unsigned long taille = prog->SecurityBlock;
     while (!stop) {
-        prog->SecurityBlock = (int) (fin - prog->EIP);
+        
+        /*-------------- Desassemblage------------*/
         int len = Disasm(prog);
+        
+        int brancheType = prog->Instruction.BranchType;
+        unsigned long iniAdress = prog->VirtualAddr;
+        unsigned long cibleAdress = prog->Instruction.AddrValue;
         switch (len) {
             case UNKNOWN_OPCODE:
                 printf("opcode inconnu\n");
@@ -113,37 +129,49 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                 break;
                 
             default:
-                if (prog->Instruction.BranchType!=0) {
-                    int brancheType = prog->Instruction.BranchType;
-                    Graphe gIni = pi[prog->VirtualAddr - debutVirtuel];
-                    Graphe gTarget = pi[prog->Instruction.AddrValue - debutVirtuel];
-                    Graphe gSuivant = pi[prog->VirtualAddr - debutVirtuel + len];
+                if (brancheType!=0) {
+                    Graphe gIni = pi[iniAdress - debutVirtuel];
+                    Graphe gTarget;
+                    Graphe gSuivant;
+                    if (cibleAdress - debutVirtuel>= taille) {
+                        gTarget = pi[cibleAdress - debutVirtuel];
+                    }
+                    if (iniAdress - debutVirtuel + len >= taille) {
+                        gSuivant = pi[iniAdress - debutVirtuel + len];
+                    }
                     gIni.interet = 1;
                     gTarget.interet = 1;
                     
                     if (brancheType == JmpType) {
+                        gIni.typeLiaison = JUMP_COND;
                         LinkedList* listeFils = newLinkedList();
-                        addFirstLL(listeFils, (void*) prog->Instruction.AddrValue); // on ajoute la cible du jump
+                        addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
                         gIni.listeFils = listeFils;
-                        addFirstLL(gTarget.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de la cible
+                        addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
                         
-                    } else if(prog->Instruction.BranchType != CallType && prog->Instruction.BranchType != RetType){
+                    } else if(brancheType!= CallType && brancheType != RetType){
+                        gIni.typeLiaison = JUMP_INCOND;
                         gSuivant.interet = 1;
                         LinkedList* listeFils = newLinkedList();
-                        addFirstLL(listeFils, (void*) prog->Instruction.AddrValue); // on ajoute la cible du jump
-                        addFirstLL(listeFils, (void*) (prog->VirtualAddr + len)); // on ajoute l'instruction suivante
+                        addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
+                        addFirstLL(listeFils, (void*) (iniAdress + len)); // on ajoute l'instruction suivante
                         gIni.listeFils = listeFils;
-                        addFirstLL(gTarget.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de la cible
-                        addFirstLL(gSuivant.listePeres, (void*) prog->VirtualAddr); // on ajoute l'adresse local aux peres de l'instruction suivante
+                        addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
+                        addFirstLL(gSuivant.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de l'instruction suivante
                     }
-                    pi[prog->VirtualAddr - debutVirtuel] = gIni;
-                    pi[prog->Instruction.AddrValue - debutVirtuel] = gTarget;
-                    pi[prog->VirtualAddr - debutVirtuel + len] = gSuivant;
+                    pi[iniAdress - debutVirtuel] = gIni;
+                    if (cibleAdress - debutVirtuel>= taille) {
+                        pi[cibleAdress - debutVirtuel] = gTarget;
+                    }
+                    if (iniAdress - debutVirtuel + len >= taille) {
+                        pi[iniAdress - debutVirtuel + len] = gSuivant;
+                    }
                 }
                 
                 
                 prog->VirtualAddr += len;
                 prog->EIP += len;
+                prog->SecurityBlock = (int) (fin - prog->EIP);
                 if (prog->EIP >= fin) {
                     printf("fin de la lecture");
                     stop = 1;
@@ -158,12 +186,81 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
 }
 
 /**
+ * le parametre pi est la positon dans le tableau
+ * 
+ * au moement ou un fait la reccursion, il faut verifier que on ne passe pas 
+ * une adresse en dehors du block.
+ * 
+ * le graphe passe est l un des fils de l iteration precedente
+ */
+
+void assembleGraphe_aux(DISASM* prog, Graphe* g){
+    Graphe* pi = g;
+    int stop = 0;
+    unsigned long debut = prog->VirtualAddr;
+    unsigned long fin = prog->VirtualAddr + prog->SecurityBlock;
+    
+    int len = Disasm2(prog);
+    
+    // normalement on a pas besoin de verifier si on sort du block
+    if (prog->VirtualAddr>=fin) {
+        printf("depassement de la lecture (normalement impossible)\n");
+        exit(EXIT_FAILURE);
+    }if (len == UNKNOWN_OPCODE) {
+        printf("opcode inconnu\n");
+        exit(EXIT_FAILURE);
+    }
+    if (len == OUT_OF_BLOCK) {
+        printf("depassement du block (anomral)\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    Graphe* tete = &(pi[prog->VirtualAddr-debut]);
+    LinkedList* filsUnique = newLinkedList();
+    addFirstLL(filsUnique, (void*) tete);
+    g->listeFils = filsUnique;
+    
+    len = Disasm2(prog);
+    char* mnemonic = prog->Instruction.Mnemonic;
+    
+    while (!tete->interet && strcmp(mnemonic, "hlt ") != 0 && !stop) {
+        
+        // normalement on a pas besoin de verifier si on sort du block
+        if (prog->VirtualAddr>=fin) {
+            printf("depassement de la lecture (normalement impossible)\n");
+            exit(EXIT_FAILURE);
+        }
+        if (len == UNKNOWN_OPCODE) {
+            printf("opcode inconnu\n");
+            exit(EXIT_FAILURE);
+        }
+        if (len == OUT_OF_BLOCK) {
+            printf("depassement du block\n");
+            stop=1;
+        } else {
+            tete = &(pi[prog->VirtualAddr-debut]);
+            filsUnique->valeur = tete;
+            len = Disasm2(prog);
+            mnemonic = prog->Instruction.Mnemonic;
+        }
+    }
+    if (strcmp(mnemonic, "hlt ") == 0) {
+        return;
+    } else {
+        
+    }
+}
+
+/**
  * Cette fonction assemble les elements du tableau
  * pour en faire un seul graphe
+ * Cette fonction est reccursive
  */
 
 Graphe* assembleGraphe(DISASM* prog, Graphe pi[]){
-    
+    Graphe* g = pi;
+    assembleGraphe_aux(prog, g);
+    return g;
 }
 
 Graphe* ControleFlow(DISASM* prog){

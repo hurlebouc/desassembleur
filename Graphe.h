@@ -11,9 +11,14 @@
 #include "LinkedList.h"
 #endif
 
+#define JUMP_COND 1
+#define JUMP_INCOND 2
+#define SEQ 0
+
 
 typedef struct _Graphe{
     int interet;
+    int typeLiaison;
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;
