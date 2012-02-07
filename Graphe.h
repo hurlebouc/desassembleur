@@ -11,9 +11,9 @@
 #include "LinkedList.h"
 #endif
 
-#define JUMP_COND 1
-#define JUMP_INCOND 2
-#define SEQ 0
+#define JUMP_COND 1 //contient aussi les call
+#define JUMP_INCOND 2 // contient aussi les ret
+#define TERMINAISON 0
 
 
 typedef struct _Graphe{

@@ -26,9 +26,13 @@ int Disasm2(DISASM* prog){
     if (prog->VirtualAddr != 0) {
         prog->VirtualAddr += len;
     }
+    if (prog->SecurityBlock != 0) {
+        prog->SecurityBlock = prog->SecurityBlock - len;
+    }
     prog->EIP += len;
     return len;
 }
+
 
 /**
  * Cette fonction desassemble dynamiquement un binaire.
@@ -111,7 +115,7 @@ void reperageJump(DISASM* prog, Graphe pi[]){
     unsigned long taille = prog->SecurityBlock;
     while (!stop) {
         
-        /*-------------- Desassemblage------------*/
+        /*-------------- Desassemblage ------------*/
         int len = Disasm(prog);
         
         int brancheType = prog->Instruction.BranchType;
@@ -143,14 +147,14 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                     gTarget.interet = 1;
                     
                     if (brancheType == JmpType) {
-                        gIni.typeLiaison = JUMP_COND;
+                        gIni.typeLiaison = JUMP_INCOND;
                         LinkedList* listeFils = newLinkedList();
                         addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
                         gIni.listeFils = listeFils;
                         addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
                         
                     } else if(brancheType!= CallType && brancheType != RetType){
-                        gIni.typeLiaison = JUMP_INCOND;
+                        gIni.typeLiaison = JUMP_COND;
                         gSuivant.interet = 1;
                         LinkedList* listeFils = newLinkedList();
                         addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
@@ -192,15 +196,66 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  * une adresse en dehors du block.
  * 
  * le graphe passe est l un des fils de l iteration precedente
+ * 
+ * prog et g designent la meme chose
+ * 
+ * dans tous les cas, g sera un pi ou le debut du programme
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
-    Graphe* pi = g;
-    int stop = 0;
+    
+    if (g->typeLiaison == JUMP_INCOND) {
+        Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
+        long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
+                                                     // partie d un meme tableau.
+        if (ecart>=prog->SecurityBlock) {
+            printf("un jump essai de joindre un element en dehors du block\n");
+            exit(EXIT_FAILURE);
+        }
+        prog->EIP += ecart;
+        prog->VirtualAddr += ecart;
+        prog->SecurityBlock = prog->SecurityBlock - (int) ecart;
+        assembleGraphe_aux(prog, etatCible);
+        return;
+    }
+    if (g->typeLiaison == JUMP_COND) {
+        unsigned long EIPini = prog->EIP;
+        unsigned long VirtualAddrIni = prog->VirtualAddr;
+        unsigned long secuIni = prog->SecurityBlock;
+        LinkedList* tete = g->listeFils;
+        int totFils = (int) sizeLL(g->listeFils);
+        for (int i = 0; i<totFils; i++) {
+            Graphe* etatCible = tete->valeur;
+            long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
+                                                         // partie d un meme tableau.
+            if (ecart>=prog->SecurityBlock) {
+                printf("un jump essai de joindre un element en dehors du block\n");
+                exit(EXIT_FAILURE);
+            }
+            prog->EIP = EIPini + ecart;
+            prog->VirtualAddr = VirtualAddrIni + ecart;
+            prog->SecurityBlock = (int) (secuIni - ecart);
+            assembleGraphe_aux(prog, etatCible);
+            tete = tete->suiv;
+        }
+        return;
+    }
+    
+    /* on fait maintenant le cas ou g n est pas le depart d une fleche */
+    
+    Graphe* pi = g; // pi est le tableau des points d internet
+                    // dont le premier element est g
+
     unsigned long debut = prog->VirtualAddr;
     unsigned long fin = prog->VirtualAddr + prog->SecurityBlock;
     
     int len = Disasm2(prog);
+    
+    /*  On verifie que l etat passe n est pas un halt  (pas besoin nomalement) */
+    char* mnemonic = prog->Instruction.Mnemonic;
+    if (strcmp(mnemonic, "hlt ") == 0) {
+        return;
+    }
     
     // normalement on a pas besoin de verifier si on sort du block
     if (prog->VirtualAddr>=fin) {
@@ -218,12 +273,16 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     Graphe* tete = &(pi[prog->VirtualAddr-debut]);
     LinkedList* filsUnique = newLinkedList();
     addFirstLL(filsUnique, (void*) tete);
-    g->listeFils = filsUnique;
+    g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
-    len = Disasm2(prog);
-    char* mnemonic = prog->Instruction.Mnemonic;
+    len = Disasm(prog);
+    mnemonic = prog->Instruction.Mnemonic;
     
-    while (!tete->interet && strcmp(mnemonic, "hlt ") != 0 && !stop) {
+    while (!tete->interet && strcmp(mnemonic, "hlt ") != 0) {
+        
+        prog->EIP += len;
+        prog->VirtualAddr +=len;
+        prog->SecurityBlock = prog->SecurityBlock - len;
         
         // normalement on a pas besoin de verifier si on sort du block
         if (prog->VirtualAddr>=fin) {
@@ -235,19 +294,20 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
             exit(EXIT_FAILURE);
         }
         if (len == OUT_OF_BLOCK) {
-            printf("depassement du block\n");
-            stop=1;
+            printf("depassement du block (pas normal)\n");
+            exit(EXIT_FAILURE);
         } else {
             tete = &(pi[prog->VirtualAddr-debut]);
             filsUnique->valeur = tete;
-            len = Disasm2(prog);
+            len = Disasm(prog);
             mnemonic = prog->Instruction.Mnemonic;
         }
     }
     if (strcmp(mnemonic, "hlt ") == 0) {
         return;
     } else {
-        
+        assembleGraphe_aux(prog, tete);
+        return;
     }
 }
 
