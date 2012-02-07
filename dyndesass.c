@@ -106,7 +106,7 @@ void desassemblage_inconditionnel(DISASM* prog) {
 /**
  * pi est un tableau de Graphes.
  * TODO : il a quelque chose de pourri au royaume du Danemark
- * (dépasement de block)
+ * (dépasement de block) (OK)
  */
 
 void reperageJump(DISASM* prog, Graphe pi[]){
@@ -139,16 +139,16 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                     Graphe gIni = pi[iniAdress - debutVirtuel];
                     Graphe gTarget;
                     Graphe gSuivant;
-                    if (cibleAdress - debutVirtuel>= taille) {
+                    if (cibleAdress - debutVirtuel < taille) {
                         gTarget = pi[cibleAdress - debutVirtuel];
                     }
-                    if (iniAdress - debutVirtuel + len >= taille) {
+                    if (iniAdress - debutVirtuel + len < taille) {
                         gSuivant = pi[iniAdress - debutVirtuel + len];
                     }
                     gIni.interet = 1;
                     gTarget.interet = 1;
                     
-                    if (brancheType == JmpType) {
+                    if (brancheType == JmpType && cibleAdress - debutVirtuel < taille) {
                         gIni.typeLiaison = JUMP_INCOND;
                         LinkedList* listeFils = newLinkedList();
                         addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
@@ -156,20 +156,25 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                         addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
                         
                     } else if(brancheType!= CallType && brancheType != RetType){
-                        gIni.typeLiaison = JUMP_COND;
-                        gSuivant.interet = 1;
-                        LinkedList* listeFils = newLinkedList();
-                        addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
-                        addFirstLL(listeFils, (void*) (iniAdress + len)); // on ajoute l'instruction suivante
-                        gIni.listeFils = listeFils;
-                        addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
-                        addFirstLL(gSuivant.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de l'instruction suivante
+                        if (cibleAdress - debutVirtuel < taille) {
+                            gIni.typeLiaison = JUMP_COND;
+                            LinkedList* listeFils = newLinkedList();
+                            addFirstLL(listeFils, (void*) cibleAdress); // on ajoute la cible du jump
+                            addFirstLL(listeFils, (void*) (iniAdress + len)); // on ajoute l'instruction suivante
+                            gIni.listeFils = listeFils;
+                            addFirstLL(gTarget.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
+                        }
+                        if (iniAdress - debutVirtuel + len < taille) {
+                            gIni.typeLiaison = JUMP_COND;
+                            gSuivant.interet = 1;
+                            addFirstLL(gSuivant.listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de l'instruction suivante
+                        }
                     }
                     pi[iniAdress - debutVirtuel] = gIni;
-                    if (cibleAdress - debutVirtuel>= taille) {
+                    if (cibleAdress - debutVirtuel < taille) {
                         pi[cibleAdress - debutVirtuel] = gTarget;
                     }
-                    if (iniAdress - debutVirtuel + len >= taille) {
+                    if (iniAdress - debutVirtuel + len < taille) {
                         pi[iniAdress - debutVirtuel + len] = gSuivant;
                     }
                 }
@@ -204,12 +209,19 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  * dans tous les cas, g sera un pi ou le debut du programme
  * 
  * cette fonction est reccursive
+ *
+ * TODO : ENCORE UN TRUC DE POURRI (ne termine pas) : OK
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
+    if (g->visite) {
+        return;
+    }
+    
     if (g->typeLiaison == JUMP_INCOND) {
         Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
+        etatCible->visite = 1;
         long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
                                                      // partie d un meme tableau.
         if (ecart>=prog->SecurityBlock) {
@@ -228,8 +240,9 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         unsigned long secuIni = prog->SecurityBlock;
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
-        for (int i = 0; i<totFils; i++) {
+        for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
+            etatCible->visite=1;
             long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
                                                          // partie d un meme tableau.
             if (ecart>=prog->SecurityBlock) {
@@ -275,6 +288,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     
     Graphe* tete = &(pi[prog->VirtualAddr-debut]);
+    tete->visite=1;
     LinkedList* filsUnique = newLinkedList();
     addFirstLL(filsUnique, (void*) tete);
     g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
@@ -302,6 +316,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
             exit(EXIT_FAILURE);
         } else {
             tete = &(pi[prog->VirtualAddr-debut]);
+            tete->visite=1; // nomrlament on pourrait se contanter des la dernière tete
             filsUnique->valeur = tete;
             len = Disasm(prog);
             mnemonic = prog->Instruction.Mnemonic;
@@ -322,6 +337,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 
 Graphe* assembleGraphe(DISASM* prog, Graphe pi[]){
     Graphe* g = pi; // la premiere instruction est forcement non vide
+    g->visite=1;
     assembleGraphe_aux(prog, g);
     return g;
 }

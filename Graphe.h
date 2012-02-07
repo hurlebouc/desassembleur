@@ -19,6 +19,7 @@
 typedef struct _Graphe{
     int interet;
     int typeLiaison;
+    int visite;
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;
