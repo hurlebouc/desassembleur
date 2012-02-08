@@ -95,7 +95,7 @@ void desassemblage_inconditionnel(DISASM* prog) {
                     prog->EIP += len;
             }
             if (prog->EIP >= finProg) {
-                printf("fin de la lecture");
+                printf("fin de la lecture\n");
                 printf("arrete apres %ld octets\n", prog->EIP-debut);
                 erreur = 1;
             }

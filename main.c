@@ -129,17 +129,19 @@ int main(int argc, char* argv []) {
 
     /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
     
-    void* pe = loaderMach(debut);
+    void* pe = loaderMach(debut, &MyDisasm);
     
     /*=========================================================================*/
 
 
-    MyDisasm.EIP = (UIntPtr) pe;
-    MyDisasm.Archi = ARCHI_PROC;
-    MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-    MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
-    MyDisasm.SecurityBlock = 40000;
-    desassemblage_inconditionnel(&MyDisasm);
+    //MyDisasm.EIP = (UIntPtr) pe;
+    //MyDisasm.Archi = ARCHI_PROC;
+    //MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    //MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
+    //MyDisasm.SecurityBlock = 40000;
+    
+    //desassemblage_inconditionnel(&MyDisasm);
+    ControleFlow(&MyDisasm);
     
     munmap(debut, size);
     close(fd);

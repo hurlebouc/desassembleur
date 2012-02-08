@@ -15,4 +15,10 @@
 #include <sys/stat.h>
 #include <string.h>
 
-void* loaderMach(void* debut);
+#ifndef BEAENGINE
+#define BEAENGINE
+#include "BeaEngine.h"
+#endif
+
+
+void* loaderMach(void* debut, DISASM* prog);

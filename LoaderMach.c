@@ -1,6 +1,6 @@
 #include "LoaderMacH.h"
 
-void* loaderMach(void* debut) {
+void* loaderMach(void* debut, DISASM* prog) {
     char *addr = debut;
     
     struct fat_header* fat = addr;
@@ -21,6 +21,7 @@ void* loaderMach(void* debut) {
 
     int fini = 0;
     void* pe;
+    unsigned long taille;
     while (!fini) {
         struct load_command *lc = (struct load_command *) addr;
         if (lc->cmd == LC_SEGMENT_64) {
@@ -31,9 +32,11 @@ void* loaderMach(void* debut) {
                     struct section_64 *sec = addrSec;
                     addrSec += sizeof (struct section_64);
                     if (strcmp(sec->sectname, "__text") == 0) {
-                        printf("%d\n", sec->offset);
+                        printf("point d entree : 0x%x\n", sec->offset);
                         fini = 1;
                         pe = sec->offset /*+ sizeof (struct mach_header_64)*/ + debut;
+                        taille = sec->size;
+                        printf("taille du bloc : 0x%lx\n", taille);
                     }
                 }
             }
@@ -41,6 +44,12 @@ void* loaderMach(void* debut) {
         //avance a la prochaine load_command
         addr += lc->cmdsize;
     }
+    
+    prog->EIP = (UIntPtr) pe;
+    prog->Archi = ARCHI_PROC;
+    prog->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    prog->VirtualAddr = 0x100000000 + pe - debut;
+    prog->SecurityBlock = (unsigned int) taille;
 
     printf("\nDone.\n");
 

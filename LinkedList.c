@@ -202,7 +202,7 @@ void* removeLastLL(LinkedList* liste) {
 
 void* removeFirstLL(LinkedList* liste) {
     if (liste->longueur == 0) {
-        printf("La liste est deja vide");
+        printf("La liste est deja vide\n");
         exit(2);
     }
     if (liste->longueur == 1) {
