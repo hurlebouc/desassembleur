@@ -279,6 +279,12 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     addFirstLL(t->listePeres, (void*) iniAdress);
                 }
                 if (brancheType == 0) {
+                    if (iniAdress + len >= taille + debut) {
+                        printf("depassement anormal du bloc\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    Graphe* t = &pi[iniAdress + len - debut];
+                    t->lu = 1;
                     prog->EIP+= len;
                     prog->VirtualAddr += len;
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr); // = prog->SecurityBlock - len;
