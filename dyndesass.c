@@ -114,10 +114,10 @@ void reperageJump(DISASM* prog, Graphe pi[]){
     unsigned long finReel = prog->SecurityBlock + prog->EIP;
     unsigned long debut = prog->VirtualAddr;
     unsigned long taille = prog->SecurityBlock;
-    while (!stop) {
-        
+    while (!stop) {        
         /*-------------- Desassemblage ------------*/
         int len = Disasm(prog);
+        printf("0x%lx\t%s\n", prog->VirtualAddr, prog->CompleteInstr);
         
         int brancheType = prog->Instruction.BranchType;
         unsigned long iniAdress = prog->VirtualAddr;
@@ -185,7 +185,7 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                 prog->EIP += len;
                 prog->SecurityBlock = (int) (finReel - prog->EIP);
                 if (prog->EIP >= finReel) {
-                    printf("fin de la lecture");
+                    printf("fin de la lecture\n");
                     stop = 1;
                 }
                 break;
@@ -214,6 +214,10 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
         
         /*-------------- Desassemblage ------------*/
         int len = Disasm(prog);
+        printf("0x%lx\t%s\n", prog->VirtualAddr, prog->CompleteInstr);
+        if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
+            return;
+        }
         
         int brancheType = prog->Instruction.BranchType;
         unsigned long iniAdress = prog->VirtualAddr;
@@ -221,6 +225,7 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
         long ecart = cibleAdress - iniAdress;
         Graphe* i = &pi[iniAdress - debut];
         if (i->lu) {
+            printf("deja lu\n");
             unsigned long addr = (long) removeFirstLL(pileAppel); // on depile
             long decalage = addr - prog->VirtualAddr;
             prog->VirtualAddr = addr; // += decalage;
@@ -247,9 +252,9 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                     Graphe* t = &pi[cibleAdress - debut];
                     i->interet = 1;
+                    i->lu = 1;
                     i->typeLiaison = JUMP_INCOND;
                     t->interet = 1;
-                    t->lu = 1;
                     i->listeFils = newLinkedList();
                     addFirstLL(i->listeFils, (void*) cibleAdress);
                     if (t->listePeres == NULL) {
@@ -259,8 +264,7 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     prog->EIP += ecart;
                     prog->VirtualAddr += ecart;
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr); // = prog->SecurityBlock - ecart;
-                }
-                if (brancheType == RetType) {
+                } else if (brancheType == RetType) {
                     unsigned long addr = (long) removeFirstLL(pileAppel); // on depile
                     long decalage = addr - prog->VirtualAddr;
                     prog->VirtualAddr = addr; // += decalage;
@@ -268,7 +272,7 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr);
                     Graphe* t = &pi[addr - debut];
                     t->interet = 1;
-                    t->lu = 1;
+                    i->lu = 1;
                     if (i->listeFils == NULL) {
                         i->listeFils = newLinkedList();
                     }
@@ -277,14 +281,12 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                         t->listePeres = newLinkedList();
                     }
                     addFirstLL(t->listePeres, (void*) iniAdress);
-                }
-                if (brancheType == 0) {
+                } else {
                     if (iniAdress + len >= taille + debut) {
                         printf("depassement anormal du bloc\n");
                         exit(EXIT_FAILURE);
                     }
-                    Graphe* t = &pi[iniAdress + len - debut];
-                    t->lu = 1;
+                    i->lu = 1;
                     prog->EIP+= len;
                     prog->VirtualAddr += len;
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr); // = prog->SecurityBlock - len;
@@ -452,15 +454,24 @@ Graphe* ControleFlow(DISASM* prog){
     unsigned long virtualAddr = prog->VirtualAddr;
     Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
     reperageJump(prog, pi);
+    printf("\n\n");
     
     prog->EIP = debut;
     prog->SecurityBlock = taille;
     prog->VirtualAddr = virtualAddr;
     reperageAppels(prog, pi);
+    printf("\n\n");
     
     prog->EIP = debut;
     prog->SecurityBlock = taille;
     prog->VirtualAddr = virtualAddr;
-    return assembleGraphe(prog, pi);
+    printf("Debut de l assemblage du graphe\n");
+    Graphe* g = assembleGraphe(prog, pi);
+    printf("Fin de l assemblage du graphe\n");
+    return g;
+}
+
+void afficheCF(Graphe* g){
+    
 }
 

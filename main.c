@@ -120,7 +120,7 @@ int main(int argc, char* argv []) {
     /* ============================= Init the Disasm structure (important !)*/
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
-    int fd = open("/Users/Hubert/Desktop/truc", O_RDONLY);
+    int fd = open("/Users/Hubert/Desktop/recc", O_RDONLY);
     //int fd = open("/bin/ls", O_RDONLY);
     struct stat stat_buf;
     fstat(fd, &stat_buf);
