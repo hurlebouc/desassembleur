@@ -140,8 +140,19 @@ int main(int argc, char* argv []) {
     //MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
     //MyDisasm.SecurityBlock = 40000;
     
+    Graphe a; a.VirtualAddrLue = 1;
+    Graphe b; b.VirtualAddrLue = 2;
+    Graphe c; c.VirtualAddrLue = 3;
+    a.listeFils = newLinkedList();
+    addFirstLL(a.listeFils, &b);
+    addFirstLL(a.listeFils, &c);
+    
     //desassemblage_inconditionnel(&MyDisasm);
-    ControleFlow(&MyDisasm);
+    printf("taille d un graphe : %d\n", sizeof(Graphe));
+    Graphe*g = ControleFlow(&MyDisasm);
+    printf("\n");
+    afficheCF(g);
+    
     
     munmap(debut, size);
     close(fd);
