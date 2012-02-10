@@ -334,17 +334,23 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
-    //printf("g : %lx : %lx\n",g->VirtualAddrLue, prog->VirtualAddr);
+    printf("\ng : %lx : %lx\n",g->VirtualAddrLue, prog->VirtualAddr);
+    //printf("passage\n");
     if (g->assemble) {
         return;
     }
     g->assemble = 1;
     if (g->typeLiaison == JUMP_INCOND) {
+        unsigned long VirtualAddrIni = g->VirtualAddrLue;
         printf("un jmp\n");
+        //printf("g : %lx\n", g->VirtualAddrLue);
         Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
                                                   //etatCible->assemble = 1;
-        long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
+        unsigned long addrCible = etatCible->VirtualAddrLue;
+        //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
                                                      // partie d un meme tableau.
+        long ecart = addrCible - VirtualAddrIni;
+        //printf("ecart : 0x%lx\n", ecart);
         if (ecart>=prog->SecurityBlock) {
             printf("un jump essai de joindre un element en dehors du block\n");
             printf("commande : %lx \t ecart : Ox%lx\n",prog->VirtualAddr, ecart);
@@ -365,9 +371,11 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
+            unsigned long addrCible = etatCible->VirtualAddrLue;
             //etatCible->assemble=1;
-            long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
+            //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
                                                          // partie d un meme tableau.
+            long ecart = addrCible - VirtualAddrIni;
             if (ecart>=prog->SecurityBlock) {
                 printf("un jump essai de joindre un element en dehors du block\n");
                 exit(EXIT_FAILURE);
@@ -389,6 +397,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
                     // dont le premier element est g
 
     unsigned long debut = prog->VirtualAddr;
+    //printf("debut : 0x%lx\n", debut);
     unsigned long fin = prog->VirtualAddr + prog->SecurityBlock;
     
     int len = Disasm2(prog);
@@ -404,7 +413,8 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     if (prog->VirtualAddr>=fin) {
         printf("depassement de la lecture (normalement impossible)\n");
         exit(EXIT_FAILURE);
-    }if (len == UNKNOWN_OPCODE) {
+    }
+    if (len == UNKNOWN_OPCODE) {
         printf("opcode inconnu\n");
         exit(EXIT_FAILURE);
     }
@@ -414,7 +424,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     
     Graphe* tete = &(pi[prog->VirtualAddr-debut]);
-    printf("%lx : %lx\n",tete->VirtualAddrLue, prog->VirtualAddr);
+    //printf("g : %lx, VirtualAddrLue : %lx, VirtualAddr : %lx\n", g->VirtualAddrLue,tete->VirtualAddrLue, prog->VirtualAddr);
     LinkedList* filsUnique = newLinkedList();
     addFirstLL(filsUnique, (void*) tete);
     g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
