@@ -14,6 +14,7 @@
 #define JUMP_COND 1 
 #define JUMP_INCOND 2 //contient aussi les call
 #define TERMINAISON 0
+#define CALL 3
 #define RET 4
 
 
@@ -24,6 +25,7 @@ typedef struct _Graphe{
     int typeLiaison; // JUMP_COND, JUMP_INCOND ou TERMINAISON
     int assemble; // 1 si le graphe fait deja parie du graphe final (assemblage)
     int lu; // 1 si cette instruction a deja ete lu (reperageAppels)
+    int affiche; // ne sert que dans la fonction d affichage du graphe
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;

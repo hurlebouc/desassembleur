@@ -284,7 +284,9 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     Graphe* t = &pi[addr - debut];
                     t->VirtualAddrPointee = addr;
                     t->interet = 1;
+                    i->interet = 1;
                     i->lu = 1;
+                    i->typeLiaison = JUMP_COND;
                     if (i->listeFils == NULL) {
                         i->listeFils = newLinkedList();
                     }
@@ -337,6 +339,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     printf("\ng : %lx : %lx\n",g->VirtualAddrLue, prog->VirtualAddr);
     //printf("passage\n");
     if (g->assemble) {
+        printf("deja assemble\n");
         return;
     }
     g->assemble = 1;
@@ -491,7 +494,7 @@ Graphe* ControleFlow(DISASM* prog){
     prog->SecurityBlock = taille;
     prog->VirtualAddr = virtualAddr;
     reperageAppels(prog, pi);
-    //afficherPI(pi, taille);
+    afficherPI(pi, taille);
     printf("\n\n");
     
     prog->EIP = debut;
@@ -504,10 +507,16 @@ Graphe* ControleFlow(DISASM* prog){
 }
 
 void afficheCF_aux(Graphe* g){
-    if (g->listeFils == NULL) {
+    if (g->affiche) {
         printf("%lx;\n", g->VirtualAddrLue);
         return;
     }
+    if (g->listeFils == NULL) {
+        printf("%lx;\n", g->VirtualAddrLue);
+        g->affiche = 1;
+        return;
+    }
+    g->affiche = 1;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
@@ -524,9 +533,24 @@ void afficheCF(Graphe* g){
     printf("}\n");
 }
 
+void afficheListeFils(Graphe* g){
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<g->listeFils->longueur; i++) {
+        Graphe* fils = tete->valeur;
+        printf(", %lx", fils->VirtualAddrLue);
+        tete = tete->suiv;
+    }
+    
+}
+
 void afficherPI(Graphe* pi, unsigned long taille){
     for (int i = 0; i<taille; i++) {
-        printf("%lx\n",pi[i].VirtualAddrLue);
+        if (pi[i].listeFils == NULL) {
+            printf("0x%lx\tinteret : %d\n",pi[i].VirtualAddrLue, pi[i].interet);
+        } else{
+            printf("0x%lx\tinteret : %d \tfils : ",pi[i].VirtualAddrLue, pi[i].interet);
+            afficheListeFils(&pi[i]);printf("\n");
+        }
     }
 }
 
