@@ -187,6 +187,11 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                     }
                 }
                 
+                if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
+                    gIni->interet = 1;
+                    gIni->typeLiaison = FIN;
+                }
+                
                 //printf("%d\n",gIni->interet);
                 prog->VirtualAddr += len;
                 prog->EIP += len;
@@ -441,6 +446,11 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                     }
                 }
                 
+                if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
+                    i->interet = 1;
+                    i->typeLiaison = FIN;
+                }
+                
                 //printf("%d\n",gIni->interet);
                 prog->VirtualAddr += len;
                 prog->EIP += len;
@@ -478,13 +488,27 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
-    printf("\ng : %lx : %lx\n",g->VirtualAddrLue, prog->VirtualAddr);
+    Disasm(prog);
+    printf("\ng : %lx : %lx (%s)\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic);
     //printf("passage\n");
     if (g->assemble) {
         printf("deja assemble\n");
         return;
     }
     g->assemble = 1;
+    
+    /*  On verifie que l etat passe est un halt*/
+    if (g->typeLiaison == FIN) {
+        printf("passage non obligatoire (probleme) (hlt)\n");
+        return;
+    }
+    
+    /*  On verifie que l etat passe est un ret*/
+    if (g->typeLiaison == RET) {
+        printf("passage non obligatoire (probleme) (ret)\n");
+        return;
+    }
+    
     if (g->typeLiaison == JUMP_INCOND) {
         unsigned long VirtualAddrIni = g->VirtualAddrLue;
         printf("un jmp\n");
@@ -533,6 +557,36 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         }
         return;
     }
+    if (g->typeLiaison == CALL) {
+        printf("un call\n");
+        if (g->listeFils == NULL) {
+            printf("erreur de structure : un call n'a pas de fils");
+            exit(EXIT_FAILURE);
+        }
+        unsigned long EIPini = prog->EIP;
+        unsigned long VirtualAddrIni = prog->VirtualAddr;
+        unsigned long secuIni = prog->SecurityBlock;
+        LinkedList* tete = g->listeFils;
+        int totFils = (int) sizeLL(g->listeFils);
+        for (int i = 0; i<totFils; i++) { // on visite tous les fils.
+            Graphe* etatCible = tete->valeur;
+            unsigned long addrCible = etatCible->VirtualAddrLue;
+            //etatCible->assemble=1;
+            //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
+            // partie d un meme tableau.
+            long ecart = addrCible - VirtualAddrIni;
+            if (ecart>=prog->SecurityBlock) {
+                printf("un call essai de joindre un element en dehors du block\n");
+                exit(EXIT_FAILURE);
+            }
+            prog->EIP = EIPini + ecart;
+            prog->VirtualAddr = VirtualAddrIni + ecart;
+            prog->SecurityBlock = (int) (secuIni - ecart);
+            assembleGraphe_aux(prog, etatCible);
+            tete = tete->suiv;
+        }
+        return;
+    }
     
     /* on fait maintenant le cas ou g n est pas le depart d une fleche */
     
@@ -547,12 +601,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     int len = Disasm2(prog);
     
-    /*  On verifie que l etat passe n est pas un halt  (pas besoin nomalement) */
-    char* mnemonic = prog->Instruction.Mnemonic;
-    if (strcmp(mnemonic, "hlt ") == 0) {
-        printf("passage non obligatoire (probleme)\n");
-        return;
-    }
+    
     
     // normalement on a pas besoin de verifier si on sort du block
     if (prog->VirtualAddr>=fin) {
@@ -575,9 +624,9 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
     len = Disasm(prog);
-    mnemonic = prog->Instruction.Mnemonic;
+    //mnemonic = prog->Instruction.Mnemonic;
     
-    while (!tete->interet && strcmp(mnemonic, "hlt ") != 0) {
+    while (!tete->interet) {
         
         tete->assemble=1; // normlament on pourrait se contanter des la dernière tete
         prog->EIP += len;
@@ -596,20 +645,22 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         if (len == OUT_OF_BLOCK) {
             printf("depassement du block (pas normal)\n");
             exit(EXIT_FAILURE);
-        } else {
-            tete = &(pi[prog->VirtualAddr-debut]);
-            //tete->assemble=1; 
-            filsUnique->valeur = tete;
-            len = Disasm(prog);
-            mnemonic = prog->Instruction.Mnemonic;
         }
+        tete = &(pi[prog->VirtualAddr-debut]);
+        //tete->assemble=1; 
+        filsUnique->valeur = tete;
+        len = Disasm(prog);
+        //mnemonic = prog->Instruction.Mnemonic;
     }
-    if (strcmp(mnemonic, "hlt ") == 0) {
-        return;
-    } else {
-        assembleGraphe_aux(prog, tete);
-        return;
-    }
+    assembleGraphe_aux(prog, tete);
+    return;
+    
+    //if (strcmp(mnemonic, "hlt ") == 0) {
+    //    return;
+    //} else {
+    //    assembleGraphe_aux(prog, tete);
+    //    return;
+    //}
 }
 
 /**
@@ -637,6 +688,23 @@ Graphe* ControleFlow(DISASM* prog){
     prog->VirtualAddr = virtualAddr;
     reperageAppels(prog, pi);
     afficherPI(pi, taille);
+    printf("\n\n");
+    
+    prog->EIP = debut;
+    prog->SecurityBlock = taille;
+    prog->VirtualAddr = virtualAddr;
+    printf("Debut de l assemblage du graphe\n");
+    Graphe* g = assembleGraphe(prog, pi);
+    printf("Fin de l assemblage du graphe\n");
+    return g;
+}
+
+Graphe* ControleFlow2(DISASM* prog){
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long debut = prog->EIP;
+    unsigned long virtualAddr = prog->VirtualAddr;
+    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
+    reperageGlobal(prog, pi);
     printf("\n\n");
     
     prog->EIP = debut;

@@ -26,6 +26,7 @@
 void desassemblage_inconditionnel(DISASM* prog);
 
 Graphe* ControleFlow(DISASM* prog);
+Graphe* ControleFlow2(DISASM* prog);
 
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);

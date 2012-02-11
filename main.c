@@ -149,7 +149,7 @@ int main(int argc, char* argv []) {
     
     //desassemblage_inconditionnel(&MyDisasm);
     printf("taille d un graphe : %lu\n", sizeof(Graphe));
-    Graphe*g = ControleFlow(&MyDisasm);
+    Graphe*g = ControleFlow2(&MyDisasm);
     printf("\n");
     afficheCF(g);
     
