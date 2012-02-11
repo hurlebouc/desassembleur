@@ -314,6 +314,148 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
     }
 }
 
+
+
+
+/**
+ * Cette fonction ne fait pas usage de la pile d'appel. Elle desassemble linéairement 
+ * en notant les liens. Cette politique vise à ne pas mélanger les appels au code de
+ * la fonction appelante. Chaque fonction aura donc un "tread" qui lui sera dédié
+ */
+
+
+void reperageGlobal(DISASM* prog, Graphe pi[]){
+    int stop = 0;
+    unsigned long finReel = prog->SecurityBlock + prog->EIP;
+    unsigned long debut = prog->VirtualAddr;
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long fin = debut + taille;
+    
+    while (!stop) {        
+        /*-------------- Desassemblage ------------*/
+        int len = Disasm(prog);
+        printf("0x%lx\t%s\n", prog->VirtualAddr, prog->CompleteInstr);
+        
+        int brancheType = prog->Instruction.BranchType;
+        unsigned long iniAdress = prog->VirtualAddr;
+        unsigned long cibleAdress = prog->Instruction.AddrValue;
+        //long ecart = cibleAdress - iniAdress;
+        Graphe* i = &pi[iniAdress - debut];
+        i->VirtualAddrLue = iniAdress;
+        
+        switch (len) {
+            case UNKNOWN_OPCODE:
+                printf("opcode inconnu\n");
+                exit(EXIT_FAILURE);
+                break;
+                
+            case OUT_OF_BLOCK:
+                printf("depassement de bloc\n");
+                stop = 1;
+                break;
+                
+            default:
+                if (brancheType!=0) {
+                    
+                    if (brancheType == JmpType && cibleAdress - debut < taille) { // pour les jmp
+                        Graphe* t = &pi[cibleAdress - debut];
+                        t->VirtualAddrPointee = cibleAdress;
+                        i->interet = 1;
+                        t->interet = 1;
+                        i->typeLiaison = JUMP_INCOND;
+                        i->listeFils = newLinkedList(); // on sait qu on ne risque pas d ecraser d autre fils
+                                                           // un jump unconditionnel n a qu un fils
+                        addFirstLL(i->listeFils, t);
+                        //addFirstLL(gIni->listeFils, (void*) cibleAdress); // on ajoute la cible du jump
+                        if (t->listePeres == NULL) {
+                            t->listePeres = newLinkedList();
+                        }
+                        addFirstLL(t->listePeres, i);
+                        //addFirstLL(gTarget->listePeres, (void*) iniAdress); // on ajoute l'adresse local aux peres de la cible
+                        
+                    } else if (brancheType == CallType) { // pour les call
+                        i->typeLiaison = CALL;
+                        if (cibleAdress < taille + debut) {
+                            //addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
+                            Graphe* t = &pi[cibleAdress - debut];
+                            t->VirtualAddrPointee = cibleAdress;
+                            i->interet = 1;
+                            //i->lu = 1;
+                            t->interet = 1;
+                            i->listeFils = newLinkedList();
+                            addFirstLL(i->listeFils, t);
+                            if (t->listePeres == NULL) {
+                                t->listePeres = newLinkedList();
+                            }
+                            addFirstLL(t->listePeres, i);
+                        }
+                        if (iniAdress + len < taille + debut) {
+                            Graphe* t = &pi[ iniAdress + len - debut];
+                            t->VirtualAddrPointee = iniAdress + len;
+                            i->interet = 1;
+                            //i->lu = 1;
+                            t->interet = 1;
+                            if (i->listeFils == NULL) {
+                                i->listeFils = newLinkedList();
+                            }
+                            addFirstLL(i->listeFils, t);
+                            if (t->listePeres == NULL) {
+                                t->listePeres = newLinkedList();
+                            }
+                            addFirstLL(t->listePeres, i);
+                        }
+                        
+                        
+                    } else if(brancheType == RetType){
+                        i->typeLiaison = RET;
+                        i->interet = 1;
+                    } else { // pour tout le reste (jne, jla, ...)
+                        if (cibleAdress < taille + debut) {
+                            Graphe* t = &pi[cibleAdress - debut];
+                            t->VirtualAddrPointee = cibleAdress;
+                            i->interet = 1;
+                            t->interet = 1;
+                            i->typeLiaison = JUMP_COND;
+                            i->listeFils = newLinkedList(); // on ne risque pas d ecraser des fils
+                            addFirstLL(i->listeFils, t); // on ajoute la cible du jump
+                            if (t->listePeres==NULL) {
+                                t->listePeres = newLinkedList();
+                            }
+                            addFirstLL(t->listePeres, i); // on ajoute l'adresse local aux peres de la cible
+                        }
+                        if (iniAdress + len < taille + debut) {
+                            Graphe* s = &pi[iniAdress - debut + len];
+                            s->VirtualAddrPointee = iniAdress + len;
+                            i->interet = 1;
+                            i->typeLiaison = JUMP_COND;
+                            s->interet = 1;
+                            if (i->listeFils == NULL) {
+                                i->listeFils = newLinkedList(); // peut etre a t on deja un fils
+                            }
+                            addFirstLL(i->listeFils, s); // on ajoute l'instruction suivante
+                            if (s->listePeres == NULL) {
+                                s->listePeres = newLinkedList();
+                            }
+                            addFirstLL(s->listePeres, i); // on ajoute l'adresse local aux peres de l'instruction suivante
+                        }
+                    }
+                }
+                
+                //printf("%d\n",gIni->interet);
+                prog->VirtualAddr += len;
+                prog->EIP += len;
+                prog->SecurityBlock = (int) (finReel - prog->EIP);
+                if (prog->EIP >= finReel) {
+                    printf("fin de la lecture\n");
+                    stop = 1;
+                }
+                break;
+        }
+    }
+}
+
+
+
 /**
  * le parametre pi est la positon dans le tableau
  * 

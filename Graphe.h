@@ -11,11 +11,12 @@
 #include "LinkedList.h"
 #endif
 
-#define JUMP_COND 1 
-#define JUMP_INCOND 2 //contient aussi les call
 #define TERMINAISON 0
+#define JUMP_COND 1 
+#define JUMP_INCOND 2
 #define CALL 3
 #define RET 4
+#define FIN 5
 
 
 typedef struct _Graphe{
