@@ -535,7 +535,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         printf("un jne\n");
         unsigned long EIPini = prog->EIP;
         unsigned long VirtualAddrIni = prog->VirtualAddr;
-        unsigned long secuIni = prog->SecurityBlock;
+        long secuIni = prog->SecurityBlock;
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
@@ -545,7 +545,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
             //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
                                                          // partie d un meme tableau.
             long ecart = addrCible - VirtualAddrIni;
-            if (ecart>=prog->SecurityBlock) {
+            if (ecart>=secuIni) {
                 printf("un jump essai de joindre un element en dehors du block\n");
                 exit(EXIT_FAILURE);
             }
@@ -565,7 +565,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         }
         unsigned long EIPini = prog->EIP;
         unsigned long VirtualAddrIni = prog->VirtualAddr;
-        unsigned long secuIni = prog->SecurityBlock;
+        long secuIni = prog->SecurityBlock;
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
@@ -575,8 +575,9 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
             //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
             // partie d un meme tableau.
             long ecart = addrCible - VirtualAddrIni;
-            if (ecart>=prog->SecurityBlock) {
+            if (ecart>=secuIni) {
                 printf("un call essai de joindre un element en dehors du block\n");
+                printf("adresse du call : %lx\n", VirtualAddrIni);
                 exit(EXIT_FAILURE);
             }
             prog->EIP = EIPini + ecart;
