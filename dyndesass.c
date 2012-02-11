@@ -508,11 +508,11 @@ Graphe* ControleFlow(DISASM* prog){
 
 void afficheCF_aux(Graphe* g){
     if (g->affiche) {
-        printf("%lx;\n", g->VirtualAddrLue);
+        printf("\"%lx\";\n", g->VirtualAddrLue);
         return;
     }
     if (g->listeFils == NULL) {
-        printf("%lx;\n", g->VirtualAddrLue);
+        printf("\"%lx\";\n", g->VirtualAddrLue);
         g->affiche = 1;
         return;
     }
@@ -521,7 +521,7 @@ void afficheCF_aux(Graphe* g){
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
-        printf("%lx->", g->VirtualAddrLue);
+        printf("\"%lx\"->", g->VirtualAddrLue);
         afficheCF_aux(etatCible);
         tete = tete->suiv;
     }
