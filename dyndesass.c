@@ -360,9 +360,12 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                 break;
                 
             default:
+                if (cibleAdress == 0 && brancheType !=0) {
+                    printf("cible non définie\n");
+                }
                 if (brancheType!=0) {
                     
-                    if (brancheType == JmpType && cibleAdress - debut < taille) { // pour les jmp
+                    if (brancheType == JmpType && cibleAdress - debut < taille  && cibleAdress != 0) { // pour les jmp
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
                         i->interet = 1;
@@ -380,7 +383,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         
                     } else if (brancheType == CallType) { // pour les call
                         i->typeLiaison = CALL;
-                        if (cibleAdress < taille + debut) {
+                        if (cibleAdress < taille + debut && cibleAdress != 0) {
                             //addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
@@ -396,7 +399,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                             addFirstLL(t->listePeres, i);
                         }
                         if (iniAdress + len < taille + debut) {
-                            Graphe* t = &pi[ iniAdress + len - debut];
+                            Graphe* t = &pi[iniAdress + len - debut];
                             t->VirtualAddrPointee = iniAdress + len;
                             i->interet = 1;
                             //i->lu = 1;
@@ -416,7 +419,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         i->typeLiaison = RET;
                         i->interet = 1;
                     } else { // pour tout le reste (jne, jla, ...)
-                        if (cibleAdress < taille + debut) {
+                        if (cibleAdress < taille + debut && cibleAdress != 0) {
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
                             i->interet = 1;
@@ -457,6 +460,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                 prog->EIP += len;
                 prog->SecurityBlock = (int) (finReel - prog->EIP);
                 prog->Instruction.BranchType = 0;
+                prog->Instruction.AddrValue = 0;
                 if (prog->EIP >= finReel) {
                     printf("fin de la lecture\n");
                     stop = 1;
@@ -501,13 +505,13 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     /*  On verifie que l etat passe est un halt*/
     if (g->typeLiaison == FIN) {
-        printf("passage non obligatoire (probleme) (hlt)\n");
+        printf("un hlt\n");
         return;
     }
     
     /*  On verifie que l etat passe est un ret*/
     if (g->typeLiaison == RET) {
-        printf("passage non obligatoire (probleme) (ret)\n");
+        printf("un ret\n");
         return;
     }
     
@@ -611,15 +615,15 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     // normalement on a pas besoin de verifier si on sort du block
     if (prog->VirtualAddr>=fin) {
-        printf("depassement de la lecture (normalement impossible)\n");
+        printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
         exit(EXIT_FAILURE);
     }
     if (len == UNKNOWN_OPCODE) {
-        printf("opcode inconnu\n");
+        printf("\nerreur : opcode inconnu\n");
         exit(EXIT_FAILURE);
     }
     if (len == OUT_OF_BLOCK) {
-        printf("depassement du block (anomral)\n");
+        printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
         exit(EXIT_FAILURE);
     }
     
@@ -641,15 +645,15 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         
         // normalement on a pas besoin de verifier si on sort du block
         if (prog->VirtualAddr>=fin) {
-            printf("depassement de la lecture (normalement impossible)\n");
+            printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
             exit(EXIT_FAILURE);
         }
         if (len == UNKNOWN_OPCODE) {
-            printf("opcode inconnu\n");
+            printf("\nerreur : opcode inconnu\n");
             exit(EXIT_FAILURE);
         }
         if (len == OUT_OF_BLOCK) {
-            printf("depassement du block (pas normal)\n");
+            printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
             exit(EXIT_FAILURE);
         }
         tete = &(pi[prog->VirtualAddr-debut]);
@@ -745,6 +749,8 @@ void afficheCF_aux(Graphe* g){
         if (g->typeLiaison == CALL) {
             if (etatCible->debutFonction) {
                 printf(" [color=red];\n");
+            } else {
+                printf(";\n");
             }
             printf("\"%lx\" [style=filled fillcolor=red]", g->VirtualAddrLue);
         }
