@@ -387,6 +387,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                             i->interet = 1;
                             //i->lu = 1;
                             t->interet = 1;
+                            t->debutFonction = 1;
                             i->listeFils = newLinkedList();
                             addFirstLL(i->listeFils, t);
                             if (t->listePeres == NULL) {
@@ -411,7 +412,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         }
                         
                         
-                    } else if(brancheType == RetType){
+                    } else if(brancheType == RetType){ //pour les ret
                         i->typeLiaison = RET;
                         i->interet = 1;
                     } else { // pour tout le reste (jne, jla, ...)
@@ -455,6 +456,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                 prog->VirtualAddr += len;
                 prog->EIP += len;
                 prog->SecurityBlock = (int) (finReel - prog->EIP);
+                prog->Instruction.BranchType = 0;
                 if (prog->EIP >= finReel) {
                     printf("fin de la lecture\n");
                     stop = 1;
@@ -726,8 +728,12 @@ void afficheCF_aux(Graphe* g){
         return;
     }
     if (g->listeFils == NULL) {
-        printf("\"%lx\";\n", g->VirtualAddrLue);
+        printf("\"%lx\"", g->VirtualAddrLue);
         g->affiche = 1;
+        if (g->typeLiaison == RET) {
+            printf("[style=filled fillcolor=grey]");
+        }
+        printf(";\n");
         return;
     }
     g->affiche = 1;
@@ -735,7 +741,22 @@ void afficheCF_aux(Graphe* g){
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
-        printf("\"%lx\"->", g->VirtualAddrLue);
+        printf("\"%lx\"->\"%lx\"", g->VirtualAddrLue, etatCible->VirtualAddrLue);
+        if (g->typeLiaison == CALL) {
+            if (etatCible->debutFonction) {
+                printf(" [color=red];\n");
+            }
+            printf("\"%lx\" [style=filled fillcolor=red]", g->VirtualAddrLue);
+        }
+        if (g->typeLiaison == JUMP_INCOND) {
+            printf(" [color=blue];\n");
+            printf("\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddrLue);
+        }
+        if (g->typeLiaison == JUMP_COND) {
+            printf(" [color=green];\n");
+            printf("\"%lx\" [style=filled fillcolor=green]", g->VirtualAddrLue);
+        }
+        printf(";\n");
         afficheCF_aux(etatCible);
         tete = tete->suiv;
     }
