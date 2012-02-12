@@ -531,6 +531,9 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         
                     } else if (brancheType == CallType) { // pour les call
                         i->typeLiaison = CALL;
+                        if (cibleAdress == 0) {
+                            printf("caca\n");
+                        }
                         if (cibleAdress < taille + debut && cibleAdress != 0) {
                             //addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                             Graphe* t = &pi[cibleAdress - debut];
@@ -594,6 +597,15 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                             addFirstLL(s->listePeres, i); // on ajoute l'adresse local aux peres de l'instruction suivante
                         }
                     }
+                } else { // cas ou on a pas un saut
+                    if (iniAdress + len < taille + debut) {
+                        Graphe* s = &pi[iniAdress - debut + len];
+                        s->VirtualAddrPointee = iniAdress + len;
+                        if (i->listeFils == NULL) {
+                            i->listeFils = newLinkedList(); // peut etre a t on deja un fils
+                        }
+                        addFirstLL(i->listeFils, s); // on ajoute l'instruction suivante
+                    }
                 }
                 break;
         }
@@ -618,62 +630,73 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
 
 
 /**
- * le parametre pi est la positon dans le tableau
- * 
- * au moement ou un fait la reccursion, il faut verifier que on ne passe pas 
- * une adresse en dehors du block.
+ * Cette fonction est reccursive.
+ *
+ * au moment ou un fait la reccursion, il faut verifier que on ne passe pas 
+ * une adresse en dehors du bloc.
  * 
  * le graphe passe est l un des fils de l iteration precedente
  * 
  * prog et g designent la meme chose
  * 
  * dans tous les cas, g sera un pi ou le debut du programme
- * 
- * cette fonction est reccursive
  *
- * TODO : ENCORE UN TRUC DE POURRI (ne termine pas) : OK
- * TODO : on dirait que dans le cas où g n'est pas le départ d'une flèche
- * alors la tete se retrouve plus loin de prog->VirtualAdress
+ * TODO :   ENCORE UN TRUC DE POURRI (ne termine pas) : OK
+ * TODO :   on dirait que dans le cas où g n'est pas le départ d'une flèche
+ *          alors la tete se retrouve plus loin de prog->VirtualAdress
+ * TODO :   Améliorer la gestion des saut non définis. Il faut que les jumps inconditionnels 
+ *          dans cette situation soient la fin d'un thread.
  *
  * Si on decide que on ne fait pas une fleche depuis les ret, il suffit d ajouter "ret " au "hlt "
  */
 
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
+    
     Disasm(prog);
     printf("\ng : %lx : %lx (%s)\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic);
-    //printf("passage\n");
+    
+    /*==================================== CAS D'ARRET ==================================*/
     if (g->assemble) {
         printf("deja assemble\n");
         return;
     }
-    g->assemble = 1;
-    
-    /*  On verifie que l etat passe est un halt*/
     if (g->typeLiaison == FIN) {
+        g->assemble = 1;
         printf("un hlt\n");
         return;
     }
-    
-    /*  On verifie que l etat passe est un ret*/
     if (g->typeLiaison == RET) {
+        g->assemble = 1;
         printf("un ret\n");
         return;
     }
+    if (g->interet == -1) {
+        g->assemble = 1;
+        printf("une instruction erronée\n");
+        return;
+    }
+    if (g->typeLiaison == JUMP_INCOND && g->listeFils == NULL) {
+        g->assemble = 1;
+        printf("un saut indéfini\n");
+        return;
+    }
+    /*===================================================================================*/
+    
+     g->assemble = 1;
+     
+    /*================================ APPELS RECCURSIFIS ===============================*/
+    
     
     if (g->typeLiaison == JUMP_INCOND) {
         unsigned long VirtualAddrIni = g->VirtualAddrLue;
         unsigned long fin = VirtualAddrIni + prog->SecurityBlock;
         printf("un jmp\n");
-        //printf("g : %lx\n", g->VirtualAddrLue);
         Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
                                                   //etatCible->assemble = 1;
         unsigned long addrCible = etatCible->VirtualAddrLue;
-        //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
-                                                     // partie d un meme tableau.
         long ecart = addrCible - VirtualAddrIni;
-        //printf("ecart : 0x%lx\n", ecart);
         if (addrCible >= fin) {
-            printf("un jump essai de joindre un element en dehors du block\n");
+            printf("un jump essai de joindre un element en dehors du bloc\n");
             printf("commande : %lx \t ecart : Ox%lx\n",prog->VirtualAddr, ecart);
             exit(EXIT_FAILURE);
         }
@@ -783,7 +806,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     while (!tete->interet) {
         
-        tete->assemble=1; // normlament on pourrait se contanter des la dernière tete
+        tete->assemble=1; // normlament on pourrait se contenter des la dernière tete
         prog->EIP += len;
         prog->VirtualAddr +=len;
         prog->SecurityBlock = prog->SecurityBlock - len;

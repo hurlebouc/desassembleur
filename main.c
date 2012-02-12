@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #define BEA_ENGINE_STATIC /* specify the usage of a static version of BeaEngine */
 #define BEA_USE_STDCALL /* specify the usage of a stdcall version of BeaEngine */
 #ifndef BEAENGINE
@@ -76,7 +80,7 @@ void afficherFermeture(DISASM* prog){
 int main(int argc, char* argv []) {
     
     DISASM MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/recc";
+    char* chemin = "/Users/Hubert/Desktop/disas";
     initialiserDISASM(&MyDisasm, chemin);
     
     afficherCFG(&MyDisasm);
