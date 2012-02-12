@@ -504,13 +504,13 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
         switch (len) {
             case UNKNOWN_OPCODE:
                 printf("opcode inconnu\n");
-                i->interet = -1;
+                i->interet = OPCODE_INCONNU;
                 //exit(EXIT_FAILURE);
                 break;
                 
             case OUT_OF_BLOCK:
                 printf("depassement de bloc pendant la lecture\n");
-                i->interet = -1;
+                i->interet = DEPASSEMENT_BLOC;
                 //stop = 1;
                 break;
                 
@@ -662,11 +662,19 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     Disasm(prog);
     printf("\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
     
+    if (g->VirtualAddrLue == 0) {
+        printf("le graphe contient un etat qui n'a pas pas été lu lors de la pré-lecture\n");
+        exit(EXIT_FAILURE);
+    }
+    
     /*==================================== CAS D'ARRET ==================================*/
     if (g->assemble) {
         printf("deja assemble\n");
         return;
     }
+    
+    /* les autres cas traitent des instructions terminales */
+    
     if (g->typeLiaison == FIN) {
         g->assemble = 1;
         printf("un hlt\n");
@@ -689,9 +697,9 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         }
         return;
     }
-    if (g->interet == -1) {
+    if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
         g->assemble = 1;
-        printf("une instruction erronée\n");
+        printf("warning : une instruction erronée\n");
         if (g->listeFils != NULL) {
             printf("une instruction terminale a des fils\n");
             exit(EXIT_FAILURE);
@@ -702,13 +710,19 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     if (g->typeLiaison == JUMP_INCOND && g->listeFils == NULL) {
         g->assemble = 1;
-        printf("un saut indéfini\n");
-        if (g->listeFils != NULL) {
-            printf("une instruction terminale a des fils\n");
-            exit(EXIT_FAILURE);
-            //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
-            //g->listeFils = NULL;
-        }
+        printf("un saut inconditionnel indéfini\n");
+        return;
+    }
+    if (g->typeLiaison == JUMP_COND && g->listeFils == NULL) {
+        g->assemble = 1;
+        g->interet = SAUT_INCOND_TERMINAL;
+        printf("warning : un saut conditionnel indéfini sans fils\n");
+        return;
+    }
+    if (g->typeLiaison == CALL && g->listeFils == NULL) {
+        g->assemble = 1;
+        g->interet = CALL_TERMINAL;
+        printf("warning : un call sans fils\n");
         return;
     }
     /*===================================================================================*/
@@ -720,20 +734,27 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     if (g->typeLiaison == JUMP_INCOND) {
         unsigned long VirtualAddrIni = g->VirtualAddrLue;
-        unsigned long fin = VirtualAddrIni + prog->SecurityBlock;
+//        unsigned long fin = VirtualAddrIni + prog->SecurityBlock; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         printf("un jmp\n");
-        Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
-                                                  //etatCible->assemble = 1;
-        unsigned long addrCible = etatCible->VirtualAddrLue;
-        long ecart = addrCible - VirtualAddrIni;
-        if (addrCible >= fin) {
-            printf("un jump essai de joindre un element en dehors du bloc\n");
-            printf("commande : %lx \t ecart : Ox%lx\n",prog->VirtualAddr, ecart);
+        
+        if (g->listeFils->longueur == 0) {
+            printf("un jump inconditionnel n a pas de fils et l'assemblage ne s'est pas arreté\n");
             exit(EXIT_FAILURE);
         }
+        Graphe* etatCible = g->listeFils->valeur; //on sait listeFils ne contient qu un element
+                                                  //etatCible->assemble = 1;
+        
+//        if (addrCible >= fin) {
+//            printf("un jump essai de joindre un element en dehors du bloc\n");
+//            printf("commande : %lx \t ecart : Ox%lx\n",g->VirtualAddrLue, ecart);
+//            exit(EXIT_FAILURE);
+//        }
+        unsigned long addrCible = etatCible->VirtualAddrLue;
+        long ecart = addrCible - VirtualAddrIni;
         prog->EIP += ecart;
         prog->VirtualAddr += ecart;
         prog->SecurityBlock = prog->SecurityBlock - (int) ecart;
+        
         assembleGraphe_aux(prog, etatCible);
         return;
     }
@@ -742,23 +763,25 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         unsigned long EIPini = prog->EIP;
         unsigned long VirtualAddrIni = prog->VirtualAddr;
         long secuIni = prog->SecurityBlock;
-        unsigned long fin = VirtualAddrIni + secuIni;
+//        unsigned long fin = VirtualAddrIni + secuIni;
+        if (g->listeFils->longueur == 0) {
+            printf("un jump conditionnel n a pas de fils et l'assemblage ne s'est pas arreté\n");
+            exit(EXIT_FAILURE);
+        }
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
+//            if (addrCible >= fin) {
+//                printf("un jump essai de joindre un element en dehors du block\n");
+//                exit(EXIT_FAILURE);
+//            }
             unsigned long addrCible = etatCible->VirtualAddrLue;
-            //etatCible->assemble=1;
-            //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
-                                                         // partie d un meme tableau.
             long ecart = addrCible - VirtualAddrIni;
-            if (addrCible >= fin) {
-                printf("un jump essai de joindre un element en dehors du block\n");
-                exit(EXIT_FAILURE);
-            }
             prog->EIP = EIPini + ecart;
             prog->VirtualAddr = addrCible;
             prog->SecurityBlock = (int) (secuIni - ecart);
+            
             assembleGraphe_aux(prog, etatCible);
             tete = tete->suiv;
         }
@@ -766,108 +789,112 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     if (g->typeLiaison == CALL) {
         printf("un call\n");
-        if (g->listeFils == NULL) {
-            printf("erreur de structure : un call n'a pas de fils");
+        if (g->listeFils->longueur == 0) {
+            printf("un call n'a pas de fils et l'assemblage ne s'est pas arrété\n");
             exit(EXIT_FAILURE);
         }
         unsigned long EIPini = prog->EIP;
         unsigned long VirtualAddrIni = prog->VirtualAddr;
         long secuIni = prog->SecurityBlock;
-        unsigned long fin = VirtualAddrIni + secuIni;
+//        unsigned long fin = VirtualAddrIni + secuIni;
+        
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
+            
+//            if (addrCible >= fin) {
+//                printf("un call essai de joindre un element en dehors du block\n");
+//                printf("adresse du call : %lx\n", VirtualAddrIni);
+//                exit(EXIT_FAILURE);
+//            }
             unsigned long addrCible = etatCible->VirtualAddrLue;
-            //etatCible->assemble=1;
-            //long ecart = (etatCible - g)/sizeof(Graphe); // on n oublie pas que tous les graphes font
-            // partie d un meme tableau.
             long ecart = addrCible - VirtualAddrIni;
-            if (addrCible >= fin) {
-                printf("un call essai de joindre un element en dehors du block\n");
-                printf("adresse du call : %lx\n", VirtualAddrIni);
-                exit(EXIT_FAILURE);
-            }
             prog->EIP = EIPini + ecart;
             prog->VirtualAddr = addrCible;
             prog->SecurityBlock = (int) (secuIni - ecart);
+            
             assembleGraphe_aux(prog, etatCible);
             tete = tete->suiv;
         }
         return;
     }
     
-    /* on fait maintenant le cas ou g n est pas le depart d une fleche */
+    /* on fait maintenant le cas ou g n est pas le depart d une fleche*/
+    /* qui n'est pas une instruction terminale */
     
     printf("un non depart d un fleche\n");
     
-    Graphe* pi = g; // pi est le tableau des points d internet
-                    // dont le premier element est g
-
-    unsigned long debut = prog->VirtualAddr;
-    //printf("debut : 0x%lx\n", debut);
-    unsigned long fin = prog->VirtualAddr + prog->SecurityBlock;
+//    Graphe* pi = g; // pi est le tableau des points d internet
+//                    // dont le premier element est g
+//
+//    unsigned long debut = g->VirtualAddrLue;
+//    unsigned long fin = debut + prog->SecurityBlock;
+//    
+//    int len = Disasm2(prog);
+//    
+//    
+//    
+//    // normalement on a pas besoin de verifier si on sort du bloc
+//    if (prog->VirtualAddr>=fin) {
+//        printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
+//        exit(EXIT_FAILURE);
+//    }
+//    if (len == UNKNOWN_OPCODE) {
+//        printf("\nerreur : opcode inconnu\n");
+//        exit(EXIT_FAILURE);
+//    }
+//    if (len == OUT_OF_BLOCK) {
+//        printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
+//        exit(EXIT_FAILURE);
+//    }
     
-    int len = Disasm2(prog);
-    
-    
-    
-    // normalement on a pas besoin de verifier si on sort du block
-    if (prog->VirtualAddr>=fin) {
-        printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
+    if (g->listeFils == NULL || g->listeFils->longueur == 0) {
+        printf("etat terminal non marqué (interet nul)\n");
         exit(EXIT_FAILURE);
     }
-    if (len == UNKNOWN_OPCODE) {
-        printf("\nerreur : opcode inconnu\n");
-        exit(EXIT_FAILURE);
-    }
-    if (len == OUT_OF_BLOCK) {
-        printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
-        exit(EXIT_FAILURE);
-    }
     
-    Graphe* tete = &(pi[prog->VirtualAddr-debut]);
+//    Graphe* tete = &(pi[prog->VirtualAddr-debut]);
+    Graphe* tete = g->listeFils->valeur;
+    
     //printf("g : %lx, VirtualAddrLue : %lx, VirtualAddr : %lx\n", g->VirtualAddrLue,tete->VirtualAddrLue, prog->VirtualAddr);
     LinkedList* filsUnique = newLinkedList();
     addFirstLL(filsUnique, (void*) tete);
     g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
-    len = Disasm(prog);
-    //mnemonic = prog->Instruction.Mnemonic;
+//    len = Disasm(prog);
     
-    while (!tete->interet) {
+    while (tete->interet == 0) {
         
         tete->assemble=1; // normlament on pourrait se contenter des la dernière tete
-        prog->EIP += len;
-        prog->VirtualAddr +=len;
-        prog->SecurityBlock = prog->SecurityBlock - len;
+//        prog->EIP += len;
+//        prog->VirtualAddr +=len;
+//        prog->SecurityBlock = prog->SecurityBlock - len;
         
-        // normalement on a pas besoin de verifier si on sort du block
-        if (prog->VirtualAddr>=fin) {
-            printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
+//        // normalement on a pas besoin de verifier si on sort du block
+//        if (prog->VirtualAddr>=fin) {
+//            printf("\nerreur : la ligne 0x%lx est hors du bloc\n",prog->VirtualAddr);
+//            exit(EXIT_FAILURE);
+//        }
+//        if (len == UNKNOWN_OPCODE) {
+//            printf("\nerreur : opcode inconnu\n");
+//            exit(EXIT_FAILURE);
+//        }
+//        if (len == OUT_OF_BLOCK) {
+//            printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
+//            exit(EXIT_FAILURE);
+//        }
+        if (tete->listeFils == NULL || tete->listeFils->longueur == 0) {
+            printf("etat terminal non marqué (interet nul)\n");
             exit(EXIT_FAILURE);
         }
-        if (len == UNKNOWN_OPCODE) {
-            printf("\nerreur : opcode inconnu\n");
-            exit(EXIT_FAILURE);
-        }
-        if (len == OUT_OF_BLOCK) {
-            printf("\nerreur : depassement du bloc lors de la lecture d un instruction\n");
-            exit(EXIT_FAILURE);
-        }
-        tete = &(pi[prog->VirtualAddr-debut]);
+//        tete = &(pi[prog->VirtualAddr-debut]);
+        tete = tete->listeFils->valeur;
         filsUnique->valeur = tete;
-        len = Disasm(prog);
+//        len = Disasm(prog);
     }
     assembleGraphe_aux(prog, tete);
     return;
-    
-    //if (strcmp(mnemonic, "hlt ") == 0) {
-    //    return;
-    //} else {
-    //    assembleGraphe_aux(prog, tete);
-    //    return;
-    //}
 }
 
 /**

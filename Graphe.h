@@ -11,12 +11,21 @@
 #include "LinkedList.h"
 #endif
 
+/*====== Valeurs possibles de type de liaison =====*/
+
 #define TERMINAISON 0
 #define JUMP_COND 1 
 #define JUMP_INCOND 2
 #define CALL 3
 #define RET 4
 #define FIN 5
+
+/*========== Valeurs possibles d'interet =========*/
+
+#define OPCODE_INCONNU -1
+#define DEPASSEMENT_BLOC -2
+#define CALL_TERMINAL -3
+#define SAUT_INCOND_TERMINAL -4
 
 
 typedef struct _Graphe{
