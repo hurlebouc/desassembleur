@@ -80,7 +80,7 @@ void afficherFermeture(DISASM* prog){
 int main(int argc, char* argv []) {
     
     DISASM MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/disas";
+    char* chemin = "/Users/Hubert/Desktop/recc";
     initialiserDISASM(&MyDisasm, chemin);
     
     afficherCFG(&MyDisasm);

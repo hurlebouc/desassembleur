@@ -602,7 +602,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                         }
                     }
                 } else { // cas ou on a pas un saut
-                    if (iniAdress + len < taille + debut) {
+                    if (iniAdress + len < taille + debut && strcmp(prog->Instruction.Mnemonic, "hlt ") != 0) {
                         Graphe* s = &pi[iniAdress - debut + len];
                         //s->VirtualAddrPointee = iniAdress + len;
                         i->listeFils = newLinkedList(); // on est sur qu'il n'y a qu'un fils
@@ -611,7 +611,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                 }
                 break;
         }
-        if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
+        if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) { 
             i->interet = 1;
             i->typeLiaison = FIN;
         }
@@ -650,9 +650,9 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
  *
  * TODO :   ENCORE UN TRUC DE POURRI (ne termine pas) : OK
  * TODO :   on dirait que dans le cas où g n'est pas le départ d'une flèche
- *          alors la tete se retrouve plus loin de prog->VirtualAdress
+ *          alors la tete se retrouve plus loin de prog->VirtualAdress (? OK)
  * TODO :   Améliorer la gestion des saut non définis. Il faut que les jumps inconditionnels 
- *          dans cette situation soient la fin d'un thread.
+ *          dans cette situation soient la fin d'un thread (OK)
  *
  * Si on decide que on ne fait pas une fleche depuis les ret, il suffit d ajouter "ret " au "hlt "
  */
@@ -671,9 +671,10 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("un hlt\n");
         if (g->listeFils != NULL) {
-            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
-            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
-            g->listeFils = NULL;
+            printf("une instruction terminale a des fils\n");
+            exit(EXIT_FAILURE);
+            //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            //g->listeFils = NULL;
         }
         return;
     }
@@ -681,10 +682,10 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("un ret\n");
         if (g->listeFils != NULL) {
-            printf("la tableau de graphe est mal structuré\n");
+            printf("une instruction terminale a des fils\n");
             exit(EXIT_FAILURE);
-            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
-            g->listeFils = NULL;
+            //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            //g->listeFils = NULL;
         }
         return;
     }
@@ -692,9 +693,10 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("une instruction erronée\n");
         if (g->listeFils != NULL) {
-            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
-            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
-            g->listeFils = NULL;
+            printf("une instruction terminale a des fils\n");
+            exit(EXIT_FAILURE);
+            //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            //g->listeFils = NULL;
         }
         return;
     }
@@ -702,9 +704,10 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("un saut indéfini\n");
         if (g->listeFils != NULL) {
-            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
-            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
-            g->listeFils = NULL;
+            printf("une instruction terminale a des fils\n");
+            exit(EXIT_FAILURE);
+            //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            //g->listeFils = NULL;
         }
         return;
     }
@@ -712,7 +715,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
      g->assemble = 1;
      
-    /*================================ APPELS RECCURSIFIS ===============================*/
+    /*================================ APPELS RECCURSIFS ===============================*/
     
     
     if (g->typeLiaison == JUMP_INCOND) {
@@ -908,8 +911,8 @@ Graphe* ControleFlow2(DISASM* prog){
     unsigned long debut = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
     Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    reperageGlobal(prog, pi, ALL_STEP);
-    afficherPI(pi, taille);
+    reperageGlobal(prog, pi, AUTO_STEP);
+    //afficherPI(pi, taille);
     printf("\n\n");
     
     prog->EIP = debut;
