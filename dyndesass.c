@@ -1,5 +1,8 @@
 #include "dyndesass.h"
 
+#define AUTO_STEP 0
+#define ALL_STEP 1
+
 int placeRegistreInListe(char* chaine, LinkedList* listeRegistreAppel) {
     int i = 0;
     int fin = 0;
@@ -469,13 +472,17 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  *
  * TODO :   Pour améliorer la fonction, il faut parcourir tout le binaire et pas 
  *          seulement les instructions accessible en première lecture. Comme ça
- *          on echappe au piège des junk bytes.
+ *          on echappe au piège des junk bytes. (OK)
  * TODO :   Améliorer la gestion des saut non définis. Il faut que les jumps inconditionnels 
  *          dans cette situation soient la fin d'un thread.
+ *
+ * le passage en mode ALL_STEP (lorsque l'on parcours tous les octets du programme) fait
+ * apparaitre des nouveaux états d'interets. Ces nouveaux états interressant sont effectivement 
+ * issues de sauts provenant de la partie cachée (celle non lue normalement au runtime).
  */
 
 
-void reperageGlobal(DISASM* prog, Graphe pi[]){
+void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
     int stop = 0;
     unsigned long finReel = prog->SecurityBlock + prog->EIP;
     unsigned long debut = prog->VirtualAddr;
@@ -508,12 +515,12 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                 break;
                 
             default:
-                if (cibleAdress == 0 && brancheType !=0) {
+                if (cibleAdress == 0 && brancheType !=0 && brancheType != RetType) {
                     printf("cible non définie\n");
                 }
                 if (brancheType!=0) {
                     
-                    if (brancheType == JmpType && cibleAdress - debut < taille  && cibleAdress != 0) { // pour les jmp
+                    if (brancheType == JmpType && cibleAdress - debut < taille  && cibleAdress >= debut) { // pour les jmp
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
                         i->interet = 1;
@@ -531,10 +538,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         
                     } else if (brancheType == CallType) { // pour les call
                         i->typeLiaison = CALL;
-                        if (cibleAdress == 0) {
-                            printf("caca\n");
-                        }
-                        if (cibleAdress < taille + debut && cibleAdress != 0) {
+                        if (cibleAdress < taille + debut && cibleAdress >= debut) {
                             //addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
@@ -568,7 +572,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         i->typeLiaison = RET;
                         i->interet = 1;
                     } else { // pour tout le reste (jne, jla, ...)
-                        if (cibleAdress < taille + debut && cibleAdress != 0) {
+                        if (cibleAdress < taille + debut && cibleAdress >= debut) {
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
                             i->interet = 1;
@@ -600,10 +604,8 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                 } else { // cas ou on a pas un saut
                     if (iniAdress + len < taille + debut) {
                         Graphe* s = &pi[iniAdress - debut + len];
-                        s->VirtualAddrPointee = iniAdress + len;
-                        if (i->listeFils == NULL) {
-                            i->listeFils = newLinkedList(); // peut etre a t on deja un fils
-                        }
+                        //s->VirtualAddrPointee = iniAdress + len;
+                        i->listeFils = newLinkedList(); // on est sur qu'il n'y a qu'un fils
                         addFirstLL(i->listeFils, s); // on ajoute l'instruction suivante
                     }
                 }
@@ -615,8 +617,13 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
         }
         
         //printf("%d\n",gIni->interet);
-        prog->VirtualAddr += len;
-        prog->EIP += len;
+        if (pas == AUTO_STEP) {
+            prog->VirtualAddr += len;
+            prog->EIP += len;
+        } else {
+            prog->VirtualAddr += pas;
+            prog->EIP += pas;
+        }
         prog->SecurityBlock = (int) (finReel - prog->EIP);
         prog->Instruction.BranchType = 0;
         prog->Instruction.AddrValue = 0;
@@ -653,7 +660,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
 void assembleGraphe_aux(DISASM* prog, Graphe* g){
     
     Disasm(prog);
-    printf("\ng : %lx : %lx (%s)\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic);
+    printf("\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
     
     /*==================================== CAS D'ARRET ==================================*/
     if (g->assemble) {
@@ -663,21 +670,42 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     if (g->typeLiaison == FIN) {
         g->assemble = 1;
         printf("un hlt\n");
+        if (g->listeFils != NULL) {
+            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
+            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            g->listeFils = NULL;
+        }
         return;
     }
     if (g->typeLiaison == RET) {
         g->assemble = 1;
         printf("un ret\n");
+        if (g->listeFils != NULL) {
+            printf("la tableau de graphe est mal structuré\n");
+            exit(EXIT_FAILURE);
+            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            g->listeFils = NULL;
+        }
         return;
     }
     if (g->interet == -1) {
         g->assemble = 1;
         printf("une instruction erronée\n");
+        if (g->listeFils != NULL) {
+            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
+            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            g->listeFils = NULL;
+        }
         return;
     }
     if (g->typeLiaison == JUMP_INCOND && g->listeFils == NULL) {
         g->assemble = 1;
         printf("un saut indéfini\n");
+        if (g->listeFils != NULL) {
+            printf("la tableau de graphe est mal structuré ou provient d'une ancienne version\n");
+            terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
+            g->listeFils = NULL;
+        }
         return;
     }
     /*===================================================================================*/
@@ -825,10 +853,8 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
             exit(EXIT_FAILURE);
         }
         tete = &(pi[prog->VirtualAddr-debut]);
-        //tete->assemble=1; 
         filsUnique->valeur = tete;
         len = Disasm(prog);
-        //mnemonic = prog->Instruction.Mnemonic;
     }
     assembleGraphe_aux(prog, tete);
     return;
@@ -882,7 +908,8 @@ Graphe* ControleFlow2(DISASM* prog){
     unsigned long debut = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
     Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    reperageGlobal(prog, pi);
+    reperageGlobal(prog, pi, ALL_STEP);
+    afficherPI(pi, taille);
     printf("\n\n");
     
     prog->EIP = debut;
@@ -958,14 +985,28 @@ void afficheListeFils(Graphe* g){
     
 }
 
+void afficheListePere(Graphe* g){
+    LinkedList* tete = g->listePeres;
+    for (int i = 0; i<g->listePeres->longueur; i++) {
+        Graphe* fils = tete->valeur;
+        printf(", %lx", fils->VirtualAddrLue);
+        tete = tete->suiv;
+    }
+    
+}
+
 void afficherPI(Graphe* pi, unsigned long taille){
     for (int i = 0; i<taille; i++) {
-        if (pi[i].listeFils == NULL) {
-            printf("0x%lx\tinteret : %d\n",pi[i].VirtualAddrLue, pi[i].interet);
-        } else{
-            printf("0x%lx\tinteret : %d \tfils : ",pi[i].VirtualAddrLue, pi[i].interet);
-            afficheListeFils(&pi[i]);printf("\n");
+        printf("0x%lx\tinteret : %d",pi[i].VirtualAddrLue, pi[i].interet);
+        if (pi[i].listeFils != NULL) {
+            printf("\tfils : ");
+            afficheListeFils(&pi[i]);
         }
+        if (pi[i].listePeres != NULL) {
+            printf("\tpere : ");
+            afficheListePere(&pi[i]);
+        }
+        printf("\n");
     }
 }
 
