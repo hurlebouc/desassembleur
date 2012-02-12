@@ -25,7 +25,7 @@
 
 void desassemblage_inconditionnel(DISASM* prog);
 
-void fermeture(DISASM* prog, int* crible);
+void fermeture(DISASM* prog, int* crible, Graphe pi[]);
 
 Graphe* ControleFlow(DISASM* prog);
 Graphe* ControleFlow2(DISASM* prog);

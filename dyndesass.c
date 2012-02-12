@@ -112,8 +112,19 @@ void desassemblage_inconditionnel(DISASM* prog) {
 /*                                                                                                  */
 /*--------------------------------------------------------------------------------------------------*/
 
+void depilage(DISASM* prog, LinkedList* pileAppel){
+    unsigned long iniAdress = prog->VirtualAddr;
+    if (pileAppel->longueur == 0) {
+        printf("\nArret du programme par dépilage d'une pile vide\n\n");
+        exit(EXIT_SUCCESS);
+    }
+    unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
+    prog->VirtualAddr = retourAddr;
+    prog->EIP += retourAddr - (long) iniAdress;
+    return;
+}
 
-void fermeture(DISASM* prog, int* crible){
+void fermeture(DISASM* prog, int* crible, Graphe pi[]){
     
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
@@ -122,7 +133,6 @@ void fermeture(DISASM* prog, int* crible){
     unsigned long fin = taille + debut;
     
     while (!stop) {
-        //prog->SecurityBlock = (unsigned int) (finReel - prog->EIP); // !!!!!!!!!!!!!!!!!        A SUPPRIMER
         
         int len = Disasm(prog);
         int brancheType = prog->Instruction.BranchType;
@@ -130,38 +140,21 @@ void fermeture(DISASM* prog, int* crible){
         unsigned long cibleAdress = prog->Instruction.AddrValue;
         unsigned long IP = iniAdress + len;
         printf("0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
-        
+        Graphe* i = &pi[iniAdress - debut];
+                
         if (len == UNKNOWN_OPCODE) {
             printf("Code inconnu\n");
-            crible[iniAdress-debut] = -1;
-            if (pileAppel->longueur == 0) {
-                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
-                exit(EXIT_SUCCESS);
-            }
-            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
-            prog->VirtualAddr = retourAddr;
-            prog->EIP += retourAddr - (long) iniAdress;
+            crible[iniAdress-debut] = OPCODE_INCONNU;
+            depilage(prog, pileAppel);
             
         } else if (len == OUT_OF_BLOCK) {
             printf("Fin du bloc\n");
-            crible[iniAdress-debut] = -1;
-            if (pileAppel->longueur == 0) {
-                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
-                exit(EXIT_SUCCESS);
-            }
-            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
-            prog->VirtualAddr = retourAddr;
-            prog->EIP += retourAddr - (long) iniAdress;
+            crible[iniAdress-debut] = DEPASSEMENT_BLOC;
+            depilage(prog, pileAppel);
             
-        } else if (crible[iniAdress - debut]){ // si on est deja passé par la
-            if (pileAppel->longueur == 0) {
-                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
-                exit(EXIT_SUCCESS);
-            }
-            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
-            prog->VirtualAddr = retourAddr;
-            prog->EIP += retourAddr - (long) iniAdress;
-            
+        } else if (crible[iniAdress - debut] != 0){ // si on est deja passé par là
+            depilage(prog, pileAppel);
+                        
         } else {
             crible[iniAdress-debut] = 1;
             switch (brancheType) {
@@ -170,56 +163,47 @@ void fermeture(DISASM* prog, int* crible){
                     if (cibleAdress == 0) {
                         printf("call indéfini\n");
                     }
-                    if (cibleAdress < fin && cibleAdress != 0) {
+                    if (cibleAdress < fin && cibleAdress >= debut) {
                         addFirstLL(pileAppel, (void *) IP); // on empile
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
-                    } else if(prog->VirtualAddr + len < fin){
+                    } else if(iniAdress + len < fin){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("erreur : un call se trouve en derniere position du bloc\n");
-                        exit(EXIT_FAILURE);
+                        printf("warning : un call se trouve en derniere position du bloc (aucun fils)\n");
+                        depilage(prog, pileAppel);
                     }
                     break;
                     
                 case JmpType:
                     if (cibleAdress == 0) { // dans ce cas on dépile car on ne sait rien faire d'autre
-                        printf("saut inconditionnel indéfini\n");
-                        if (pileAppel->longueur == 0) {
-                            printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
-                            exit(EXIT_SUCCESS);
-                        }
-                        prog->VirtualAddr = (unsigned long) removeFirstLL(pileAppel);
-                        prog->EIP += prog->VirtualAddr - (long) iniAdress;
-                    } else if (cibleAdress < fin) {
+                        printf("message : saut inconditionnel indéfini\n");
+                        depilage(prog, pileAppel);
+                    } else if (cibleAdress < fin && cibleAdress >= debut) {
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
-                        printf("erreur : un jump essai de sortir du bloc \n");
-                        exit(EXIT_FAILURE);
+                        printf("warning : un jump essai de sortir du bloc\n");
+                        depilage(prog, pileAppel);
                     }
                     break;
                     
                 case RetType:
-                    if (pileAppel->longueur == 0) {
-                        printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
-                        exit(EXIT_SUCCESS);
-                    }
-                    prog->VirtualAddr = (unsigned long) removeFirstLL(pileAppel);
-                    prog->EIP += prog->VirtualAddr - (long) iniAdress;
+                    depilage(prog, pileAppel);
                     break;
                     
                 case 0: // cas ou il n y a pas de saut
                     if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
-                        printf("fin de la lecture\n\n");
-                        stop = 1;
+                        //printf("fin de la lecture\n\n");
+                        depilage(prog, pileAppel);
+                        //stop = 1;
                     }else if (prog->VirtualAddr + len < fin) {
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("erreur : la fin est atteinte sans rencontrer de point d arret");
-                        exit(EXIT_FAILURE);
+                        printf("warning : la fin du bloc est atteinte sans rencontrer de point d arret");
+                        depilage(prog, pileAppel);
                     }
                     break;
                     
@@ -229,13 +213,13 @@ void fermeture(DISASM* prog, int* crible){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     }
-                    if (cibleAdress < fin) {
+                    if (cibleAdress < fin && cibleAdress>=debut) {
                         addFirstLL(pileAppel, (void *) IP); // on empile
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
-                        printf("erreur : un jump conditionnel essai de sortir du bloc\n");
-                        exit(EXIT_FAILURE);
+                        printf("warning : un jump conditionnel essai de sortir du bloc\n");
+                        depilage(prog, pileAppel);
                     }
                     break;
                    

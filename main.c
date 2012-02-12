@@ -72,19 +72,20 @@ void afficherCFG(DISASM* prog){
 void afficherFermeture(DISASM* prog){
     unsigned long taille = prog->SecurityBlock;
     unsigned long pev = prog->VirtualAddr;
+    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
     int* crible = calloc(sizeof(int), taille);
-    fermeture(prog, crible);
-    afficheCrible(crible, taille, pev);
+    fermeture(prog, crible, pi);
+    //afficheCrible(crible, taille, pev);
 }
 
 int main(int argc, char* argv []) {
     
     DISASM MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/recc";
+    char* chemin = "/Users/Hubert/Desktop/disas";
     initialiserDISASM(&MyDisasm, chemin);
     
-    afficherCFG(&MyDisasm);
-    
+    //afficherCFG(&MyDisasm);
+    afficherFermeture(&MyDisasm);
     //munmap(debut, size);
     
     return 0;
