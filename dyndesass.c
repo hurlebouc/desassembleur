@@ -103,6 +103,141 @@ void desassemblage_inconditionnel(DISASM* prog) {
     }
 }
 
+/*--------------------------------------------------------------------------------------------------*/
+/*                                                                                                  */
+/*                                         PRE-TRAITEMENT                                           */
+/*                                                                                                  */
+/*--------------------------------------------------------------------------------------------------*/
+
+
+void fermeture(DISASM* prog, int* crible){
+    
+    LinkedList* pileAppel = newLinkedList();
+    int stop = 0;
+    unsigned long debut = prog->VirtualAddr;
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long fin = taille + debut;
+    
+    while (!stop) {
+        //prog->SecurityBlock = (unsigned int) (finReel - prog->EIP); // !!!!!!!!!!!!!!!!!        A SUPPRIMER
+        
+        int len = Disasm(prog);
+        int brancheType = prog->Instruction.BranchType;
+        unsigned long iniAdress = prog->VirtualAddr; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       ATTENTION AU CAS NUL
+        unsigned long cibleAdress = prog->Instruction.AddrValue;
+        unsigned long IP = iniAdress + len;
+        printf("(0x%lx) \t 0x%lx \t %s \t (0x%lx)\n", prog->EIP, iniAdress, prog->CompleteInstr, cibleAdress);
+        
+        if (len == UNKNOWN_OPCODE) {
+            printf("Code inconnu\n");
+            crible[iniAdress-debut] = -1;
+            if (pileAppel->longueur == 0) {
+                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
+                exit(EXIT_SUCCESS);
+            }
+            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
+            prog->VirtualAddr = retourAddr;
+            prog->EIP += retourAddr - (long) iniAdress;
+            
+        } else if (len == OUT_OF_BLOCK) {
+            printf("Fin du bloc\n");
+            crible[iniAdress-debut] = -1;
+            if (pileAppel->longueur == 0) {
+                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
+                exit(EXIT_SUCCESS);
+            }
+            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
+            prog->VirtualAddr = retourAddr;
+            prog->EIP += retourAddr - (long) iniAdress;
+            
+        } else if (crible[iniAdress - debut]){ // si on est deja passé par la
+            if (pileAppel->longueur == 0) {
+                printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
+                exit(EXIT_SUCCESS);
+            }
+            unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
+            prog->VirtualAddr = retourAddr;
+            prog->EIP += retourAddr - (long) iniAdress;
+            
+        } else {
+            crible[iniAdress-debut] = 1;
+            switch (brancheType) {
+                    
+                case CallType:
+                    if (cibleAdress < fin && cibleAdress != 0) {
+                        addFirstLL(pileAppel, (void *) IP); // on empile
+                        prog->VirtualAddr = cibleAdress;
+                        prog->EIP += cibleAdress - (long) iniAdress;
+                    } else if(prog->VirtualAddr + len < fin){
+                        prog->VirtualAddr += len;
+                        prog->EIP += len;
+                    } else {
+                        printf("erreur : un call se trouve en derniere position du bloc\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    break;
+                    
+                case JmpType:
+                    if (cibleAdress == 0) { // dans ce cas on dépile car on ne sait rien faire d'autre
+                        if (pileAppel->longueur == 0) {
+                            printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
+                            exit(EXIT_SUCCESS);
+                        }
+                        prog->VirtualAddr = (unsigned long) removeFirstLL(pileAppel);
+                        prog->EIP += prog->VirtualAddr - (long) iniAdress;
+                    } else if (cibleAdress < fin) {
+                        prog->VirtualAddr = cibleAdress;
+                        prog->EIP += cibleAdress - (long) iniAdress;
+                    } else {
+                        printf("erreur : un jump essai de sortir du bloc \n");
+                        exit(EXIT_FAILURE);
+                    }
+                    break;
+                    
+                case RetType:
+                    if (pileAppel->longueur == 0) {
+                        printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
+                        exit(EXIT_SUCCESS);
+                    }
+                    prog->VirtualAddr = (unsigned long) removeFirstLL(pileAppel);
+                    prog->EIP += prog->VirtualAddr - (long) iniAdress;
+                    break;
+                    
+                case 0: // cas ou il n y a pas de saut
+                    if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
+                        printf("fin de la lecture\n\n");
+                        stop = 1;
+                    }else if (prog->VirtualAddr + len < fin) {
+                        prog->VirtualAddr += len;
+                        prog->EIP += len;
+                    } else {
+                        printf("erreur : la fin est atteinte sans rencontrer de point d arret");
+                        exit(EXIT_FAILURE);
+                    }
+                    break;
+                    
+                default: // cas des jumps conditionnels
+                    if (cibleAdress == 0) {
+                        prog->VirtualAddr += len;
+                        prog->EIP += len;
+                    }
+                    if (cibleAdress < fin) {
+                        addFirstLL(pileAppel, (void *) IP); // on empile
+                        prog->VirtualAddr = cibleAdress;
+                        prog->EIP += cibleAdress - (long) iniAdress;
+                    } else {
+                        printf("erreur : un jump conditionnel essai de sortir du bloc\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    break;
+                   
+            }
+        }
+        prog->SecurityBlock = (unsigned int) (fin - prog->VirtualAddr);
+    }
+}
+
+
 /**
  * pi est un tableau de Graphes.
  * TODO : il a quelque chose de pourri au royaume du Danemark
@@ -326,6 +461,12 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
  * Cette fonction ne fait pas usage de la pile d'appel. Elle desassemble linéairement 
  * en notant les liens. Cette politique vise à ne pas mélanger les appels au code de
  * la fonction appelante. Chaque fonction aura donc un "tread" qui lui sera dédié
+ *
+ * TODO :   Pour améliorer la fonction, il faut parcourir tout le binaire et pas 
+ *          seulement les instructions accessible en première lecture. Comme ça
+ *          on echappe au piège des junk bytes.
+ * TODO :   Améliorer la gestion des saut non définis. Il faut que les jumps inconditionnels 
+ *          dans cette situation soient la fin d'un thread.
  */
 
 
@@ -351,12 +492,14 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
         switch (len) {
             case UNKNOWN_OPCODE:
                 printf("opcode inconnu\n");
-                exit(EXIT_FAILURE);
+                i->interet = -1;
+                //exit(EXIT_FAILURE);
                 break;
                 
             case OUT_OF_BLOCK:
-                printf("depassement de bloc\n");
-                stop = 1;
+                printf("depassement de bloc pendant la lecture\n");
+                i->interet = -1;
+                //stop = 1;
                 break;
                 
             default:
@@ -413,8 +556,6 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                             }
                             addFirstLL(t->listePeres, i);
                         }
-                        
-                        
                     } else if(brancheType == RetType){ //pour les ret
                         i->typeLiaison = RET;
                         i->interet = 1;
@@ -449,23 +590,22 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
                         }
                     }
                 }
-                
-                if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
-                    i->interet = 1;
-                    i->typeLiaison = FIN;
-                }
-                
-                //printf("%d\n",gIni->interet);
-                prog->VirtualAddr += len;
-                prog->EIP += len;
-                prog->SecurityBlock = (int) (finReel - prog->EIP);
-                prog->Instruction.BranchType = 0;
-                prog->Instruction.AddrValue = 0;
-                if (prog->EIP >= finReel) {
-                    printf("fin de la lecture\n");
-                    stop = 1;
-                }
                 break;
+        }
+        if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
+            i->interet = 1;
+            i->typeLiaison = FIN;
+        }
+        
+        //printf("%d\n",gIni->interet);
+        prog->VirtualAddr += len;
+        prog->EIP += len;
+        prog->SecurityBlock = (int) (finReel - prog->EIP);
+        prog->Instruction.BranchType = 0;
+        prog->Instruction.AddrValue = 0;
+        if (prog->EIP >= finReel) {
+            printf("fin de la lecture\n");
+            stop = 1;
         }
     }
 }
@@ -725,6 +865,12 @@ Graphe* ControleFlow2(DISASM* prog){
     printf("Fin de l assemblage du graphe\n");
     return g;
 }
+
+/*--------------------------------------------------------------------------------------------------*/
+/*                                                                                                  */
+/*                                           AFFICHAGE                                              */
+/*                                                                                                  */
+/*--------------------------------------------------------------------------------------------------*/
 
 void afficheCF_aux(Graphe* g){
     if (g->affiche) {

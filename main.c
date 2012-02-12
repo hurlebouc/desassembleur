@@ -120,7 +120,7 @@ int main(int argc, char* argv []) {
     /* ============================= Init the Disasm structure (important !)*/
     (void) memset(&MyDisasm, 0, sizeof (DISASM));
 
-    int fd = open("/Users/Hubert/Desktop/Entropie", O_RDONLY);
+    int fd = open("/Users/Hubert/Desktop/recc", O_RDONLY);
     //int fd = open("/bin/ls", O_RDONLY);
     struct stat stat_buf;
     fstat(fd, &stat_buf);
@@ -133,12 +133,6 @@ int main(int argc, char* argv []) {
     
     /*=========================================================================*/
 
-
-    //MyDisasm.EIP = (UIntPtr) pe;
-    //MyDisasm.Archi = ARCHI_PROC;
-    //MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-    //MyDisasm.VirtualAddr = 0x100000000 + pe - debut;
-    //MyDisasm.SecurityBlock = 40000;
     
     Graphe a; a.VirtualAddrLue = 1;
     Graphe b; b.VirtualAddrLue = 2;
@@ -147,11 +141,13 @@ int main(int argc, char* argv []) {
     addFirstLL(a.listeFils, &b);
     addFirstLL(a.listeFils, &c);
     
-    //desassemblage_inconditionnel(&MyDisasm);
-    printf("taille d un graphe : %lu\n", sizeof(Graphe));
-    Graphe*g = ControleFlow2(&MyDisasm);
-    printf("\n");
-    afficheCF(g);
+    //printf("taille d un graphe : %lu\n", sizeof(Graphe));
+    //Graphe*g = ControleFlow2(&MyDisasm);
+    //printf("\n");
+    //afficheCF(g);
+    
+    int* crible = malloc(sizeof(int)*MyDisasm.SecurityBlock);
+    fermeture(&MyDisasm, crible);
     
     
     munmap(debut, size);
