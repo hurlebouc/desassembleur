@@ -126,7 +126,7 @@ void fermeture(DISASM* prog, int* crible){
         unsigned long iniAdress = prog->VirtualAddr; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       ATTENTION AU CAS NUL
         unsigned long cibleAdress = prog->Instruction.AddrValue;
         unsigned long IP = iniAdress + len;
-        printf("(0x%lx) \t 0x%lx \t %s \t (0x%lx)\n", prog->EIP, iniAdress, prog->CompleteInstr, cibleAdress);
+        printf("0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
         
         if (len == UNKNOWN_OPCODE) {
             printf("Code inconnu\n");
@@ -164,6 +164,9 @@ void fermeture(DISASM* prog, int* crible){
             switch (brancheType) {
                     
                 case CallType:
+                    if (cibleAdress == 0) {
+                        printf("call indéfini\n");
+                    }
                     if (cibleAdress < fin && cibleAdress != 0) {
                         addFirstLL(pileAppel, (void *) IP); // on empile
                         prog->VirtualAddr = cibleAdress;
@@ -179,6 +182,7 @@ void fermeture(DISASM* prog, int* crible){
                     
                 case JmpType:
                     if (cibleAdress == 0) { // dans ce cas on dépile car on ne sait rien faire d'autre
+                        printf("saut inconditionnel indéfini\n");
                         if (pileAppel->longueur == 0) {
                             printf("warning : le desassemblage s'est terminé sans rencontrer de point d'arret\n");
                             exit(EXIT_SUCCESS);
@@ -218,6 +222,7 @@ void fermeture(DISASM* prog, int* crible){
                     
                 default: // cas des jumps conditionnels
                     if (cibleAdress == 0) {
+                        printf("saut conditionnel indéfini\n");
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     }
@@ -475,7 +480,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[]){
     unsigned long finReel = prog->SecurityBlock + prog->EIP;
     unsigned long debut = prog->VirtualAddr;
     unsigned long taille = prog->SecurityBlock;
-    unsigned long fin = debut + taille;
+    //unsigned long fin = debut + taille;
     
     while (!stop) {        
         /*-------------- Desassemblage ------------*/
@@ -834,14 +839,14 @@ Graphe* ControleFlow(DISASM* prog){
     printf("\n\n");
     
     prog->EIP = debut;
-    prog->SecurityBlock = taille;
+    prog->SecurityBlock = (unsigned int) taille;
     prog->VirtualAddr = virtualAddr;
     reperageAppels(prog, pi);
     afficherPI(pi, taille);
     printf("\n\n");
     
     prog->EIP = debut;
-    prog->SecurityBlock = taille;
+    prog->SecurityBlock = (unsigned int) taille;
     prog->VirtualAddr = virtualAddr;
     printf("Debut de l assemblage du graphe\n");
     Graphe* g = assembleGraphe(prog, pi);
@@ -858,7 +863,7 @@ Graphe* ControleFlow2(DISASM* prog){
     printf("\n\n");
     
     prog->EIP = debut;
-    prog->SecurityBlock = taille;
+    prog->SecurityBlock = (unsigned int) taille;
     prog->VirtualAddr = virtualAddr;
     printf("Debut de l assemblage du graphe\n");
     Graphe* g = assembleGraphe(prog, pi);
@@ -938,6 +943,12 @@ void afficherPI(Graphe* pi, unsigned long taille){
             printf("0x%lx\tinteret : %d \tfils : ",pi[i].VirtualAddrLue, pi[i].interet);
             afficheListeFils(&pi[i]);printf("\n");
         }
+    }
+}
+
+void afficheCrible(int* crible, unsigned long taille, unsigned long pev){
+    for (unsigned long i = 0; i<taille; i++) {
+        printf("%lx \t %d\n", pev + i, crible[i]);
     }
 }
 

@@ -3,7 +3,7 @@
 void* loaderMach(void* debut, DISASM* prog) {
     char *addr = debut;
     
-    struct fat_header* fat = addr;
+    struct fat_header* fat = (struct fat_header*) addr;
     if (fat->magic == FAT_CIGAM) { // du coup ça m apprend que mon processeur est un little-endian
                                    // en effet, apres recherche, les intels sont little-endien, les motorola sont big-endian
         printf("c est un fat binary : je ne peux de le desassembler\n(dans un prochaine version sans doute...)\n");

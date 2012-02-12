@@ -32,3 +32,4 @@ Graphe* ControleFlow2(DISASM* prog);
 
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);
+void afficheCrible(int* crible, unsigned long taille, unsigned long pev);

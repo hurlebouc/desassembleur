@@ -37,122 +37,51 @@
  * @param chemin chemin du bianire
  */
 
-void lireProg(char* chemin) {
-    DISASM prog;
-    (void) memset(&prog, 0, sizeof (DISASM));
-
-    FILE* FileHandle = fopen(chemin, "rb");
-    (void) fseek(FileHandle, 0, SEEK_END);
-    long FileSize = ftell(FileHandle);
-    (void) rewind(FileHandle);
-    char* pBuffer = malloc(FileSize);
-    (void) fread(pBuffer, FileSize, sizeof (char), FileHandle);
-    (void) fclose(FileHandle);
-
-    prog.EIP = (UIntPtr) pBuffer;
-    prog.VirtualAddr = (UInt64) pBuffer;
-
-    prog.Archi = ARCHI_PROC;
-    prog.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-
-    int Error = 0;
-    int len;
-    int i = 0;
-
-    while ((!Error) && (i < 80)) {
-        len = Disasm(&prog);
-        if (len != UNKNOWN_OPCODE) {
-            printf("0x%lx \t %s \t (0x%lx)\n", prog.EIP, prog.CompleteInstr, prog.Instruction.AddrValue);
-            prog.EIP += (UIntPtr) len;
-            prog.VirtualAddr += len;
-            i++;
-        } else {
-            Error = 1;
-        }
-    }
-    free(pBuffer);
+void initialiserDISASM(DISASM* prog, char* chemin){
+    
+    /* ============================= met tous les champs à zéro (important !)*/
+    (void) memset(prog, 0, sizeof (DISASM));
+    
+    int fd = open(chemin, O_RDONLY);
+    struct stat stat_buf;
+    fstat(fd, &stat_buf);
+    size_t size = stat_buf.st_size;
+    
+    /*============================= chargement en mémoire====================*/
+    void* debut = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
+    
+    /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
+    
+    loaderMach(debut, prog);
+    
+    /*=========================================================================*/
+    
+    close(fd);
 }
 
-void desassemblageStatique(void* addr, unsigned long taille){
-    printf("\n ============================= \n");
+void afficherCFG(DISASM* prog){
+    Graphe*g = ControleFlow2(prog);
+    printf("\n");
+    afficheCF(g);
+}
 
-    /* ============================= Init datas */
-    DISASM MyDisasm;
-    int len, i = 0;
-    int Error = 0;
-
-    /* ===================== display the version and revision used */
-    (void) printf("Version : %s\n", BeaEngineVersion());
-    (void) printf("Revision : %s\n", BeaEngineRevision());
-    /* ============================= Init the Disasm structure (important !)*/
-    (void) memset(&MyDisasm, 0, sizeof (DISASM));
-
-    /* ============================= Init EIP */
-    MyDisasm.EIP = (UIntPtr) addr;
-    MyDisasm.Archi = ARCHI_PROC;
-    MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-    MyDisasm.VirtualAddr = 0x100000000;
-    /* ============================= Loop for Disasm */
-    while ((!Error) && (i < taille)) {
-        len = Disasm(&MyDisasm);
-        if (len != UNKNOWN_OPCODE) {
-            printf("0x%lx \t %s \t (0x%lx) \t \n",
-                    MyDisasm.VirtualAddr,
-                    MyDisasm.CompleteInstr,
-                    MyDisasm.Instruction.AddrValue);
-            MyDisasm.EIP += (UIntPtr) len;
-            MyDisasm.VirtualAddr += len;
-            i++;
-        } else {
-            Error = 1;
-        }
-    };
+void afficherFermeture(DISASM* prog){
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long pev = prog->VirtualAddr;
+    int* crible = calloc(sizeof(int), taille);
+    fermeture(prog, crible);
+    afficheCrible(crible, taille, pev);
 }
 
 int main(int argc, char* argv []) {
     
-    /* ============================= Init datas */
     DISASM MyDisasm;
-
-    /* ===================== display the version and revision used */
-    (void) printf("Version : %s\n", BeaEngineVersion());
-    (void) printf("Revision : %s\n", BeaEngineRevision());
-    /* ============================= Init the Disasm structure (important !)*/
-    (void) memset(&MyDisasm, 0, sizeof (DISASM));
-
-    int fd = open("/Users/Hubert/Desktop/recc", O_RDONLY);
-    //int fd = open("/bin/ls", O_RDONLY);
-    struct stat stat_buf;
-    fstat(fd, &stat_buf);
-    size_t size = stat_buf.st_size;
-    void* debut = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
-
-    /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
+    char* chemin = "/Users/Hubert/Desktop/recc";
+    initialiserDISASM(&MyDisasm, chemin);
     
-    void* pe = loaderMach(debut, &MyDisasm);
+    afficherCFG(&MyDisasm);
     
-    /*=========================================================================*/
-
+    //munmap(debut, size);
     
-    Graphe a; a.VirtualAddrLue = 1;
-    Graphe b; b.VirtualAddrLue = 2;
-    Graphe c; c.VirtualAddrLue = 3;
-    a.listeFils = newLinkedList();
-    addFirstLL(a.listeFils, &b);
-    addFirstLL(a.listeFils, &c);
-    
-    //printf("taille d un graphe : %lu\n", sizeof(Graphe));
-    //Graphe*g = ControleFlow2(&MyDisasm);
-    //printf("\n");
-    //afficheCF(g);
-    
-    int* crible = malloc(sizeof(int)*MyDisasm.SecurityBlock);
-    fermeture(&MyDisasm, crible);
-    
-    
-    munmap(debut, size);
-    close(fd);
-
     return 0;
-
 }
