@@ -64,28 +64,28 @@ void initialiserDISASM(DISASM* prog, char* chemin){
 }
 
 void afficherCFG(DISASM* prog){
-    Graphe*g = ControleFlow2(prog);
+    Graphe*g = ControleFlow3(prog);
     printf("\n");
     afficheCF(g);
 }
 
 void afficherFermeture(DISASM* prog){
-    unsigned long taille = prog->SecurityBlock;
-    unsigned long pev = prog->VirtualAddr;
+    //unsigned long taille = prog->SecurityBlock;
+    //unsigned long pev = prog->VirtualAddr;
     Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    int* crible = calloc(sizeof(int), taille);
-    fermeture(prog, crible, pi);
+    //int* crible = calloc(sizeof(int), taille);
+    fermeture(prog, pi);
     //afficheCrible(crible, taille, pev);
 }
 
 int main(int argc, char* argv []) {
     
     DISASM MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/disas";
+    char* chemin = "/Users/Hubert/Desktop/recc";
     initialiserDISASM(&MyDisasm, chemin);
     
-    //afficherCFG(&MyDisasm);
-    afficherFermeture(&MyDisasm);
+    afficherCFG(&MyDisasm);
+    //afficherFermeture(&MyDisasm);
     //munmap(debut, size);
     
     return 0;

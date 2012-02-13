@@ -25,10 +25,11 @@
 
 void desassemblage_inconditionnel(DISASM* prog);
 
-void fermeture(DISASM* prog, int* crible, Graphe pi[]);
+void fermeture(DISASM* prog, Graphe pi[]);
 
 Graphe* ControleFlow(DISASM* prog);
 Graphe* ControleFlow2(DISASM* prog);
+Graphe* ControleFlow3(DISASM* prog);
 
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);

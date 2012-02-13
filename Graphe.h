@@ -24,8 +24,21 @@
 
 #define OPCODE_INCONNU -1
 #define DEPASSEMENT_BLOC -2
+
+#define SAUT_INCOND_OUT_OF_BLOCK -4
+#define SAUT_INCOND_INDEFINI -6
+
+#define FIN_BLOC_SANS_POINT_ARRET -7
+
 #define CALL_TERMINAL -3
-#define SAUT_INCOND_TERMINAL -4
+#define CALL_FIN_BLOC -5
+#define CALL_INDEFINI -12
+#define CALL_OUT_OF_BLOCK -13
+
+#define SAUT_COND_FIN_BLOC -8
+#define SAUT_COND_INDEFINI -9
+#define SAUT_COND_OUT_OF_BLOCK -10
+#define SAUT_COND_TERMINAL -11
 
 
 typedef struct _Graphe{

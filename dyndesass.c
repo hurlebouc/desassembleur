@@ -112,19 +112,20 @@ void desassemblage_inconditionnel(DISASM* prog) {
 /*                                                                                                  */
 /*--------------------------------------------------------------------------------------------------*/
 
-void depilage(DISASM* prog, LinkedList* pileAppel){
+int depilage(DISASM* prog, LinkedList* pileAppel){
     unsigned long iniAdress = prog->VirtualAddr;
     if (pileAppel->longueur == 0) {
-        printf("\nArret du programme par dépilage d'une pile vide\n\n");
-        exit(EXIT_SUCCESS);
+        printf("\nArret du désassembleur par dépilage d'une pile vide\n\n");
+        return 1;
+        //exit(EXIT_SUCCESS);
     }
     unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
     prog->VirtualAddr = retourAddr;
     prog->EIP += retourAddr - (long) iniAdress;
-    return;
+    return 0;
 }
 
-void fermeture(DISASM* prog, int* crible, Graphe pi[]){
+void fermeture(DISASM* prog, Graphe pi[]){
     
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
@@ -136,90 +137,198 @@ void fermeture(DISASM* prog, int* crible, Graphe pi[]){
         
         int len = Disasm(prog);
         int brancheType = prog->Instruction.BranchType;
-        unsigned long iniAdress = prog->VirtualAddr; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       ATTENTION AU CAS NUL
+        unsigned long iniAdress = prog->VirtualAddr;
         unsigned long cibleAdress = prog->Instruction.AddrValue;
         unsigned long IP = iniAdress + len;
         printf("0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
         Graphe* i = &pi[iniAdress - debut];
+        i->VirtualAddrLue = iniAdress;
                 
         if (len == UNKNOWN_OPCODE) {
-            printf("Code inconnu\n");
-            crible[iniAdress-debut] = OPCODE_INCONNU;
-            depilage(prog, pileAppel);
+            printf("warning : le desassembleur a rencontrer un opcode inconnu\n");
+//            crible[iniAdress-debut] = OPCODE_INCONNU; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+            i->interet = OPCODE_INCONNU;
+            i->lu = 1;
+            stop = depilage(prog, pileAppel);
             
         } else if (len == OUT_OF_BLOCK) {
-            printf("Fin du bloc\n");
-            crible[iniAdress-debut] = DEPASSEMENT_BLOC;
-            depilage(prog, pileAppel);
+            printf("warning : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
+//            crible[iniAdress-debut] = DEPASSEMENT_BLOC; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+            i->interet = DEPASSEMENT_BLOC;
+            i->lu = 1;
+            stop = depilage(prog, pileAppel);
             
-        } else if (crible[iniAdress - debut] != 0){ // si on est deja passé par là
-            depilage(prog, pileAppel);
+        } else if (/*crible[iniAdress - debut] != 0*/ i->lu){ // si on est deja passé par là
+            stop = depilage(prog, pileAppel); 
                         
         } else {
-            crible[iniAdress-debut] = 1;
+//            crible[iniAdress-debut] = 1; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+            i->lu = 1;
             switch (brancheType) {
                     
                 case CallType:
+                    i->interet = 1;
+                    i->typeLiaison = CALL;
                     if (cibleAdress == 0) {
-                        printf("call indéfini\n");
+                        printf("warning : call indéfini\n");
+                        i->interet = CALL_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
-                        addFirstLL(pileAppel, (void *) IP); // on empile
+                        Graphe* t = &pi[cibleAdress - debut];
+                        t->VirtualAddrPointee = cibleAdress;
+                        t->interet = 1;
+                        t->debutFonction = 1;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, t);
+                        if (t->listePeres == NULL) {
+                            t->listePeres = newLinkedList();
+                        }
+                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
-                    } else if(iniAdress + len < fin){
+                        if (iniAdress + len < fin) {
+                            Graphe* s = &pi[iniAdress + len - debut];
+                            s->VirtualAddrPointee = iniAdress + len;
+                            s->interet = 1;
+                            addFirstLL(i->listeFils, s);
+                            if (s->listePeres == NULL) {
+                                s->listePeres = newLinkedList();
+                            }
+                            addFirstLL(s->listePeres, i);
+                            addFirstLL(pileAppel, (void *) IP); // on empile
+                        } else {
+                            printf("warning : il est impossible de revenir à ce call car");
+                            printf("il est la dernière instruction du bloc\n");
+                            i->interet = CALL_FIN_BLOC;
+                        }
+                    } else if(iniAdress + len < fin){ // cas où le call appel une fonction
+                                                      // hors du bloc ou lorsque le saut est indéfini
+                        if (cibleAdress != 0) {
+                            printf("warning : un call fait appel à une fonction hors du bloc\n");
+                            i->interet = CALL_OUT_OF_BLOCK;
+                        }
+                        Graphe* s = &pi[iniAdress + len - debut];
+                        s->VirtualAddrPointee = iniAdress + len;
+                        s->interet = 1;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, s);
+                        if (s->listePeres == NULL) {
+                            s->listePeres = newLinkedList();
+                        }
+                        addFirstLL(s->listePeres, i);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("warning : un call se trouve en derniere position du bloc (aucun fils)\n");
-                        depilage(prog, pileAppel);
+                        printf("warning : un call n'a aucun fils\n");
+                        i->interet = CALL_TERMINAL;
+                        stop = depilage(prog, pileAppel);
                     }
                     break;
                     
                 case JmpType:
-                    if (cibleAdress == 0) { // dans ce cas on dépile car on ne sait rien faire d'autre
-                        printf("message : saut inconditionnel indéfini\n");
-                        depilage(prog, pileAppel);
+                    i->interet = 1;
+                    i->typeLiaison = JUMP_INCOND;
+                    if (cibleAdress == 0) {
+                        printf("warning : saut inconditionnel indéfini\n");
+                        i->interet = SAUT_INCOND_INDEFINI;
+                        stop = depilage(prog, pileAppel);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
+                        Graphe* t = &pi[cibleAdress - debut];
+                        t->VirtualAddrPointee = cibleAdress;
+                        t->interet = 1;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, t);
+                        if (t->listePeres == NULL) {
+                            t->listePeres = newLinkedList();
+                        }
+                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
                         printf("warning : un jump essai de sortir du bloc\n");
-                        depilage(prog, pileAppel);
+                        i->interet = SAUT_INCOND_OUT_OF_BLOCK;
+                        stop = depilage(prog, pileAppel);
                     }
                     break;
                     
                 case RetType:
-                    depilage(prog, pileAppel);
+                    i->interet = 1;
+                    i->typeLiaison = RET;
+                    stop = depilage(prog, pileAppel);
                     break;
                     
                 case 0: // cas ou il n y a pas de saut
                     if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
-                        //printf("fin de la lecture\n\n");
-                        depilage(prog, pileAppel);
-                        //stop = 1;
-                    }else if (prog->VirtualAddr + len < fin) {
+                        i->interet = 1;
+                        i->typeLiaison = FIN;
+                        stop = depilage(prog, pileAppel);
+                    }else if (iniAdress + len < fin) {
+                        Graphe* s = &pi[iniAdress + len - debut];
+                        s->VirtualAddrPointee = iniAdress + len;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
                         printf("warning : la fin du bloc est atteinte sans rencontrer de point d arret");
-                        depilage(prog, pileAppel);
+                        i->interet = FIN_BLOC_SANS_POINT_ARRET;
+                        stop = depilage(prog, pileAppel);
                     }
                     break;
                     
                 default: // cas des jumps conditionnels
+                    i->interet = 1;
+                    i->typeLiaison = JUMP_COND;
                     if (cibleAdress == 0) {
-                        printf("saut conditionnel indéfini\n");
-                        prog->VirtualAddr += len;
-                        prog->EIP += len;
+                        printf("warning : saut conditionnel indéfini\n");
+                        i->interet = SAUT_COND_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
-                        addFirstLL(pileAppel, (void *) IP); // on empile
+                        Graphe* t = &pi[cibleAdress - debut];
+                        t->VirtualAddrPointee = cibleAdress;
+                        t->interet = 1;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, t);
+                        if (t->listePeres == NULL) {
+                            t->listePeres = newLinkedList();
+                        }
+                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
+                        if (iniAdress + len < fin) {
+                            Graphe* s = &pi[iniAdress + len - debut];
+                            s->VirtualAddrPointee = iniAdress + len;
+                            s->interet = 1;
+                            addFirstLL(i->listeFils, s);
+                            if (s->listePeres == NULL) {
+                                s->listePeres = newLinkedList();
+                            }
+                            addFirstLL(s->listePeres, i);
+                            addFirstLL(pileAppel, (void *) IP); // on empile
+                        } else {
+                            printf("warning : un saut conditionnel est dernière instruction du bloc\n");
+                            i->interet = SAUT_COND_FIN_BLOC;
+                        }
+                    } else if(iniAdress + len < fin){
+                        if (cibleAdress != 0) {
+                            printf("warning : un saut conditionnel essai de sortir du bloc\n");
+                            i->interet = SAUT_COND_OUT_OF_BLOCK;
+                        }
+                        Graphe* s = &pi[iniAdress + len - debut];
+                        s->VirtualAddrPointee = iniAdress + len;
+                        s->interet = 1;
+                        i->listeFils = newLinkedList();
+                        addFirstLL(i->listeFils, s);
+                        if (s->listePeres == NULL) {
+                            s->listePeres = newLinkedList();
+                        }
+                        addFirstLL(s->listePeres, i);
+                        prog->VirtualAddr += len;
+                        prog->EIP += len;
                     } else {
-                        printf("warning : un jump conditionnel essai de sortir du bloc\n");
-                        depilage(prog, pileAppel);
+                        printf("warning : un saut conditionnel n'a pas de fils\n");
+                        i->interet = SAUT_COND_TERMINAL;
+                        stop = depilage(prog, pileAppel);
                     }
                     break;
                    
@@ -227,6 +336,7 @@ void fermeture(DISASM* prog, int* crible, Graphe pi[]){
         }
         prog->SecurityBlock = (unsigned int) (fin - prog->VirtualAddr);
     }
+    printf("fin de la lecture\n");
 }
 
 
@@ -527,7 +637,6 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
                             i->interet = 1;
-                            //i->lu = 1;
                             t->interet = 1;
                             t->debutFonction = 1;
                             i->listeFils = newLinkedList();
@@ -541,7 +650,6 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                             Graphe* t = &pi[iniAdress + len - debut];
                             t->VirtualAddrPointee = iniAdress + len;
                             i->interet = 1;
-                            //i->lu = 1;
                             t->interet = 1;
                             if (i->listeFils == NULL) {
                                 i->listeFils = newLinkedList();
@@ -637,6 +745,8 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
  *          alors la tete se retrouve plus loin de prog->VirtualAdress (? OK)
  * TODO :   Améliorer la gestion des saut non définis. Il faut que les jumps inconditionnels 
  *          dans cette situation soient la fin d'un thread (OK)
+ * TODO :   Traiter l'ensemble des appels reccursifs des instructions de saut
+            en un seul cas
  *
  * Si on decide que on ne fait pas une fleche depuis les ret, il suffit d ajouter "ret " au "hlt "
  */
@@ -699,13 +809,11 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     if (g->typeLiaison == JUMP_COND && g->listeFils == NULL) {
         g->assemble = 1;
-        g->interet = SAUT_INCOND_TERMINAL;
         printf("warning : un saut conditionnel indéfini sans fils\n");
         return;
     }
     if (g->typeLiaison == CALL && g->listeFils == NULL) {
         g->assemble = 1;
-        g->interet = CALL_TERMINAL;
         printf("warning : un call sans fils\n");
         return;
     }
@@ -922,7 +1030,25 @@ Graphe* ControleFlow2(DISASM* prog){
     unsigned long debut = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
     Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    reperageGlobal(prog, pi, AUTO_STEP);
+    reperageGlobal(prog, pi, ALL_STEP);
+    //afficherPI(pi, taille);
+    printf("\n\n");
+    
+    prog->EIP = debut;
+    prog->SecurityBlock = (unsigned int) taille;
+    prog->VirtualAddr = virtualAddr;
+    printf("Debut de l assemblage du graphe\n");
+    Graphe* g = assembleGraphe(prog, pi);
+    printf("Fin de l assemblage du graphe\n");
+    return g;
+}
+
+Graphe* ControleFlow3(DISASM* prog){
+    unsigned long taille = prog->SecurityBlock;
+    unsigned long debut = prog->EIP;
+    unsigned long virtualAddr = prog->VirtualAddr;
+    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
+    fermeture(prog, pi);
     //afficherPI(pi, taille);
     printf("\n\n");
     
@@ -941,6 +1067,10 @@ Graphe* ControleFlow2(DISASM* prog){
 /*                                                                                                  */
 /*--------------------------------------------------------------------------------------------------*/
 
+/**
+ * TODO :   Amélioration des couleurs en fonctions des différents cas.
+ */
+
 void afficheCF_aux(Graphe* g){
     if (g->affiche) {
         printf("\"%lx\";\n", g->VirtualAddrLue);
@@ -951,6 +1081,12 @@ void afficheCF_aux(Graphe* g){
         g->affiche = 1;
         if (g->typeLiaison == RET) {
             printf("[style=filled fillcolor=grey]");
+        }
+        if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
+            printf("[style=filled fillcolor=red]");
+        }
+        if (g->interet < -2) {
+            printf("[style=filled fillcolor=orange]");
         }
         printf(";\n");
         return;
