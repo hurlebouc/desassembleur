@@ -41,7 +41,7 @@
  * @param chemin chemin du bianire
  */
 
-void initialiserDISASM(DISASM* prog, char* chemin){
+unsigned long initialiserDISASM(DISASM* prog, char* chemin){
     
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(prog, 0, sizeof (DISASM));
@@ -56,15 +56,16 @@ void initialiserDISASM(DISASM* prog, char* chemin){
     
     /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
     
-    loaderMach(debut, prog);
+    unsigned long debutVirtuel = loaderMach(debut, prog);
     
     /*=========================================================================*/
     
     close(fd);
+    return debutVirtuel;
 }
 
-void afficherCFG(DISASM* prog){
-    Graphe*g = ControleFlow3(prog);
+void afficherCFG(desasembleur* desas){
+    Graphe*g = ControleFlow3(desas);
     printf("\n");
     afficheCF(g);
 }
@@ -81,10 +82,13 @@ void afficherFermeture(DISASM* prog){
 int main(int argc, char* argv []) {
     
     DISASM MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/recc";
-    initialiserDISASM(&MyDisasm, chemin);
+    desasembleur desas;
+    desas.prog = &MyDisasm;
+    char* chemin = "/Users/Hubert/Desktop/HandBrake";
+    unsigned long debutBloc = initialiserDISASM(&MyDisasm, chemin);
+    desas.debut = debutBloc;
     
-    afficherCFG(&MyDisasm);
+    afficherCFG(&desas);
     //afficherFermeture(&MyDisasm);
     //munmap(debut, size);
     

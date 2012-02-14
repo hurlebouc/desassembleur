@@ -125,13 +125,14 @@ int depilage(DISASM* prog, LinkedList* pileAppel){
     return 0;
 }
 
-void fermeture(DISASM* prog, Graphe pi[]){
+void fermeture(desasembleur* desas, Graphe pi[]){
     
+    DISASM* prog = desas->prog;
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
-    unsigned long debut = prog->VirtualAddr;
-    unsigned long taille = prog->SecurityBlock;
-    unsigned long fin = taille + debut;
+    unsigned long debut = desas->debut;
+    //unsigned long taille = prog->SecurityBlock;
+    unsigned long fin = prog->SecurityBlock + prog->VirtualAddr;
     
     while (!stop) {
         
@@ -923,7 +924,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 //    unsigned long debut = g->VirtualAddrLue;
 //    unsigned long fin = debut + prog->SecurityBlock;
 //    
-//    int len = Disasm2(prog);
+    int len = Disasm2(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 //    
 //    
 //    
@@ -954,14 +955,14 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     addFirstLL(filsUnique, (void*) tete);
     g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
-//    len = Disasm(prog);
+    len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
     
     while (tete->interet == 0) {
         
         tete->assemble=1; // normlament on pourrait se contenter des la dernière tete
-//        prog->EIP += len;
-//        prog->VirtualAddr +=len;
-//        prog->SecurityBlock = prog->SecurityBlock - len;
+        prog->EIP += len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+        prog->VirtualAddr +=len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+        prog->SecurityBlock = prog->SecurityBlock - len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         
 //        // normalement on a pas besoin de verifier si on sort du block
 //        if (prog->VirtualAddr>=fin) {
@@ -983,7 +984,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 //        tete = &(pi[prog->VirtualAddr-debut]);
         tete = tete->listeFils->valeur;
         filsUnique->valeur = tete;
-//        len = Disasm(prog);
+        len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
     }
     assembleGraphe_aux(prog, tete);
     return;
@@ -994,8 +995,9 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
  * pour en faire un seul graphe
  */
 
-Graphe* assembleGraphe(DISASM* prog, Graphe pi[]){
-    Graphe* g = pi; // la premiere instruction est forcement non vide
+Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
+    DISASM* prog = desas->prog;
+    Graphe* g = &pi[prog->VirtualAddr - desas->debut]; // la premiere instruction est forcement non vide
     assembleGraphe_aux(prog, g);
     g->assemble=1;
     return g;
@@ -1043,20 +1045,22 @@ Graphe* ControleFlow2(DISASM* prog){
     return g;
 }
 
-Graphe* ControleFlow3(DISASM* prog){
-    unsigned long taille = prog->SecurityBlock;
-    unsigned long debut = prog->EIP;
+Graphe* ControleFlow3(desasembleur* desas){
+    DISASM* prog = desas->prog;
+    unsigned long sb = prog->SecurityBlock;
+    unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
-    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    fermeture(prog, pi);
+    unsigned long taille = sb + virtualAddr - desas->debut;
+    Graphe* pi = calloc(sizeof(Graphe),taille);
+    fermeture(desas, pi);
     //afficherPI(pi, taille);
     printf("\n\n");
     
-    prog->EIP = debut;
-    prog->SecurityBlock = (unsigned int) taille;
+    prog->EIP = debutReel;
+    prog->SecurityBlock = (unsigned int) sb;
     prog->VirtualAddr = virtualAddr;
     printf("Debut de l assemblage du graphe\n");
-    Graphe* g = assembleGraphe(prog, pi);
+    Graphe* g = assembleGraphe(desas, pi);
     printf("Fin de l assemblage du graphe\n");
     return g;
 }

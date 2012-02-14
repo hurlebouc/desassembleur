@@ -23,13 +23,19 @@
 
 //#include <mach-o/loader.h>
 
+typedef struct _desassembleur{
+    DISASM* prog;
+    unsigned long debut;    // debut virtuel du bloc
+    unsigned long fin;      // fin virtuelle du bloc
+}desasembleur;
+
 void desassemblage_inconditionnel(DISASM* prog);
 
-void fermeture(DISASM* prog, Graphe pi[]);
+void fermeture(desasembleur* desas, Graphe pi[]);
 
 Graphe* ControleFlow(DISASM* prog);
 Graphe* ControleFlow2(DISASM* prog);
-Graphe* ControleFlow3(DISASM* prog);
+Graphe* ControleFlow3(desasembleur* desas);
 
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);
