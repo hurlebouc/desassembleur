@@ -26,7 +26,6 @@
 typedef struct _desassembleur{
     DISASM* prog;
     unsigned long debut;    // debut virtuel du bloc
-    unsigned long fin;      // fin virtuelle du bloc
 }desasembleur;
 
 void desassemblage_inconditionnel(DISASM* prog);
@@ -34,7 +33,7 @@ void desassemblage_inconditionnel(DISASM* prog);
 void fermeture(desasembleur* desas, Graphe pi[]);
 
 Graphe* ControleFlow(DISASM* prog);
-Graphe* ControleFlow2(DISASM* prog);
+Graphe* ControleFlow2(desasembleur* desas);
 Graphe* ControleFlow3(desasembleur* desas);
 
 void afficheCF(Graphe* g);
