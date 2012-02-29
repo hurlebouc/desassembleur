@@ -84,7 +84,7 @@ int main(int argc, char* argv []) {
     DISASM MyDisasm;
     desasembleur desas;
     desas.prog = &MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/HandBrake";
+    char* chemin = "/Users/Hubert/Desktop/recc";
     unsigned long debutBloc = initialiserDISASM(&MyDisasm, chemin);
     desas.debut = debutBloc;
     

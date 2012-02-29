@@ -146,14 +146,14 @@ void fermeture(desasembleur* desas, Graphe pi[]){
         i->VirtualAddrLue = iniAdress;
                 
         if (len == UNKNOWN_OPCODE) {
-            printf("warning : le desassembleur a rencontrer un opcode inconnu\n");
+            printf("WARNING : le desassembleur a rencontrer un opcode inconnu\n");
 //            crible[iniAdress-debut] = OPCODE_INCONNU; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             i->interet = OPCODE_INCONNU;
             i->lu = 1;
             stop = depilage(prog, pileAppel);
             
         } else if (len == OUT_OF_BLOCK) {
-            printf("warning : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
+            printf("WARNING : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
 //            crible[iniAdress-debut] = DEPASSEMENT_BLOC; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             i->interet = DEPASSEMENT_BLOC;
             i->lu = 1;
@@ -171,7 +171,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     i->interet = 1;
                     i->typeLiaison = CALL;
                     if (cibleAdress == 0) {
-                        printf("warning : call indéfini\n");
+                        printf("WARNING : call indéfini\n");
                         i->interet = CALL_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
@@ -198,14 +198,14 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                             addFirstLL(s->listePeres, i);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
-                            printf("warning : il est impossible de revenir à ce call car");
+                            printf("WARNING : il est impossible de revenir à ce call car");
                             printf("il est la dernière instruction du bloc\n");
                             i->interet = CALL_FIN_BLOC;
                         }
                     } else if(iniAdress + len < fin){ // cas où le call appel une fonction
                                                       // hors du bloc ou lorsque le saut est indéfini
                         if (cibleAdress != 0) {
-                            printf("warning : un call fait appel à une fonction hors du bloc\n");
+                            printf("WARNING : un call fait appel à une fonction hors du bloc\n");
                             i->interet = CALL_OUT_OF_BLOCK;
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
@@ -220,7 +220,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("warning : un call n'a aucun fils\n");
+                        printf("WARNING : un call n'a aucun fils\n");
                         i->interet = CALL_TERMINAL;
                         stop = depilage(prog, pileAppel);
                     }
@@ -230,7 +230,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     i->interet = 1;
                     i->typeLiaison = JUMP_INCOND;
                     if (cibleAdress == 0) {
-                        printf("warning : saut inconditionnel indéfini\n");
+                        printf("WARNING : saut inconditionnel indéfini\n");
                         i->interet = SAUT_INCOND_INDEFINI;
                         stop = depilage(prog, pileAppel);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
@@ -246,7 +246,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
-                        printf("warning : un jump essai de sortir du bloc\n");
+                        printf("WARNING : un jump essai de sortir du bloc\n");
                         i->interet = SAUT_INCOND_OUT_OF_BLOCK;
                         stop = depilage(prog, pileAppel);
                     }
@@ -271,7 +271,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("warning : la fin du bloc est atteinte sans rencontrer de point d arret");
+                        printf("WARNING : la fin du bloc est atteinte sans rencontrer de point d arret");
                         i->interet = FIN_BLOC_SANS_POINT_ARRET;
                         stop = depilage(prog, pileAppel);
                     }
@@ -281,7 +281,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     i->interet = 1;
                     i->typeLiaison = JUMP_COND;
                     if (cibleAdress == 0) {
-                        printf("warning : saut conditionnel indéfini\n");
+                        printf("WARNING : saut conditionnel indéfini\n");
                         i->interet = SAUT_COND_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
@@ -307,12 +307,12 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                             addFirstLL(s->listePeres, i);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
-                            printf("warning : un saut conditionnel est dernière instruction du bloc\n");
+                            printf("WARNING : un saut conditionnel est dernière instruction du bloc\n");
                             i->interet = SAUT_COND_FIN_BLOC;
                         }
                     } else if(iniAdress + len < fin){
                         if (cibleAdress != 0) {
-                            printf("warning : un saut conditionnel essai de sortir du bloc\n");
+                            printf("WARNING : un saut conditionnel essai de sortir du bloc\n");
                             i->interet = SAUT_COND_OUT_OF_BLOCK;
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
@@ -327,7 +327,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
-                        printf("warning : un saut conditionnel n'a pas de fils\n");
+                        printf("WARNING : un saut conditionnel n'a pas de fils\n");
                         i->interet = SAUT_COND_TERMINAL;
                         stop = depilage(prog, pileAppel);
                     }
@@ -774,7 +774,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("un hlt\n");
         if (g->listeFils != NULL) {
-            printf("erreur : une instruction terminale a des fils\n");
+            printf("ERREUR : une instruction terminale a des fils\n");
             exit(EXIT_FAILURE);
             //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
             //g->listeFils = NULL;
@@ -785,7 +785,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         g->assemble = 1;
         printf("un ret\n");
         if (g->listeFils != NULL) {
-            printf("erreur : une instruction terminale a des fils\n");
+            printf("ERREUR : une instruction terminale a des fils\n");
             exit(EXIT_FAILURE);
             //terminateLinkedList(g->listeFils); // on ne souhaite pas détruire les éléments de la liste
             //g->listeFils = NULL;
@@ -794,7 +794,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     }
     if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
         g->assemble = 1;
-        printf("warning : une instruction erronée\n");
+        printf("WARNING : une instruction erronée\n");
         if (g->listeFils != NULL) {
             printf("une instruction terminale a des fils\n");
             exit(EXIT_FAILURE);
@@ -806,16 +806,16 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
     if (g->listeFils == NULL) { // normalement seul les ret et les hlt n'ont pas de fils
         g->assemble = 1;
         if (g->typeLiaison == CALL) {
-            printf("warning : call sans fils\n");
+            printf("WARNING : call sans fils\n");
         }
         if (g->typeLiaison == JUMP_INCOND) {
-            printf("warning : jmp sans fils\n");
+            printf("WARNING : jmp sans fils\n");
         }
         if (g->typeLiaison == JUMP_COND) {
-            printf("warning : jne sans fils\n");
+            printf("WARNING : jne sans fils\n");
         }
         if (g->typeLiaison == TERMINAISON) {
-            printf("warning : l'instruction suivante sort du bloc\n");
+            printf("WARNING : l'instruction suivante sort du bloc\n");
         }
         return;
     }
@@ -827,17 +827,17 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 //    }
 //    if (g->typeLiaison == JUMP_COND && g->listeFils == NULL) {
 //        g->assemble = 1;
-//        //printf("warning : un saut conditionnel indéfini sans fils\n");
+//        //printf("WARNING : un saut conditionnel indéfini sans fils\n");
 //        return;
 //    }
 //    if (g->typeLiaison == CALL && g->listeFils == NULL) {
 //        g->assemble = 1;
-//        //printf("warning : un call sans fils\n");
+//        //printf("WARNING : un call sans fils\n");
 //        return;
 //    }
 //    if (g->typeLiaison == TERMINAISON && g->listeFils == NULL) {
 //        g->assemble = 1;
-//        printf("warning : l'instruction suivante sort du bloc");
+//        printf("WARNING : l'instruction suivante sort du bloc");
 //        return;
 //    }
     
@@ -870,7 +870,6 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
-            
             
             
             unsigned long addrCible = etatCible->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
@@ -1016,6 +1015,9 @@ Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
 }
 
 Graphe* ControleFlow(DISASM* prog){
+    printf("ERREUR : cette version (1) n'est plus compatible");
+    printf("avec les spécifications actuelles.\n");
+    exit(EXIT_FAILURE);
     unsigned long taille = prog->SecurityBlock;
     unsigned long debut = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
