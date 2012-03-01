@@ -6,10 +6,11 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-#ifndef LL
-#define LL
+#ifndef desassembleur_Graphe_h
+#define desassembleur_Graphe_h
+
+
 #include "LinkedList.h"
-#endif
 
 /*====== Valeurs possibles de type de liaison =====*/
 
@@ -56,3 +57,5 @@ typedef struct _Graphe{
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;
+
+#endif

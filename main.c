@@ -7,20 +7,10 @@
 #include <sys/stat.h>
 #define BEA_ENGINE_STATIC /* specify the usage of a static version of BeaEngine */
 #define BEA_USE_STDCALL /* specify the usage of a stdcall version of BeaEngine */
-#ifndef BEAENGINE
-#define BEAENGINE
 #include "BeaEngine.h"
-#endif
-
-#ifndef MACH
-#define MACH
 #include "LoaderMach.h"
-#endif
-
-#ifndef DYN
-#define DYN
 #include "dyndesass.h"
-#endif
+#include "Vide.h"
 
 #define CHEMIN "/Users/Hubert/projets/NetBeansProjects/desassembleur-code/tests/recc"
 
@@ -72,13 +62,13 @@ void afficherCFG(desasembleur* desas){
     afficheCF(g);
 }
 
-void afficherFermeture(DISASM* prog){
-    //unsigned long taille = prog->SecurityBlock;
-    //unsigned long pev = prog->VirtualAddr;
-    Graphe* pi = calloc(sizeof(Graphe),prog->SecurityBlock);
-    //int* crible = calloc(sizeof(int), taille);
-    fermeture(prog, pi);
-    //afficheCrible(crible, taille, pev);
+void afficherFermeture(desasembleur* desas){
+    unsigned long taille = desas->prog->SecurityBlock;
+    Graphe* pi = calloc(sizeof(Graphe),taille);
+    fermeture(desas, pi);
+    LinkedList* lVides = newLLFromclassificationVides(pi, taille);
+    afficherVides(lVides, taille);
+    terminatelVides(lVides);
 }
 
 int main(int argc, char* argv []) {
@@ -86,13 +76,15 @@ int main(int argc, char* argv []) {
     DISASM MyDisasm;
     desasembleur desas;
     desas.prog = &MyDisasm;
-    char* chemin = CHEMIN;
-    unsigned long debutBloc = initialiserDISASM(&MyDisasm, chemin);
+    unsigned long debutBloc = initialiserDISASM(&MyDisasm, CHEMIN);
     desas.debut = debutBloc;
     
     afficherCFG(&desas);
-    //afficherFermeture(&MyDisasm);
-    //munmap(debut, size);
+    
+    
+    debutBloc = initialiserDISASM(&MyDisasm, CHEMIN);
+    desas.debut = debutBloc;
+    afficherFermeture(&desas);
     
     return 0;
 }

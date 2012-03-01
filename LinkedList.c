@@ -1,15 +1,5 @@
 #include "LinkedList.h"
 
-#ifndef STDLIB
-#define STDLIB
-#include "stdlib.h"
-#endif
-
-#ifndef STDIO
-#define STDIO
-#include "stdio.h"
-#endif
-
 /* -------------------------------------------------------------------- *
  *                          LINKEDLIST                                  *
  * -------------------------------------------------------------------- */

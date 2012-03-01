@@ -5,6 +5,9 @@
  * Created on 3 janvier 2012, 23:25
  */
 
+#ifndef desassembleur_loaderElf_h
+#define desassembleur_loaderElf_h
+
 #define __LIBELF_INTERNAL__ 1
 
 #include <stdio.h>
@@ -18,3 +21,4 @@
 
 void* loaderElf(void *debut);
 
+#endif

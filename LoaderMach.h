@@ -5,7 +5,8 @@
  * Created on 11 décembre 2011, 20:49
  */
 
-
+#ifndef desassembleur_LoaderMach_h
+#define desassembleur_LoaderMach_h
 
 #include <string.h>
 #include <stdio.h>
@@ -15,11 +16,7 @@
 #include <mach-o/fat.h>
 //#include <mach/thread_status.h>
 
-
-#ifndef BEAENGINE
-#define BEAENGINE
 #include "BeaEngine.h"
-#endif
 
 struct lecteurRegistre {
     uint32_t cmd;
@@ -30,3 +27,5 @@ struct lecteurRegistre {
 };
 
 unsigned long loaderMach(void* debut, DISASM* prog);
+
+#endif

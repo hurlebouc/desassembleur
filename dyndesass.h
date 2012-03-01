@@ -1,7 +1,5 @@
-#ifndef LL
-#define LL
-#include "LinkedList.h"
-#endif
+#ifndef desassembleur_dyndesass_h
+#define desassembleur_dyndesass_h
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,15 +9,9 @@
 #define OPCALL 232
 #define OP
 
-#ifndef GRAPHE
-#define GRAPHE
+#include "LinkedList.h"
 #include "Graphe.h"
-#endif
-
-#ifndef BEAENGINE
-#define BEAENGINE
 #include "BeaEngine.h"
-#endif
 
 //#include <mach-o/loader.h>
 
@@ -39,3 +31,5 @@ Graphe* ControleFlow3(desasembleur* desas);
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);
 void afficheCrible(int* crible, unsigned long taille, unsigned long pev);
+
+#endif

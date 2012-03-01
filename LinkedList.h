@@ -1,7 +1,9 @@
-#ifndef STRING
-#define STRING
+#ifndef desassembleur_LinkedList_h
+#define desassembleur_LinkedList_h
+
 #include <string.h>
-#endif
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct LinkedList
 {
@@ -50,3 +52,6 @@ LinkedList* copieLinkedList(LinkedList* liste);
  a utiliser avec beaucoup de précautions car cette foncion
  ne copie pas les objets pointés par le pointeur valeur
  */
+
+#endif
+
