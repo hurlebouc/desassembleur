@@ -22,6 +22,9 @@
 
 /*========== Valeurs possibles d'interet =========*/
 
+#define SANS_INTERET 0
+#define GO_AND_LEAVE 1
+
 #define OPCODE_INCONNU -1
 #define DEPASSEMENT_BLOC -2
 
@@ -44,12 +47,12 @@
 typedef struct _Graphe{
     unsigned long VirtualAddrLue;       // donne l'adresse de l'instruction lorsque le desassembleur passe dessus
     unsigned long VirtualAddrPointee;   // donne l'adresse de l'instruction lorsque le desassembleur pointe dessus
-    int interet;                        // 1 si est le depart ou l arrivee d une fleche
-    int typeLiaison;                    // JUMP_COND, JUMP_INCOND ou TERMINAISON
-    int assemble;                       // 1 si le graphe fait deja parie du graphe final (assemblage)
-    int lu;                             // 1 si cette instruction a deja ete lu (reperageAppels)
+    int interet;                        // voir les macros
+    int typeLiaison;                    // voir les macros
+    int assemble;                       // 1 si le graphe fait deja partie du graphe final (assemblage)
+    int lu;                             // 1 si cette instruction a deja ete lu (defini dans reperageAppels (déprédié) ou fermeture)
     int affiche;                        // ne sert que dans la fonction d affichage du graphe
-    int debutFonction;
+    int debutFonction;                  // indique si l'indruction est le début d'une fonction (défini dans fermeture ou reperageAppels)
     LinkedList* listeFils;
     LinkedList* listePeres;
 }Graphe;

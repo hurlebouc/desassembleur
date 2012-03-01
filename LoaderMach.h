@@ -13,7 +13,7 @@
 
 #include <mach-o/loader.h>
 #include <mach-o/fat.h>
-#include <mach/thread_status.h>
+//#include <mach/thread_status.h>
 
 
 #ifndef BEAENGINE

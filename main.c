@@ -22,6 +22,8 @@
 #include "dyndesass.h"
 #endif
 
+#define CHEMIN "/Users/Hubert/projets/NetBeansProjects/desassembleur-code/tests/recc"
+
 //#include <mach-o/loader.h>
 
 /**
@@ -84,7 +86,7 @@ int main(int argc, char* argv []) {
     DISASM MyDisasm;
     desasembleur desas;
     desas.prog = &MyDisasm;
-    char* chemin = "/Users/Hubert/Desktop/recc";
+    char* chemin = CHEMIN;
     unsigned long debutBloc = initialiserDISASM(&MyDisasm, chemin);
     desas.debut = debutBloc;
     
