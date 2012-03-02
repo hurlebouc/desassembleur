@@ -34,14 +34,17 @@ void terminatelVides(LinkedList* lVides){
 
 LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille){
     LinkedList* lVides = newLinkedList(); /* liste des listes de vides */
+    unsigned long debutVirtuel = pi->VirtualAddrLue;
     unsigned long i = 0;
     while (i<taille) {
         if (!pi[i].lu) {
             unsigned long debutVide = i;
             Vide* v = malloc(sizeof(Vide));
-            v->debut = pi[i++].VirtualAddrLue;
+            v->debut = debutVirtuel+i;
+            i++;
             while (i<taille && (!pi[i++].lu) ) {}
-            v->taille = i-debutVide;
+            v->taille = i-debutVide - 1;
+            printf("trou de 0x%lx à 0x%lx\n", v->debut, v->debut + v->taille-1);
             LinkedList* container = recherche(lVides, v->taille);
             if (container == NULL) {
                 LinkedList* lClasseVides = newLinkedList();
