@@ -130,7 +130,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
     DISASM* prog = desas->prog;
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
-    unsigned long debut = desas->debut;
+    unsigned long debut = desas->debutVirtuel;
     //unsigned long taille = prog->SecurityBlock;
     unsigned long fin = prog->SecurityBlock + prog->VirtualAddr;
     
@@ -144,31 +144,37 @@ void fermeture(desasembleur* desas, Graphe pi[]){
         printf("0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
         Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddrLue = iniAdress;
+        i->tailleInstruction = len;
+        for (int k = 1; k<len; k++) {
+            if (iniAdress + k < fin) {
+                pi[iniAdress - debut].recouvert = EST_RECOUVERT;
+            }
+        }
                 
         if (len == UNKNOWN_OPCODE) {
             printf("WARNING : le desassembleur a rencontrer un opcode inconnu\n");
 //            crible[iniAdress-debut] = OPCODE_INCONNU; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             i->interet = OPCODE_INCONNU;
-            i->lu = 1;
+            i->lu = EST_LU;
             stop = depilage(prog, pileAppel);
             
         } else if (len == OUT_OF_BLOCK) {
             printf("WARNING : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
 //            crible[iniAdress-debut] = DEPASSEMENT_BLOC; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             i->interet = DEPASSEMENT_BLOC;
-            i->lu = 1;
+            i->lu = EST_LU;
             stop = depilage(prog, pileAppel);
             
-        } else if (/*crible[iniAdress - debut] != 0*/ i->lu){ // si on est deja passé par là
+        } else if (/*crible[iniAdress - debut] != 0*/ i->lu == EST_LU){ // si on est deja passé par là
             stop = depilage(prog, pileAppel); 
                         
         } else {
 //            crible[iniAdress-debut] = 1; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
-            i->lu = 1;
+            i->lu = EST_LU;
             switch (brancheType) {
                     
                 case CallType:
-                    i->interet = 1;
+                    i->interet = GO_AND_LEAVE;
                     i->typeLiaison = CALL;
                     if (cibleAdress == 0) {
                         printf("WARNING : call indéfini\n");
@@ -177,7 +183,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
-                        t->interet = 1;
+                        t->interet = GO_AND_LEAVE;
                         t->debutFonction = 1;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
@@ -190,7 +196,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         if (iniAdress + len < fin) {
                             Graphe* s = &pi[iniAdress + len - debut];
                             s->VirtualAddrPointee = iniAdress + len;
-                            s->interet = 1;
+                            s->interet = GO_AND_LEAVE;
                             addFirstLL(i->listeFils, s);
                             if (s->listePeres == NULL) {
                                 s->listePeres = newLinkedList();
@@ -210,7 +216,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
                         s->VirtualAddrPointee = iniAdress + len;
-                        s->interet = 1;
+                        s->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, s);
                         if (s->listePeres == NULL) {
@@ -227,7 +233,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     break;
                     
                 case JmpType:
-                    i->interet = 1;
+                    i->interet = GO_AND_LEAVE;
                     i->typeLiaison = JUMP_INCOND;
                     if (cibleAdress == 0) {
                         printf("WARNING : saut inconditionnel indéfini\n");
@@ -236,7 +242,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
-                        t->interet = 1;
+                        t->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
                         if (t->listePeres == NULL) {
@@ -253,14 +259,14 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     break;
                     
                 case RetType:
-                    i->interet = 1;
+                    i->interet = GO_AND_LEAVE;
                     i->typeLiaison = RET;
                     stop = depilage(prog, pileAppel);
                     break;
                     
                 case 0: // cas ou il n y a pas de saut
                     if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
-                        i->interet = 1;
+                        i->interet = GO_AND_LEAVE;
                         i->typeLiaison = FIN;
                         stop = depilage(prog, pileAppel);
                     }else if (iniAdress + len < fin) {
@@ -278,7 +284,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     break;
                     
                 default: // cas des jumps conditionnels
-                    i->interet = 1;
+                    i->interet = GO_AND_LEAVE;
                     i->typeLiaison = JUMP_COND;
                     if (cibleAdress == 0) {
                         printf("WARNING : saut conditionnel indéfini\n");
@@ -287,7 +293,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                     if (cibleAdress < fin && cibleAdress>=debut) {
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
-                        t->interet = 1;
+                        t->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
                         if (t->listePeres == NULL) {
@@ -299,7 +305,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         if (iniAdress + len < fin) {
                             Graphe* s = &pi[iniAdress + len - debut];
                             s->VirtualAddrPointee = iniAdress + len;
-                            s->interet = 1;
+                            s->interet = GO_AND_LEAVE;
                             addFirstLL(i->listeFils, s);
                             if (s->listePeres == NULL) {
                                 s->listePeres = newLinkedList();
@@ -317,7 +323,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
                         s->VirtualAddrPointee = iniAdress + len;
-                        s->interet = 1;
+                        s->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, s);
                         if (s->listePeres == NULL) {
@@ -379,8 +385,8 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                     if (brancheType == JmpType && cibleAdress - debut < taille) {
                         Graphe* gTarget = &pi[cibleAdress - debut];
                         gTarget->VirtualAddrPointee = cibleAdress;
-                        gIni->interet = 1;
-                        gTarget->interet = 1;
+                        gIni->interet = GO_AND_LEAVE;
+                        gTarget->interet = GO_AND_LEAVE;
                         gIni->typeLiaison = JUMP_INCOND;
                         gIni->listeFils = newLinkedList(); // on sait qu on ne risque pas d ecraser d autre fils
                                                            // un jump unconditionnel n a qu un fils
@@ -396,8 +402,8 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                         if (cibleAdress < taille + debut) {
                             Graphe* gTarget = &pi[cibleAdress - debut];
                             gTarget->VirtualAddrPointee = cibleAdress;
-                            gIni->interet = 1;
-                            gTarget->interet = 1;
+                            gIni->interet = GO_AND_LEAVE;
+                            gTarget->interet = GO_AND_LEAVE;
                             gIni->typeLiaison = JUMP_COND;
                             gIni->listeFils = newLinkedList(); // on ne risque pas d ecraser des fils
                             addFirstLL(gIni->listeFils, gTarget); // on ajoute la cible du jump
@@ -409,9 +415,9 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                         if (iniAdress + len < taille + debut) {
                             Graphe* gSuivant = &pi[iniAdress - debut + len];
                             gSuivant->VirtualAddrPointee = iniAdress + len;
-                            gIni->interet = 1;
+                            gIni->interet = GO_AND_LEAVE;
                             gIni->typeLiaison = JUMP_COND;
-                            gSuivant->interet = 1;
+                            gSuivant->interet = GO_AND_LEAVE;
                             if (gIni->listeFils == NULL) {
                                 gIni->listeFils = newLinkedList(); // peut etre a t on deja un fils
                             }
@@ -425,7 +431,7 @@ void reperageJump(DISASM* prog, Graphe pi[]){
                 }
                 
                 if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) {
-                    gIni->interet = 1;
+                    gIni->interet = GO_AND_LEAVE;
                     gIni->typeLiaison = FIN;
                 }
                 
@@ -477,7 +483,7 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
         Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddrLue = iniAdress;
         
-        if (i->lu) {
+        if (i->lu == EST_LU) {
             printf("deja lu\n");
             unsigned long addr = (long) removeFirstLL(pileAppel); // on depile
             long decalage = addr - prog->VirtualAddr;
@@ -505,10 +511,10 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                     Graphe* t = &pi[cibleAdress - debut];
                     t->VirtualAddrPointee = cibleAdress;
-                    i->interet = 1;
-                    i->lu = 1;
+                    i->interet = GO_AND_LEAVE;
+                    i->lu = EST_LU;
                     i->typeLiaison = JUMP_INCOND;
-                    t->interet = 1;
+                    t->interet = GO_AND_LEAVE;
                     i->listeFils = newLinkedList();
                     addFirstLL(i->listeFils, t);
                     if (t->listePeres == NULL) {
@@ -527,9 +533,9 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr);
                     Graphe* t = &pi[addr - debut];
                     t->VirtualAddrPointee = addr;
-                    t->interet = 1;
-                    i->interet = 1;
-                    i->lu = 1;
+                    t->interet = GO_AND_LEAVE;
+                    i->interet = GO_AND_LEAVE;
+                    i->lu = EST_LU;
                     i->typeLiaison = JUMP_COND;
                     if (i->listeFils == NULL) {
                         i->listeFils = newLinkedList();
@@ -544,7 +550,7 @@ void reperageAppels(DISASM* prog, Graphe pi[]){
                         printf("depassement anormal du bloc\n");
                         exit(EXIT_FAILURE);
                     }
-                    i->lu = 1;
+                    i->lu = EST_LU;
                     prog->EIP+= len;
                     prog->VirtualAddr += len;
                     prog->SecurityBlock = (int) (fin - prog->VirtualAddr); // = prog->SecurityBlock - len;
@@ -619,8 +625,8 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                     if (brancheType == JmpType && cibleAdress - debut < taille  && cibleAdress >= debut) { // pour les jmp
                         Graphe* t = &pi[cibleAdress - debut];
                         t->VirtualAddrPointee = cibleAdress;
-                        i->interet = 1;
-                        t->interet = 1;
+                        i->interet = GO_AND_LEAVE;
+                        t->interet = GO_AND_LEAVE;
                         i->typeLiaison = JUMP_INCOND;
                         i->listeFils = newLinkedList(); // on sait qu on ne risque pas d ecraser d autre fils
                                                            // un jump unconditionnel n a qu un fils
@@ -638,8 +644,8 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                             //addFirstLL(pileAppel, (void*) iniAdress + len); // on empile
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
-                            i->interet = 1;
-                            t->interet = 1;
+                            i->interet = GO_AND_LEAVE;
+                            t->interet = GO_AND_LEAVE;
                             t->debutFonction = 1;
                             i->listeFils = newLinkedList();
                             addFirstLL(i->listeFils, t);
@@ -651,8 +657,8 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                         if (iniAdress + len < taille + debut) {
                             Graphe* t = &pi[iniAdress + len - debut];
                             t->VirtualAddrPointee = iniAdress + len;
-                            i->interet = 1;
-                            t->interet = 1;
+                            i->interet = GO_AND_LEAVE;
+                            t->interet = GO_AND_LEAVE;
                             if (i->listeFils == NULL) {
                                 i->listeFils = newLinkedList();
                             }
@@ -664,13 +670,13 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                         }
                     } else if(brancheType == RetType){ //pour les ret
                         i->typeLiaison = RET;
-                        i->interet = 1;
+                        i->interet = GO_AND_LEAVE;
                     } else { // pour tout le reste (jne, jla, ...)
                         if (cibleAdress < taille + debut && cibleAdress >= debut) {
                             Graphe* t = &pi[cibleAdress - debut];
                             t->VirtualAddrPointee = cibleAdress;
-                            i->interet = 1;
-                            t->interet = 1;
+                            i->interet = GO_AND_LEAVE;
+                            t->interet = GO_AND_LEAVE;
                             i->typeLiaison = JUMP_COND;
                             i->listeFils = newLinkedList(); // on ne risque pas d ecraser des fils
                             addFirstLL(i->listeFils, t); // on ajoute la cible du jump
@@ -682,9 +688,9 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                         if (iniAdress + len < taille + debut) {
                             Graphe* s = &pi[iniAdress - debut + len];
                             s->VirtualAddrPointee = iniAdress + len;
-                            i->interet = 1;
+                            i->interet = GO_AND_LEAVE;
                             i->typeLiaison = JUMP_COND;
-                            s->interet = 1;
+                            s->interet = GO_AND_LEAVE;
                             if (i->listeFils == NULL) {
                                 i->listeFils = newLinkedList(); // peut etre a t on deja un fils
                             }
@@ -706,7 +712,7 @@ void reperageGlobal(DISASM* prog, Graphe pi[], int pas){
                 break;
         }
         if (strcmp(prog->Instruction.Mnemonic, "hlt ") == 0) { 
-            i->interet = 1;
+            i->interet = GO_AND_LEAVE;
             i->typeLiaison = FIN;
         }
         
@@ -911,7 +917,7 @@ void assembleGraphe_aux(DISASM* prog, Graphe* g){
 
 Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
     DISASM* prog = desas->prog;
-    Graphe* g = &pi[prog->VirtualAddr - desas->debut]; // la premiere instruction est forcement non vide
+    Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
     assembleGraphe_aux(prog, g);
     g->assemble=1;
     return g;
@@ -949,7 +955,7 @@ Graphe* ControleFlow2(desasembleur* desas){
     unsigned long sb = prog->SecurityBlock;
     unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
-    unsigned long taille = sb + virtualAddr - desas->debut;
+    unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
     reperageGlobal(prog, pi, ALL_STEP);
     //afficherPI(pi, taille);
@@ -969,7 +975,7 @@ Graphe* ControleFlow3(desasembleur* desas){
     unsigned long sb = prog->SecurityBlock;
     unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
-    unsigned long taille = sb + virtualAddr - desas->debut;
+    unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
     fermeture(desas, pi);
     //afficherPI(pi, taille);

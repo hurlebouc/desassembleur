@@ -10,7 +10,7 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>beaengine</sourceRootElem>
+                <sourceRootElem>/Users/Hubert/projets/NetBeansProjects/desassembleur-code/trunk/beaengine</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -38,7 +38,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>beaengine</Elem>
+    <Elem>/Users/Hubert/projets/NetBeansProjects/desassembleur-code/trunk/beaengine</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -49,6 +49,9 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <incDir>
+            <pElem>/opt/local/include/libelf</pElem>
+          </incDir>
           <commandLine>-std=c99</commandLine>
         </cTool>
         <linkerTool>

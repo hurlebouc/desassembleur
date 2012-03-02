@@ -78,13 +78,13 @@ int main(int argc, char* argv []) {
     desasembleur desas;
     desas.prog = &MyDisasm;
     unsigned long debutBloc = initialiserDISASM(&MyDisasm, CHEMIN);
-    desas.debut = debutBloc;
+    desas.debutVirtuel = debutBloc;
     
     afficherCFG(&desas);
     
     
     debutBloc = initialiserDISASM(&MyDisasm, CHEMIN);
-    desas.debut = debutBloc;
+    desas.debutVirtuel = debutBloc;
     afficherFermeture(&desas);
     
     return 0;

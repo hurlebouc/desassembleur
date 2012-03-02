@@ -48,6 +48,7 @@
 MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
+TESTDIR=test
 
 
 # build

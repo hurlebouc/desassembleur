@@ -17,7 +17,7 @@
 
 typedef struct _desassembleur{
     DISASM* prog;
-    unsigned long debut;    // debut virtuel du bloc
+    unsigned long debutVirtuel;    // debut virtuel du bloc
 }desasembleur;
 
 void desassemblage_inconditionnel(DISASM* prog);

@@ -70,27 +70,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trunk: ${OBJECTFILES}
 ${OBJECTDIR}/LinkedList.o: LinkedList.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/LinkedList.o LinkedList.c
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/LinkedList.o LinkedList.c
 
 ${OBJECTDIR}/test7.o: test7.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
 
 ${OBJECTDIR}/dyndesass.o: dyndesass.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/LoaderMach.o: LoaderMach.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
 
 # Subprojects
 .build-subprojects:
