@@ -17,8 +17,9 @@
 #include <libelf.h>
 #include <sys/mman.h>	
 #include <fcntl.h>
+#include "BeaEngine.h"
 
 
-void* loaderElf(void *debut);
+unsigned long loaderElf(void *debut,DISASM* prog);
 
 #endif

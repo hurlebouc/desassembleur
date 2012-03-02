@@ -9,6 +9,7 @@
 #define BEA_USE_STDCALL /* specify the usage of a stdcall version of BeaEngine */
 #include "BeaEngine.h"
 #include "LoaderMach.h"
+#include "loaderElf.h"
 #include "dyndesass.h"
 #include "Vide.h"
 
