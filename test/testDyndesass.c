@@ -1,3 +1,11 @@
+//
+//  testDyndesass.c
+//  desassembleur
+//
+//  Created by Hubert Godfroy on 04/03/12.
+//  Copyright (c) 2012 Mines de Nancy. All rights reserved.
+//
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -5,17 +13,21 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+
+#include "../Fichier.h"
 #define BEA_ENGINE_STATIC /* specify the usage of a static version of BeaEngine */
 #define BEA_USE_STDCALL /* specify the usage of a stdcall version of BeaEngine */
-#include "BeaEngine.h"
-#include "LoaderMach.h"
-#include "loaderElf.h"
-#include "dyndesass.h"
-#include "Vide.h"
+#include "../BeaEngine.h"
+#include "../LoaderMach.h"
+#include "../loaderElf.h"
+#include "../dyndesass.h"
+#include "../Vide.h"
 
-#define CHEMIN_RUNTIME "../../../../tests/recc"
+#include "CUnit/Basic.h"
 
-//#include <mach-o/loader.h>
+#define BINAIRE_BUILDTIME "../../tests/recc"
+#define BINAIRE_RUNTIME "../../../../tests/recc"
+#define MODELE_RUNTIME "../../../../tests/recc.dot"
 
 /**
  * Cette fonction desassemble statiquement un binaire.
@@ -34,7 +46,8 @@
  * @param chemin chemin du bianire
  */
 
-unsigned long initialiserDISASM(DISASM* prog, char* chemin){
+unsigned long initDISASM(DISASM* prog, Fichier* binaire){
+    char* chemin = binaire->chemin;
     
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(prog, 0, sizeof (DISASM));
@@ -63,6 +76,11 @@ void afficherCFG(desasembleur* desas){
     afficheCF(g);
 }
 
+void enregistrerCFG(desasembleur* desas, Fichier* tmp){
+    Graphe*g = ControleFlow3(desas);
+    enregistreCF(g, tmp);
+}
+
 void afficherFermeture(desasembleur* desas){
     unsigned long taille = desas->prog->SecurityBlock;
     Graphe* pi = calloc(sizeof(Graphe),taille);
@@ -72,22 +90,36 @@ void afficherFermeture(desasembleur* desas){
     terminatelVides(lVides);
 }
 
-int main(int argc, char* argv []) {
+void test1(void){
     
-    printf("fichier_temp : %s\n", tmpnam(NULL));
+    /********************** INITIALISATION *******************/
+    
+    char chemintmp[L_tmpnam];
+    tmpnam(chemintmp);
+    Fichier* temp = newFichier(chemintmp);
+    Fichier* modele = newFichier(MODELE_RUNTIME);
+    Fichier* binaire = newFichier(BINAIRE_RUNTIME);
     
     DISASM MyDisasm;
     desasembleur desas;
     desas.prog = &MyDisasm;
-    unsigned long debutBloc = initialiserDISASM(&MyDisasm, CHEMIN_RUNTIME);
+    unsigned long debutBloc = initDISASM(&MyDisasm, binaire);
     desas.debutVirtuel = debutBloc;
     
-    afficherCFG(&desas);
+    enregistrerCFG(&desas, temp);
     
-    
-    debutBloc = initialiserDISASM(&MyDisasm, CHEMIN_RUNTIME);
-    desas.debutVirtuel = debutBloc;
-    afficherFermeture(&desas);
-    
-    return 0;
+    long diff = fequals(temp, modele);
+    CU_ASSERT_EQUAL(diff, -1);
 }
+
+
+
+
+
+
+
+
+
+
+
+

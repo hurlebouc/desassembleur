@@ -12,6 +12,7 @@
 #include "LinkedList.h"
 #include "Graphe.h"
 #include "BeaEngine.h"
+#include "Fichier.h"
 
 //#include <mach-o/loader.h>
 
@@ -31,5 +32,7 @@ Graphe* ControleFlow3(desasembleur* desas);
 void afficheCF(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);
 void afficheCrible(int* crible, unsigned long taille, unsigned long pev);
+
+void enregistreCF(Graphe* g, Fichier* tmp);
 
 #endif

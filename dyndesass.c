@@ -1048,10 +1048,70 @@ void afficheCF_aux(Graphe* g){
     }
 }
 
+void enregistreCF_aux(Graphe* g, FILE* graveur){
+    if (g->affiche) {
+        fprintf(graveur, "\"%lx\";\n", g->VirtualAddrLue);
+        return;
+    }
+    if (g->listeFils == NULL) {
+        fprintf(graveur, "\"%lx\"", g->VirtualAddrLue);
+        g->affiche = 1;
+        if (g->typeLiaison == RET) {
+            fprintf(graveur, "[style=filled fillcolor=grey]");
+        }
+        if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
+            fprintf(graveur, "[style=filled fillcolor=red]");
+        }
+        if (g->interet < -2) {
+            fprintf(graveur, "[style=filled fillcolor=orange]");
+        }
+        fprintf(graveur, ";\n");
+        return;
+    }
+    g->affiche = 1;
+    LinkedList* tete = g->listeFils;
+    int totFils = (int) sizeLL(g->listeFils);
+    for (int i = 0; i<totFils; i++) { // on visite tous les fils.
+        Graphe* etatCible = tete->valeur;
+        fprintf(graveur, "\"%lx\"->\"%lx\"", g->VirtualAddrLue, etatCible->VirtualAddrLue);
+        if (g->typeLiaison == CALL) {
+            if (etatCible->debutFonction) {
+                fprintf(graveur, " [color=red];\n");
+            } else {
+                fprintf(graveur, ";\n");
+            }
+            fprintf(graveur, "\"%lx\" [style=filled fillcolor=red]", g->VirtualAddrLue);
+        }
+        if (g->typeLiaison == JUMP_INCOND) {
+            fprintf(graveur, " [color=blue];\n");
+            fprintf(graveur, "\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddrLue);
+        }
+        if (g->typeLiaison == JUMP_COND) {
+            fprintf(graveur, " [color=green];\n");
+            fprintf(graveur, "\"%lx\" [style=filled fillcolor=green]", g->VirtualAddrLue);
+        }
+        fprintf(graveur, ";\n");
+        enregistreCF_aux(etatCible,graveur);
+        tete = tete->suiv;
+    }
+}
+
 void afficheCF(Graphe* g){
     printf("digraph mon_graphe {\n");
     afficheCF_aux(g);
     printf("}\n");
+    return;
+}
+
+void enregistreCF(Graphe* g, Fichier* tmp){
+    printf("enregistrement du résultat... ");
+    FILE* graveur = ouvrirEcriture(tmp);
+    fprintf(graveur, "digraph mon_graphe {\n");
+    enregistreCF_aux(g, graveur);
+    fprintf(graveur, "}");
+    fclose(graveur);
+    printf("(fait)\n");
+    return;
 }
 
 void afficheListeFils(Graphe* g){
