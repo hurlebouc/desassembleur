@@ -9,6 +9,7 @@
 #ifndef desassembleur_testDyndesass_h
 #define desassembleur_testDyndesass_h
 
-void test1(void);
+void cfg_recc(void);
+void cfg_entropie(void);
 
 #endif

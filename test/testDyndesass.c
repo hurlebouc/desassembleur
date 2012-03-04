@@ -90,15 +90,15 @@ void afficherFermeture(desasembleur* desas){
     terminatelVides(lVides);
 }
 
-void test1(void){
+void cfg_recc(void){
     
     /********************** INITIALISATION *******************/
     
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
-    Fichier* modele = newFichier(MODELE_RUNTIME);
-    Fichier* binaire = newFichier(BINAIRE_RUNTIME);
+    Fichier* modele = newFichier("../../../../tests/recc.dot");
+    Fichier* binaire = newFichier("../../../../tests/recc");
     
     DISASM MyDisasm;
     desasembleur desas;
@@ -109,6 +109,34 @@ void test1(void){
     enregistrerCFG(&desas, temp);
     
     long diff = fequals(temp, modele);
+    if (diff == -1) {
+        removeFichier(temp);
+    }
+    CU_ASSERT_EQUAL(diff, -1);
+}
+
+void cfg_entropie(void){
+    
+    /********************** INITIALISATION *******************/
+    
+    char chemintmp[L_tmpnam];
+    tmpnam(chemintmp);
+    Fichier* temp = newFichier(chemintmp);
+    Fichier* modele = newFichier("../../../../tests/entropie.dot");
+    Fichier* binaire = newFichier("../../../../tests/entropie");
+    
+    DISASM MyDisasm;
+    desasembleur desas;
+    desas.prog = &MyDisasm;
+    unsigned long debutBloc = initDISASM(&MyDisasm, binaire);
+    desas.debutVirtuel = debutBloc;
+    
+    enregistrerCFG(&desas, temp);
+    
+    long diff = fequals(temp, modele);
+    if (diff == -1) {
+        removeFichier(temp);
+    }
     CU_ASSERT_EQUAL(diff, -1);
 }
 

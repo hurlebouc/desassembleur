@@ -15,7 +15,7 @@ typedef struct LinkedList
 }LinkedList;
 
 
-LinkedList* newLinkedList();
+LinkedList* newLinkedList(void);
 unsigned long sizeLL(LinkedList* liste);
 unsigned long sizeExtLL(LinkedList* liste);
 

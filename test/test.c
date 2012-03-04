@@ -14,13 +14,13 @@
 
 #include "testDyndesass.h"
 
+char* LOCAL = ".";
+
 #define TRUE 1
 #define FALSE 0
 
 int init_suite_success(void) { return 0; }
-int init_suite_failure(void) { return -1; }
 int clean_suite_success(void) { return 0; }
-int clean_suite_failure(void) { return -1; }
 
 
 int main()
@@ -32,14 +32,15 @@ int main()
         return CU_get_error();
     
     /* add a suite to the registry */
-    pSuite = CU_add_suite("Suite_success", init_suite_success, clean_suite_success);
+    pSuite = CU_add_suite("comparaison CFG", init_suite_success, clean_suite_success);
     if (NULL == pSuite) {
         CU_cleanup_registry();
         return CU_get_error();
     }
     
     /* add the tests to the suite */
-    if ((NULL == CU_add_test(pSuite, "successful_test_1", test1)))
+    if ((NULL == CU_add_test(pSuite, "CFG recc", cfg_recc))||
+        (NULL == CU_add_test(pSuite, "CFG entropie", cfg_entropie)))
     {
         CU_cleanup_registry();
         return CU_get_error();

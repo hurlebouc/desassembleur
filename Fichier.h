@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-
+#define MAX_BUFFER 1024
 
 
 typedef struct fichier {
@@ -87,5 +87,9 @@ unsigned long fsize(Fichier* fichier);
  * @return retourne la valeur de remove(fichier->chemin)
  */
 int removeFichier(Fichier* fichier);
+
+void pushlog(Fichier* f, char* s);
+
+void cleanFile(Fichier* f);
 
 #endif

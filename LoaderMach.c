@@ -12,12 +12,12 @@ unsigned long loaderMach(void* debutReel, DISASM* prog) {
 
 
     // The first bytes of a Mach-O file comprise its header
-    struct mach_header_64 *mh = (struct mach_header_64 *) addr;
+//    struct mach_header_64 *mh = (struct mach_header_64 *) addr;
 
     // Load commands follow the header
     addr += sizeof (struct mach_header_64);
 
-    printf("There are %d load commands\n", mh->ncmds);
+//    printf("There are %d load commands\n", mh->ncmds);
 
     int fini = 0;
     unsigned long debutVirtuel;
@@ -34,9 +34,9 @@ unsigned long loaderMach(void* debutReel, DISASM* prog) {
                     if (strcmp(sec->sectname, "__text") == 0) {
                         fini = 1;
                         debutVirtuel = 0x100000000 + sec->offset; // /*+ sizeof (struct mach_header_64)*/ + (unsigned long) debutReel;
-                        printf("début du bloc : 0x%lx\n", debutVirtuel);
+//                        printf("début du bloc : 0x%lx\n", debutVirtuel);
                         taille = sec->size;
-                        printf("taille du bloc : 0x%lx\n", taille);
+//                        printf("taille du bloc : 0x%lx\n", taille);
                     }
                 }
             }
@@ -54,7 +54,7 @@ unsigned long loaderMach(void* debutReel, DISASM* prog) {
         struct load_command *lc = (struct load_command *) addr;
         if (lc->cmd == LC_UNIXTHREAD) {
             struct lecteurRegistre* t = (struct lecteurRegistre*) addr;
-            printf("point d'entrée : 0x%llx\n", t->state.uts.ts64.__rip);
+//            printf("point d'entrée : 0x%llx\n", t->state.uts.ts64.__rip);
             pev = t->state.uts.ts64.__rip;
             fini = 1;
         }
@@ -70,7 +70,7 @@ unsigned long loaderMach(void* debutReel, DISASM* prog) {
     prog->VirtualAddr = pev;
     prog->SecurityBlock = (unsigned int) (taille - (pev - debutVirtuel));
 
-    printf("\nDone.\n\n");
+//    printf("\nDone.\n\n");
     
     
     

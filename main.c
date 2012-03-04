@@ -14,6 +14,7 @@
 #include "Vide.h"
 
 #define CHEMIN_RUNTIME "../../../../tests/recc"
+char* LOCAL = ".";
 
 //#include <mach-o/loader.h>
 
@@ -34,7 +35,7 @@
  * @param chemin chemin du bianire
  */
 
-unsigned long initialiserDISASM(DISASM* prog, char* chemin){
+static unsigned long initialiserDISASM(DISASM* prog, char* chemin){
     
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(prog, 0, sizeof (DISASM));
@@ -57,13 +58,18 @@ unsigned long initialiserDISASM(DISASM* prog, char* chemin){
     return debutVirtuel;
 }
 
-void afficherCFG(desasembleur* desas){
+static void afficherCFG(desasembleur* desas){
     Graphe*g = ControleFlow3(desas);
     printf("\n");
     afficheCF(g);
 }
 
-void afficherFermeture(desasembleur* desas){
+static void enregistrerCFG(desasembleur* desas, Fichier* tmp){
+    Graphe*g = ControleFlow3(desas);
+    enregistreCF(g, tmp);
+}
+
+static void afficherVide(desasembleur* desas){
     unsigned long taille = desas->prog->SecurityBlock;
     Graphe* pi = calloc(sizeof(Graphe),taille);
     fermeture(desas, pi);
@@ -72,22 +78,40 @@ void afficherFermeture(desasembleur* desas){
     terminatelVides(lVides);
 }
 
+static void enregistrerVide(desasembleur* desas, Fichier* fichier){
+    unsigned long taille = desas->prog->SecurityBlock;
+    Graphe* pi = calloc(sizeof(Graphe),taille);
+    fermeture(desas, pi);
+    LinkedList* lVides = newLLFromclassificationVides(pi, taille);
+    enregistrerVides(lVides, taille, fichier);
+    terminatelVides(lVides);
+}
+
 int main(int argc, char* argv []) {
-    
-    printf("fichier_temp : %s\n", tmpnam(NULL));
+    char chemin_dot[FILENAME_MAX];
+    strcpy(chemin_dot, LOCAL);
+    strcat(chemin_dot, "/graphe.dot");
+    Fichier* dot = newFichier(chemin_dot);
+    cleanFile(dot);
     
     DISASM MyDisasm;
     desasembleur desas;
     desas.prog = &MyDisasm;
     unsigned long debutBloc = initialiserDISASM(&MyDisasm, CHEMIN_RUNTIME);
     desas.debutVirtuel = debutBloc;
+    enregistrerCFG(&desas, dot);
+    closeFichier(dot);
     
-    afficherCFG(&desas);
-    
+    char chemin_vide[FILENAME_MAX];
+    strcpy(chemin_vide, LOCAL);
+    strcat(chemin_vide, "/vide.txt");
+    Fichier* res_vide = newFichier(chemin_vide);
+    cleanFile(res_vide);
     
     debutBloc = initialiserDISASM(&MyDisasm, CHEMIN_RUNTIME);
     desas.debutVirtuel = debutBloc;
-    afficherFermeture(&desas);
-    
+    enregistrerVide(&desas, res_vide);
+    closeFichier(res_vide);
+    printf("done.\n");
     return 0;
 }

@@ -12,6 +12,8 @@
 #include "LinkedList.h"
 #include "Graphe.h"
 #include <stdlib.h>
+#include "Fichier.h"
+extern char* LOCAL;
 
 typedef struct _Vide{
     unsigned long taille;
@@ -20,6 +22,7 @@ typedef struct _Vide{
 
 LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille);
 void afficherVides(LinkedList* lVides, unsigned long tailleProgramme);
+void enregistrerVides(LinkedList* lVides, unsigned long tailleProgramme, Fichier* fichier);
 void terminatelVides(LinkedList* lVides);
 
 #endif

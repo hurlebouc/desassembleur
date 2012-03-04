@@ -4,7 +4,7 @@
  *                          LINKEDLIST                                  *
  * -------------------------------------------------------------------- */
 
-LinkedList* newLinkedList() {
+LinkedList* newLinkedList(void) {
     LinkedList* res = malloc(sizeof (LinkedList));
     res->valeur = NULL;
     res->prec = NULL;

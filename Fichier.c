@@ -24,6 +24,12 @@ void closeFichier(Fichier* f){
     free(f);
 }
 
+void pushlog(Fichier* f, char* s){
+    FILE* graveur = fopen(f->chemin, "a");
+    fprintf(graveur, "%s",s);
+    fclose(graveur);
+}
+
 FILE* ouvrirLecture(Fichier* f){
     FILE* res = fopen(f->chemin, "rb");
     if (res == NULL) {
@@ -77,6 +83,12 @@ unsigned long fsize(Fichier* fichier){
 
 int removeFichier(Fichier* fichier){
     return remove(fichier->chemin);
+}
+
+void cleanFile(Fichier* f){
+    FILE* graveur = ouvrirEcriture(f);
+    fclose(graveur);
+    return;
 }
 
 //-------------------------------------------------------------------------

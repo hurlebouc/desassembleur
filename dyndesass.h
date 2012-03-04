@@ -9,10 +9,15 @@
 #define OPCALL 232
 #define OP
 
+#define AUTO_STEP 0
+#define ALL_STEP 1
+
 #include "LinkedList.h"
 #include "Graphe.h"
 #include "BeaEngine.h"
 #include "Fichier.h"
+
+extern char* LOCAL;
 
 //#include <mach-o/loader.h>
 
@@ -24,6 +29,7 @@ typedef struct _desassembleur{
 void desassemblage_inconditionnel(DISASM* prog);
 
 void fermeture(desasembleur* desas, Graphe pi[]);
+Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]);
 
 Graphe* ControleFlow(DISASM* prog);
 Graphe* ControleFlow2(desasembleur* desas);
