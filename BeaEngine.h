@@ -174,6 +174,7 @@ typedef struct _Disasm {
    PREFIXINFO Prefix;
    InternalDatas Reserved_;
 } DISASM, *PDISASM, *LPDISASM;
+    
 #pragma pack()
 
 #define ESReg 1

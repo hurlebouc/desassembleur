@@ -12,19 +12,15 @@
 #define AUTO_STEP 0
 #define ALL_STEP 1
 
+
 #include "LinkedList.h"
 #include "Graphe.h"
-#include "BeaEngine.h"
+#include "desassembleur.h"
 #include "Fichier.h"
 
 extern char* LOCAL;
 
 //#include <mach-o/loader.h>
-
-typedef struct _desassembleur{
-    DISASM* prog;
-    unsigned long debutVirtuel;    // debut virtuel du bloc
-}desasembleur;
 
 void desassemblage_inconditionnel(DISASM* prog);
 
