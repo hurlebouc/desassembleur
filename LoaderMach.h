@@ -14,9 +14,12 @@
 
 #include <mach-o/loader.h>
 #include <mach-o/fat.h>
+#include <mach-o/getsect.h>
+#include <dlfcn.h>
 //#include <mach/thread_status.h>
 
-#include "BeaEngine.h"
+#include "desassembleur.h"
+#include "Fichier.h"
 
 struct lecteurRegistre {
     uint32_t cmd;
@@ -26,6 +29,6 @@ struct lecteurRegistre {
     struct x86_thread_state state;
 };
 
-unsigned long loaderMach(void* debut, DISASM* prog);
+void loaderMach(desasembleur* desas, Fichier* fichier);
 
 #endif

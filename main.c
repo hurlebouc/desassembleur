@@ -6,9 +6,10 @@
 //#include <sys/mman.h>
 //#include <sys/stat.h>
 
+#include "Fichier.h"
+#include "desassembleur.h"
+#include "loader.h"
 #include "commandes.h"
-
-#define CHEMIN_RUNTIME "../../../../tests/recc"
 
 char* LOCAL = ".";
 
@@ -20,11 +21,14 @@ int main(int argc, char* argv []) {
     cleanFile(res_vide);
     Fichier* binaire = newFichier("../../../../tests/recc");
     
-    desasembleur* desas = newDesassembleur(NULL, binaire);
+    desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
+    
     
     enregistrerVide(desas, res_vide);
     closeFichier(res_vide);
     closeFichier(binaire);
+    terminateDesassembleur(desas);
     printf("done.\n");
     return 0;
 }

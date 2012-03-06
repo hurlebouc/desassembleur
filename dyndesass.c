@@ -135,7 +135,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
 //    FILE* graveur;
     
 //    printf("%s\n",CHEMIN_LOG);
-    DISASM* prog = desas->prog;
+    DISASM* prog = desas->disasm;
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
     unsigned long debut = desas->debutVirtuel;
@@ -962,7 +962,7 @@ Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
     Fichier* fichierlog = newFichier(chemin_log);
     
     pushlog(fichierlog, "début de l'assemblage\n");
-    DISASM* prog = desas->prog;
+    DISASM* prog = desas->disasm;
     Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
     assembleGraphe_aux(prog, g, fichierlog);
     g->assemble=1;
@@ -1019,7 +1019,7 @@ Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
 //}
 
 Graphe* ControleFlow3(desasembleur* desas){
-    DISASM* prog = desas->prog;
+    DISASM* prog = desas->disasm;
     unsigned long sb = prog->SecurityBlock;
     unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;

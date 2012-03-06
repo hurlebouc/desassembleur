@@ -16,7 +16,8 @@ void cfg_recc(void){
     Fichier* modele = newFichier("../../../../tests/recc.dot");
     Fichier* binaire = newFichier("../../../../tests/recc");
     
-    desasembleur* desas = newDesassembleur(NULL, binaire);
+    desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
     
     enregistrerCFG(desas, temp);
     
@@ -35,7 +36,8 @@ void cfg_entropie(void){
     Fichier* modele = newFichier("../../../../tests/entropie.dot");
     Fichier* binaire = newFichier("../../../../tests/entropie");
     
-    desasembleur* desas = newDesassembleur(NULL, binaire);
+    desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
     
     enregistrerCFG(desas, temp);
     
@@ -54,7 +56,8 @@ void cfg_disas(void){
     Fichier* modele = newFichier("../../../../tests/disas.dot");
     Fichier* binaire = newFichier("../../../../tests/disas");
     
-    desasembleur* desas = newDesassembleur(NULL, binaire);
+    desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
     
     enregistrerCFG(desas, temp);
     
@@ -73,7 +76,8 @@ void cfg_handbrake(void){
     Fichier* modele = newFichier("../../../../tests/handbrake.dot");
     Fichier* binaire = newFichier("../../../../tests/handbrake");
     
-    desasembleur* desas = newDesassembleur(NULL, binaire);
+    desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
     
     enregistrerCFG(desas, temp);
     
