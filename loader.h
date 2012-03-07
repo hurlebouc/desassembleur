@@ -11,8 +11,12 @@
 
 #include "Fichier.h"
 #include "desassembleur.h"
+#ifdef __APPLE__
 #include "LoaderMach.h"
+#endif
+#ifdef __linux__
 #include "loaderElf.h"
+#endif
 
 void load(desasembleur* desas, Fichier* fichier);
 
