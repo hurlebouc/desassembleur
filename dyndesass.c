@@ -162,7 +162,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
         }
                 
         if (len == UNKNOWN_OPCODE) {
-            pushlog(fichierlog, "WARNING : le desassembleur a rencontrer un opcode inconnu\n");
+            pushlog(fichierlog, "WARNING : le desassembleur a rencontré un opcode inconnu\n");
 //            fprintf(graveur, "WARNING : le desassembleur a rencontrer un opcode inconnu\n");
 //            crible[iniAdress-debut] = OPCODE_INCONNU; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             i->interet = OPCODE_INCONNU;

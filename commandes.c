@@ -20,7 +20,7 @@ void enregistrerCFG(desasembleur* desas, Fichier* tmp){
 }
 
 void afficherVide(desasembleur* desas){
-    unsigned long taille = desas->disasm->SecurityBlock;
+    unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
     fermeture(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
@@ -29,7 +29,7 @@ void afficherVide(desasembleur* desas){
 }
 
 void enregistrerVide(desasembleur* desas, Fichier* fichier){
-    unsigned long taille = desas->disasm->SecurityBlock;
+    unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
     fermeture(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
