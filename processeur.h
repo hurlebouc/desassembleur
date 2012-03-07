@@ -37,10 +37,52 @@ typedef struct _Processeur{
 	int64	cs;
 	int64	fs;
 	int64	gs;
+    char    CF;
+    char    PF;
+    char    AF;
+    char    ZF;
+    char    SF;
+    char    TF;
+    char    IF;
+    char    DF;
+    char    OF;
 }Processeur;
 
-void add(Processeur* proc, int64 destination, int64 masque); //{destion} &= {masque}
-void call(Processeur* proc, int64 adresse);
-void cmp(Processeur* proc, int64 a, int64 b);
+/*------------ Modifs registres ------------*/
+
+void add(Processeur* proc, int64* destination, int64* masque); //{destion} &= {masque}
+void move(Processeur* proc, int64* dest, int64* source);
+void lea(Processeur* proc, int64* a, int64* b);
+
+/*---------------- sauts -------------------*/
+
+void call(Processeur* proc, int64* adresse);
+
+/*----------------- flags ------------------*/
+
+void cmp(Processeur* proc, int64* a, int64* b);
+
+/*------------------ pile ------------------*/
+
+void push(Processeur* proc, int64* a);
+
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

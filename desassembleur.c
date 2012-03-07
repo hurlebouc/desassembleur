@@ -30,10 +30,6 @@ void terminateDesassembleur(desasembleur* desas){
     free(desas);
 }
 
-static void push(Processeur* proc, int64 val){
-    addFirstLL(proc->pileAppel, (void*) val);
-}
-
 int litInstruction(desasembleur* desas){
     int len = Disasm(desas->disasm);
     

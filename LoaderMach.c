@@ -1,5 +1,17 @@
 #include "LoaderMach.h"
 
+static void initialiserFlags(Processeur* proc,int64 rflags){
+    proc->CF = rflags % 2;
+    proc->PF = rflags % 8;
+    proc->AF = rflags % 32;
+    proc->ZF = rflags % 128;
+    proc->SF = rflags % 256;
+    proc->TF = rflags % 512;
+    proc->IF = rflags % 1024;
+    proc->DF = rflags % 2048;
+    proc->OF = rflags % 4096;
+}
+
 static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
     proc->cs = state.uts.ts64.__cs;
     proc->fs = state.uts.ts64.__fs;
@@ -22,6 +34,7 @@ static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
     proc->rip = state.uts.ts64.__rip;
     proc->rsi = state.uts.ts64.__rsi;
     proc->rsp = state.uts.ts64.__rsp;
+    initialiserFlags(proc, proc->rflags);
 }
 
 void loaderMach(desasembleur* desas, Fichier* fichier) {
@@ -84,7 +97,7 @@ void loaderMach(desasembleur* desas, Fichier* fichier) {
     //===============================================================
     
     const struct section_64* section = getsectbynamefromheader_64(debutReel, "__TEXT", "__text");
-    unsigned long debutVirtuel = section->offset + 0x100000000;
+    unsigned long debutVirtuel = section->addr;
     unsigned long taille = section->size;
     desas->debutVirtuel = debutVirtuel;
     
@@ -104,7 +117,7 @@ void loaderMach(desasembleur* desas, Fichier* fichier) {
     }
     
     
-    unsigned long per = pev - 0x100000000 + (unsigned long) debutReel;
+    unsigned long per = ((unsigned long) debutReel) + pev - (debutVirtuel - section->offset);
     
     prog->EIP = (UIntPtr) per;
     prog->Archi = ARCHI_PROC;
