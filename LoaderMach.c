@@ -1,5 +1,29 @@
 #include "LoaderMach.h"
 
+static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
+    proc->cs = state.uts.ts64.__cs;
+    proc->fs = state.uts.ts64.__fs;
+    proc->gs = state.uts.ts64.__gs;
+    proc->r10 = state.uts.ts64.__r10;
+    proc->r11 = state.uts.ts64.__r11;
+    proc->r12 = state.uts.ts64.__r12;
+    proc->r13 = state.uts.ts64.__r13;
+    proc->r14 = state.uts.ts64.__r14;
+    proc->r15 = state.uts.ts64.__r15;
+    proc->r8 = state.uts.ts64.__r8;
+    proc->r9 = state.uts.ts64.__r9;
+    proc->rax = state.uts.ts64.__rax;
+    proc->rbp = state.uts.ts64.__rbp;
+    proc->rbx = state.uts.ts64.__rbx;
+    proc->rcx = state.uts.ts64.__rcx;
+    proc->rdi = state.uts.ts64.__rdi;
+    proc->rdx = state.uts.ts64.__rdx;
+    proc->rflags = state.uts.ts64.__rflags;
+    proc->rip = state.uts.ts64.__rip;
+    proc->rsi = state.uts.ts64.__rsi;
+    proc->rsp = state.uts.ts64.__rsp;
+}
+
 void loaderMach(desasembleur* desas, Fichier* fichier) {
     
     char* chemin = fichier->chemin;
@@ -73,6 +97,7 @@ void loaderMach(desasembleur* desas, Fichier* fichier) {
             struct lecteurRegistre* t = (struct lecteurRegistre*) addr;
 //            printf("point d'entrée : 0x%llx\n", t->state.uts.ts64.__rip);
             pev = t->state.uts.ts64.__rip;
+            initialiseRegistre(desas->proc, t->state);
             fini = 1;
         }
         addr += lc->cmdsize;

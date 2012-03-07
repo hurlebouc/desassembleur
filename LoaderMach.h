@@ -18,6 +18,7 @@
 #include <dlfcn.h>
 //#include <mach/thread_status.h>
 
+#include "processeur.h"
 #include "desassembleur.h"
 #include "Fichier.h"
 
