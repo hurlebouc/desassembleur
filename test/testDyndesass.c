@@ -25,6 +25,7 @@ void cfg_recc(void){
     if (diff == -1) {
         removeFichier(temp);
     }
+    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -45,6 +46,7 @@ void cfg_entropie(void){
     if (diff == -1) {
         removeFichier(temp);
     }
+    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -65,6 +67,7 @@ void cfg_disas(void){
     if (diff == -1) {
         removeFichier(temp);
     }
+    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -85,6 +88,7 @@ void cfg_handbrake(void){
     if (diff == -1) {
         removeFichier(temp);
     }
+    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 

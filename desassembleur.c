@@ -11,36 +11,33 @@
 
 desasembleur* newDesassembleur(desasembleur* desas){
     
-//    char* chemin = fichier->chemin;
     if (desas == NULL) {
-        DISASM* prog = malloc(sizeof(DISASM));
-        Processeur* proc = malloc(sizeof(Processeur));
         desas = malloc(sizeof(desasembleur));
-        desas->disasm = prog;
-        desas->proc = proc;
+        desas->disasm = malloc(sizeof(DISASM));;
+        desas->proc = malloc(sizeof(Processeur));
+        desas->proc->pileAppel = newLinkedList();
     }
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(desas->disasm, 0, sizeof (DISASM));
     
-//    int fd = open(chemin, O_RDONLY);
-//    struct stat stat_buf;
-//    fstat(fd, &stat_buf);
-//    size_t size = stat_buf.st_size;
-//    /*============================= chargement en mémoire====================*/
-//    void* debut = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
-//    
-//    /*======  c'est ici qu'il faut changer en fonction de l'architecture  =====*/
-//    
-//    unsigned long debutVirtuel = loaderMach(desas, fichier);
-//    
-//    /*=========================================================================*/
-//    
-//    close(fd);
     return desas;
 }
 
 void terminateDesassembleur(desasembleur* desas){
-    free(desas->proc);
     free(desas->disasm);
+    terminateLinkedList(desas->proc->pileAppel); // on utilisera pas de lien vers l'extérieur
+    free(desas->proc);
     free(desas);
+}
+
+static void push(Processeur* proc, int64 val){
+    addFirstLL(proc->pileAppel, (void*) val);
+}
+
+int litInstruction(desasembleur* desas){
+    int len = Disasm(desas->disasm);
+    
+    // Partie chiante ...
+    
+    return len;
 }
