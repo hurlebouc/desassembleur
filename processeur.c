@@ -7,3 +7,8 @@
 //
 
 #include "processeur.h"
+
+void call(Processeur* proc, int64* adresse){
+    proc->rip = *adresse;
+    
+}
