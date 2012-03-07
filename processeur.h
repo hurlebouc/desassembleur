@@ -39,7 +39,7 @@ typedef struct _Processeur{
 	int64	gs;
 }Processeur;
 
-void add(Processeur* proc, int64 destination, int64 masque);
+void add(Processeur* proc, int64 destination, int64 masque); //{destion} &= {masque}
 void call(Processeur* proc, int64 adresse);
 void cmp(Processeur* proc, int64 a, int64 b);
 
