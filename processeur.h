@@ -32,8 +32,8 @@ typedef struct _Processeur{
 	int64	r13;
 	int64	r14;
 	int64	r15;
-	int64	rip;    // Registre IP
-	int64	rflags; // Registre de flags
+	int64	rip;    // registre IP
+	int64	rflags; // registre de flags
 	int64	cs;
 	int64	fs;
 	int64	gs;
@@ -50,30 +50,37 @@ typedef struct _Processeur{
 
 /*------------ Modifs registres ------------*/
 
-void add(Processeur* proc, int64* destination, int64* masque); //{destion} &= {masque}
-void move(Processeur* proc, int64* dest, int64* source);
-void lea(Processeur* proc, int64* a, int64* b);
-void shl(Processeur* proc, int64* reg, int64* val); // shift left
-void shr(Processeur* proc, int64* reg, int64* val);
-void mov(Processeur* proc, int64* a, int64* b);
-void sub(Processeur* proc, int64* a, int64* b);
-void xr(Processeur* proc, int64* a, int64* b); //xor
+void add(Processeur* proc, int len, int64* destination, int64* masque); //{destion} &= {masque}
+void move(Processeur* proc, int len, int64* dest, int64* source);
+void lea(Processeur* proc, int len, int64* a, int64* b);
+void shl(Processeur* proc, int len, int64* reg, int64* val); // shift left
+void shr(Processeur* proc, int len, int64* reg, int64* val);
+void mov(Processeur* proc, int len, int64* a, int64* b);
+void sub(Processeur* proc, int len, int64* a, int64* b);
+void xr(Processeur* proc, int len, int64* a, int64* b); //xor
 
 
 /*---------------- sauts -------------------*/
 
-void call(Processeur* proc, int64* adresse);
-void jmp(Processeur* proc, int64);
-void jne(Processeur* proc, int64);
+void call(Processeur* proc, int len, int64* adresse);
+void jmp(Processeur* proc, int64* adresse);
+void jne(Processeur* proc, int len, int64* adresse);
+void ja(Processeur* proc, int len, int64* adresse);
+void jb(Processeur* proc, int len, int64* adresse);
+void jbe(Processeur* proc, int len, int64* adresse);
+void je(Processeur* proc, int len, int64* adresse);
+void jg(Processeur* proc, int len, int64* adresse);
+void jle(Processeur* proc, int len, int64* adresse);
+void ret(Processeur* proc);
 
 /*----------------- flags ------------------*/
 
-void cmp(Processeur* proc, int64* a, int64* b);
+void cmp(Processeur* proc, int len, int64* a, int64* b);
 
 /*------------------ pile ------------------*/
 
-void push(Processeur* proc, int64* a);
-void pop(Processeur* proc, int64* reg);
+void push(Processeur* proc, int len, int64* a);
+void pop(Processeur* proc, int len, int64* reg);
 
 #endif
 
