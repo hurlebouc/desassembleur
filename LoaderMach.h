@@ -8,6 +8,10 @@
 #ifndef desassembleur_LoaderMach_h
 #define desassembleur_LoaderMach_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,4 +36,8 @@ struct lecteurRegistre {
 
 void loaderMach(desasembleur* desas, Fichier* fichier);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

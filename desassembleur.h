@@ -9,6 +9,10 @@
 #ifndef desassembleur_desassembleur_h
 #define desassembleur_desassembleur_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -39,4 +43,8 @@ void terminateDesassembleur(desasembleur* desas);
 
 int litInstruction(desasembleur* desas);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

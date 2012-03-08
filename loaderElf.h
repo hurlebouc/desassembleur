@@ -8,6 +8,10 @@
 #ifndef desassembleur_loaderElf_h
 #define desassembleur_loaderElf_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __LIBELF_INTERNAL__ 1
 
 #include <stdio.h>
@@ -22,4 +26,8 @@
 
 unsigned long loaderElf(void *debut,DISASM* prog);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

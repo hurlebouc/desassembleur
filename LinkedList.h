@@ -1,6 +1,10 @@
 #ifndef desassembleur_LinkedList_h
 #define desassembleur_LinkedList_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -52,6 +56,10 @@ LinkedList* copieLinkedList(LinkedList* liste);
  a utiliser avec beaucoup de précautions car cette foncion
  ne copie pas les objets pointés par le pointeur valeur
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

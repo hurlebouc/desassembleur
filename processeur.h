@@ -9,6 +9,10 @@
 #ifndef desassembleur_processeur_h
 #define desassembleur_processeur_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include "LinkedList.h"
 
@@ -83,6 +87,10 @@ void _cmp(Processeur* proc, int len, int64* a, int64* b);
 void _push(Processeur* proc, int len, int64* a);
 void _pop(Processeur* proc, int len, int64* reg);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif
 
 

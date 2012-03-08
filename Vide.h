@@ -9,6 +9,10 @@
 #ifndef desassembleur_Vide_h
 #define desassembleur_Vide_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include "LinkedList.h"
 #include "Graphe.h"
@@ -25,4 +29,8 @@ void afficherVides(LinkedList* lVides, unsigned long tailleProgramme);
 void enregistrerVides(LinkedList* lVides, unsigned long tailleProgramme, Fichier* fichier);
 void terminatelVides(LinkedList* lVides);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

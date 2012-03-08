@@ -9,6 +9,9 @@
 #ifndef desassembleur_Graphe_h
 #define desassembleur_Graphe_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "LinkedList.h"
 
@@ -63,4 +66,8 @@ typedef struct _Graphe{
     LinkedList* listePeres;
 }Graphe;
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

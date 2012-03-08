@@ -1,6 +1,10 @@
 #ifndef desassembleur_dyndesass_h
 #define desassembleur_dyndesass_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,4 +41,8 @@ void afficheCrible(int* crible, unsigned long taille, unsigned long pev);
 
 void enregistreCF(Graphe* g, Fichier* tmp);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

@@ -9,6 +9,10 @@
 #ifndef desassembleur_loader_h
 #define desassembleur_loader_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "Fichier.h"
 #include "desassembleur.h"
 #ifdef __APPLE__
@@ -20,4 +24,8 @@
 
 void load(desasembleur* desas, Fichier* fichier);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

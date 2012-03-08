@@ -16,6 +16,10 @@
 #ifndef desassembleur_Fichier_h
 #define desassembleur_Fichier_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -91,5 +95,9 @@ int removeFichier(Fichier* fichier);
 void pushlog(Fichier* f, char* s);
 
 void cleanFile(Fichier* f);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

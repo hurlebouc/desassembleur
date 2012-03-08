@@ -9,16 +9,20 @@
 #ifndef desassembleur_commades_h
 #define desassembleur_commades_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "dyndesass.h"
 #include "Vide.h"
-
-#include "CUnit/Basic.h"
-
 
 void afficherCFG(desasembleur* desas);
 void enregistrerCFG(desasembleur* desas, Fichier* tmp);
 void afficherVide(desasembleur* desas);
 void enregistrerVide(desasembleur* desas, Fichier* fichier);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif
