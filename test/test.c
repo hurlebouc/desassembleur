@@ -14,6 +14,7 @@
 
 #include "testDyndesass.h"
 #include "testVide.h"
+#include "CUnit/CUCurses.h"
 
 char* LOCAL = ".";
 
@@ -87,6 +88,9 @@ int main()
     /* Run all tests using the console interface */
     //CU_console_run_tests();
     
+    /* Run all tests using the curses interface */
+    /* (only on systems having curses) */
+    //CU_curses_run_tests();
     
     /* Clean up registry and return */
     CU_cleanup_registry();

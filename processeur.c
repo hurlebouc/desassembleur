@@ -13,66 +13,74 @@ void call(Processeur* proc, int len, int64* adresse){
     proc->rip = *adresse;
 }
 
-void jmp(Processeur* proc, int64* adresse){
+void _jmp(Processeur* proc, int64* adresse){
     proc->rip = *adresse;
 }
 
-void jne(Processeur* proc, int len, int64* adresse){
+void _jne(Processeur* proc, int len, int64* adresse){
     if (!proc->ZF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void je(Processeur* proc, int len, int64* adresse){
+void _je(Processeur* proc, int len, int64* adresse){
     if (proc->ZF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void ja(Processeur* proc, int len, int64* adresse){
+void _ja(Processeur* proc, int len, int64* adresse){
     if (!proc->ZF && !proc->CF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void jb(Processeur* proc, int len, int64* adresse){
+void _jb(Processeur* proc, int len, int64* adresse){
     if (proc->CF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void jbe(Processeur* proc, int len, int64* adresse){
+void _jbe(Processeur* proc, int len, int64* adresse){
     if (proc->ZF || proc->CF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void jg(Processeur* proc, int len, int64* adresse){
+void _jg(Processeur* proc, int len, int64* adresse){
     if (!proc->ZF && proc->SF == proc->OF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
-void jle(Processeur* proc, int len, int64* adresse){
+void _jle(Processeur* proc, int len, int64* adresse){
     if (proc->ZF || proc->SF != proc->OF) {
-        jmp(proc, adresse);
+        _jmp(proc, adresse);
     } else {
         proc->rip += len;
     }
 }
 
+void _add(Processeur* proc, int64* destination, int64* masque){
+    *destination += *masque;
+    // pas fini
+}
+
+void _move(int64* dest, int64* source){
+    *dest = *source;
+}
 
 
 
