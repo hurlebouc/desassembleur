@@ -9,6 +9,7 @@
 #ifndef desassembleur_testVide_h
 #define desassembleur_testVide_h
 
+#include "CUnit/Basic.h"
 #include "../commandes.h"
 
 #define BINAIRE_BUILDTIME "../../tests/recc"

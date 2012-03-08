@@ -9,6 +9,7 @@
 #ifndef desassembleur_testDyndesass_h
 #define desassembleur_testDyndesass_h
 
+#include "CUnit/Basic.h"
 #include "../Fichier.h"
 #include "../desassembleur.h"
 #include "../loader.h"
