@@ -8,8 +8,8 @@
 
 #include "registre.h"
 
-registre* newRegistreFeuille(int t, uint64_t v){
-    registre* reg = malloc(sizeof(registre));
+Registre* newRegistreFeuille(int t, uint64_t v){
+    Registre* reg = malloc(sizeof(Registre));
     reg->taille = t;
     reg->valeur = v;
     reg->filsh = NULL;
@@ -17,8 +17,8 @@ registre* newRegistreFeuille(int t, uint64_t v){
     return reg;
 }
 
-registre* newRegistreFilsUnique(registre* fils){
-    registre* reg = malloc(sizeof(registre));
+Registre* newRegistreFilsUnique(Registre* fils){
+    Registre* reg = malloc(sizeof(Registre));
     reg->taille = 2*fils->taille;
     reg->valeur = -1;
     reg->filsl = fils;
@@ -26,8 +26,8 @@ registre* newRegistreFilsUnique(registre* fils){
     return reg;
 }
 
-registre* newRegistreDeuxFils(registre* filsh, registre* filsl){
-    registre* reg = malloc(sizeof(registre));
+Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
+    Registre* reg = malloc(sizeof(Registre));
     reg->filsh = filsh;
     reg->filsl = filsl;
     reg->taille = filsh->taille + filsl->taille;
@@ -35,14 +35,14 @@ registre* newRegistreDeuxFils(registre* filsh, registre* filsl){
     return reg;
 }
 
-uint64_t getValeur(registre* reg){
+uint64_t getValeur(Registre* reg){
     if (reg->filsl == NULL) {
         return reg->valeur;
     }
     return getValeur(reg->filsl) + getValeur(reg->filsh)*pow(2, reg->filsl->taille);
 }
 
-uint64_t setValeur(registre* reg, uint64_t n){
+uint64_t setValeur(Registre* reg, uint64_t n){
     uint64_t p = pow((long double) 2, reg->taille);
     uint64_t reste = n % p;
     //this->valeur = reste;
@@ -56,4 +56,8 @@ uint64_t setValeur(registre* reg, uint64_t n){
         reg->valeur = reste;
     }
     return n - reste; // différent de 0 lorsque ne peut pas être stocké dans le registre
+}
+
+void copieVal(Registre* dest, Registre* src){
+    setValeur(dest, getValeur(src));
 }

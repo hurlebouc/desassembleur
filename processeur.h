@@ -12,85 +12,126 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    
 #include <stdio.h>
 #include "LinkedList.h"
-
-typedef unsigned long long int64;
-
-typedef struct _Processeur{
-    LinkedList* pileAppel;
-    int64	rax;
-	int64	rbx;
-	int64	rcx;
-	int64	rdx;
-	int64	rdi;
-	int64	rsi;
-	int64	rbp;    // souvent une copie de rsp
-	int64	rsp;    // stack pointer
-	int64	r8;
-	int64	r9;
-	int64	r10;
-	int64	r11;
-	int64	r12;
-	int64	r13;
-	int64	r14;
-	int64	r15;
-	int64	rip;    // registre IP
-	int64	rflags; // registre de flags
-	int64	cs;
-	int64	fs;
-	int64	gs;
-    char    CF;     // carry flag (retenue)
-    char    PF;     // parity flag
-    char    AF;     // auxiliary flag (retenue aux)
-    char    ZF;     // zero flag
-    char    SF;     // sign flag
-    char    TF;     // single step flag (debugage)
-    char    IF;     // interrupt flag
-    char    DF;     // direction flag (chaine)
-    char    OF;     // overfolw flag
-}Processeur;
-
-/*------------ Modifs registres ------------*/
-
-void _and(int64 a, int64 b);
-void _add(Processeur* proc, int64* destination, int64* masque); //{destion} &= {masque}
-void _move(int64* dest, int64* source);
-void _lea(Processeur* proc, int len, int64* a, int64* b);
-void _shl(Processeur* proc, int len, int64* reg, int64* val); // shift left
-void _shr(Processeur* proc, int len, int64* reg, int64* val);
-void _mov(Processeur* proc, int len, int64* a, int64* b);
-void _sub(Processeur* proc, int len, int64* a, int64* b);
-void _xor(Processeur* proc, int len, int64* a, int64* b); //xor
-
-
-/*---------------- sauts -------------------*/
-
-void _call(Processeur* proc, int len, int64* adresse);
-void _jmp(Processeur* proc, int64* adresse);
-void _jne(Processeur* proc, int len, int64* adresse);
-void _ja(Processeur* proc, int len, int64* adresse);
-void _jb(Processeur* proc, int len, int64* adresse);
-void _jbe(Processeur* proc, int len, int64* adresse);
-void _je(Processeur* proc, int len, int64* adresse);
-void _jg(Processeur* proc, int len, int64* adresse);
-void _jle(Processeur* proc, int len, int64* adresse);
-void _ret(Processeur* proc);
-
-/*----------------- flags ------------------*/
-
-void _cmp(Processeur* proc, int len, int64* a, int64* b);
-
-/*------------------ pile ------------------*/
-
-void _push(Processeur* proc, int len, int64* a);
-void _pop(Processeur* proc, int len, int64* reg);
-
+#include "registre.h"
+    
+    
+    typedef struct _Processeur{
+        LinkedList* stack;
+        
+        Registre*	rax;
+        Registre*   eax;    // ne pas détruire
+        Registre*   ax;     // ne pas détruire
+        Registre*   ah;     // ne pas détruire
+        Registre*   al;     // ne pas détruire
+        
+        Registre*	rbx;
+        Registre*	ebx;    // ne pas détruire
+        Registre*	bx;     // ne pas détruire
+        Registre*	bh;     // ne pas détruire
+        Registre*	bl;     // ne pas détruire
+        
+        Registre*	rcx;
+        Registre*	ecx;    // ne pas détruire
+        Registre*	cx;     // ne pas détruire
+        Registre*	ch;     // ne pas détruire
+        Registre*	cl;     // ne pas détruire
+        
+        Registre*	rdx;
+        Registre*	edx;    // ne pas détruire
+        Registre*	dx;     // ne pas détruire
+        Registre*	dh;     // ne pas détruire
+        Registre*	dl;     // ne pas détruire
+        
+        Registre*	rdi;
+        Registre*   edi;    // ne pas détruire
+        
+        Registre*	rsi;
+        Registre*   esi;    // ne pas détruire
+        
+        Registre*	rbp;    // souvent une copie de rsp
+        Registre*   ebp;    // ne pas détruire
+        
+        Registre*	rsp;    // stack pointer
+        Registre*   esp;    // ne pas détruire
+        
+        Registre*	rip;
+        Registre*   eip;    // ne pas détruire
+        
+        Registre*	rflags;
+        Registre*   eflags; // ne pas détruire
+        
+        Registre*	r8;
+        Registre*	r9;
+        Registre*	r10;
+        Registre*	r11;
+        Registre*	r12;
+        Registre*	r13;
+        Registre*	r14;
+        Registre*	r15;
+        
+        Registre*	cs;     // tenir compte des 32 bits et 64 bits
+        Registre*   ds;     // tenir compte des 32 bits et 64 bits
+        Registre*   ss;     // tenir compte des 32 bits et 64 bits
+        Registre*   es;     // tenir compte des 32 bits et 64 bits
+        Registre*	fs;     // tenir compte des 32 bits et 64 bits
+        Registre*	gs;     // tenir compte des 32 bits et 64 bits
+        
+        int8_t    CF;     // carry flag (retenue)
+        int8_t    PF;     // parity flag
+        int8_t    AF;     // auxiliary flag (retenue aux)
+        int8_t    ZF;     // zero flag
+        int8_t    SF;     // sign flag
+        int8_t    TF;     // single step flag (debugage)
+        int8_t    IF;     // interrupt flag
+        int8_t    DF;     // direction flag (chaine)
+        int8_t    OF;     // overfolw flag
+    }Processeur;
+    
+    Processeur* newProcesseur();
+    void terminateProcesseur(Processeur* proc);
+    
+    /*------------ Modifs registres ------------*/
+    
+    void _and(Processeur* proc, Registre* a, Registre* b);
+    void _add(Processeur* proc, Registre* destination, Registre* masque); //{destion} &= {masque}
+    void _move(Registre* dest, Registre* source);
+    void _lea(Processeur* proc, int len, Registre* a, Registre* b);
+    void _shl(Processeur* proc, int len, Registre* reg, Registre* val); // shift left
+    void _shr(Processeur* proc, int len, Registre* reg, Registre* val);
+    void _mov(Processeur* proc, int len, Registre* a, Registre* b);
+    void _sub(Processeur* proc, int len, Registre* a, Registre* b);
+    void _xor(Processeur* proc, int len, Registre* a, Registre* b); //xor
+    
+    
+    /*---------------- sauts -------------------*/
+    
+    void _call(Processeur* proc, int len, Registre* adresse);
+    void _jmp(Processeur* proc, Registre* adresse);
+    void _jne(Processeur* proc, int len, Registre* adresse);
+    void _ja(Processeur* proc, int len, Registre* adresse);
+    void _jb(Processeur* proc, int len, Registre* adresse);
+    void _jbe(Processeur* proc, int len, Registre* adresse);
+    void _je(Processeur* proc, int len, Registre* adresse);
+    void _jg(Processeur* proc, int len, Registre* adresse);
+    void _jle(Processeur* proc, int len, Registre* adresse);
+    void _ret(Processeur* proc);
+    
+    /*----------------- flags ------------------*/
+    
+    void _cmp(Processeur* proc, int len, Registre* a, Registre* b);
+    
+    /*------------------ pile ------------------*/
+    
+    void _push(Processeur* proc, int len, Registre* a);
+    void _pop(Processeur* proc, int len, Registre* reg);
+    
 #ifdef __cplusplus
 }
 #endif
-    
+
 #endif
 
 

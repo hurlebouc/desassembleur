@@ -15,7 +15,7 @@ desasembleur* newDesassembleur(desasembleur* desas){
         desas = malloc(sizeof(desasembleur));
         desas->disasm = malloc(sizeof(DISASM));;
         desas->proc = malloc(sizeof(Processeur));
-        desas->proc->pileAppel = newLinkedList();
+        desas->proc->stack = newLinkedList();
     }
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(desas->disasm, 0, sizeof (DISASM));
@@ -25,7 +25,7 @@ desasembleur* newDesassembleur(desasembleur* desas){
 
 void terminateDesassembleur(desasembleur* desas){
     free(desas->disasm);
-    terminateLinkedList(desas->proc->pileAppel); // on utilisera pas de lien vers l'extérieur
+    terminateLinkedList(desas->proc->stack); // on utilisera pas de lien vers l'extérieur
     free(desas->proc);
     free(desas);
 }
