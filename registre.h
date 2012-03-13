@@ -34,6 +34,10 @@ extern "C" {
     
     uint64_t getValeur(Registre* reg);
     
+    /**
+     * Le paramètre n est trop petit : il faut utiliser un type plus grand
+     */
+    
     uint64_t setValeur(Registre* reg, uint64_t n); // retourne ce qu'il reste à attribuer
     void copieVal(Registre* dest, Registre* src);
     
