@@ -17,6 +17,75 @@ extern "C" {
 #include "LinkedList.h"
 #include "registre.h"
     
+#define _RAX proc->rax
+#define _EAX proc->eax
+#define _AX  proc->ax
+#define _AH  proc->ah
+#define _AL  proc->al
+    
+#define _RBX proc->rbx
+#define _EBX proc->ebx
+#define _BX  proc->bx
+#define _BH  proc->bh
+#define _BL  proc->bl
+    
+#define _RCX proc->rcx
+#define _ECX proc->ecx
+#define _CX  proc->cx
+#define _CH  proc->ch
+#define _CL  proc->cl
+    
+#define _RDX proc->rdx
+#define _EDX proc->edx
+#define _DX  proc->dx
+#define _DH  proc->dh
+#define _DL  proc->dl
+    
+#define _RDI proc->rdi
+#define _EDI proc->edi
+    
+#define _RSI proc->rsi
+#define _ESI proc->esi
+    
+#define _RBP proc->rbp
+#define _EBP proc->ebp
+    
+#define _RSP proc->rsp
+#define _ESP proc->esp
+    
+#define _RIP proc->rip
+#define _EIP proc->eip
+    
+#define _RFLAGS proc->rflags
+#define _EFLAGS proc->eflags
+    
+#define _R8  proc->r8
+#define _R9  proc->r9
+#define _R10  proc->r10
+#define _R11  proc->r11
+#define _R12  proc->r12
+#define _R13  proc->r13
+#define _R14  proc->r14
+#define _R15  proc->r15
+    
+#define _CS  proc->cs
+#define _DS  proc->ds
+#define _SS  proc->ss
+#define _ES  proc->es
+#define _FS  proc->fs
+#define _GS  proc->gs
+    
+#define _CF proc->_cf
+#define _PF proc->_pf
+#define _AF proc->_af
+#define _ZF proc->_zf
+#define _SF proc->_sf
+#define _TF proc->_tf
+#define _IF proc->_if
+#define _DF proc->_df
+#define _OF proc->_of
+    
+#define STACK proc->stack
     
     typedef struct _Processeur{
         LinkedList* stack;
@@ -79,15 +148,15 @@ extern "C" {
         Registre*	fs;     // tenir compte des 32 bits et 64 bits
         Registre*	gs;     // tenir compte des 32 bits et 64 bits
         
-        int8_t    CF;     // carry flag (retenue)
-        int8_t    PF;     // parity flag
-        int8_t    AF;     // auxiliary flag (retenue aux)
-        int8_t    ZF;     // zero flag
-        int8_t    SF;     // sign flag
-        int8_t    TF;     // single step flag (debugage)
-        int8_t    IF;     // interrupt flag
-        int8_t    DF;     // direction flag (chaine)
-        int8_t    OF;     // overfolw flag
+        int8_t    _cf;     // carry flag (retenue)
+        int8_t    _pf;     // parity flag
+        int8_t    _af;     // auxiliary flag (retenue aux)
+        int8_t    _zf;     // zero flag
+        int8_t    _sf;     // sign flag
+        int8_t    _tf;     // single step flag (debugage)
+        int8_t    _if;     // interrupt flag
+        int8_t    _df;     // direction flag (chaine)
+        int8_t    _of;     // overflow flag
     }Processeur;
     
     Processeur* newProcesseur();
@@ -97,36 +166,35 @@ extern "C" {
     
     void _and(Processeur* proc, Registre* a, Registre* b);
     void _add(Processeur* proc, Registre* destination, Registre* masque); //{destion} &= {masque}
-    void _move(Registre* dest, Registre* source);
-    void _lea(Processeur* proc, int len, Registre* a, Registre* b);
-    void _shl(Processeur* proc, int len, Registre* reg, Registre* val); // shift left
-    void _shr(Processeur* proc, int len, Registre* reg, Registre* val);
-    void _mov(Processeur* proc, int len, Registre* a, Registre* b);
-    void _sub(Processeur* proc, int len, Registre* a, Registre* b);
-    void _xor(Processeur* proc, int len, Registre* a, Registre* b); //xor
+    void _lea(Processeur* proc, Registre* a, Registre* b);
+    void _shl(Processeur* proc, Registre* reg, Registre* val); // shift left
+    void _shr(Processeur* proc, Registre* reg, Registre* val);
+    void _mov(Processeur* proc, Registre* a, Registre* b);
+    void _sub(Processeur* proc, Registre* a, Registre* b);
+    void _xor(Processeur* proc, Registre* a, Registre* b); //xor
     
     
     /*---------------- sauts -------------------*/
     
-    void _call(Processeur* proc, int len, Registre* adresse);
+    void _call(Processeur* proc, int lenInstr, Registre* adresse);
     void _jmp(Processeur* proc, Registre* adresse);
-    void _jne(Processeur* proc, int len, Registre* adresse);
-    void _ja(Processeur* proc, int len, Registre* adresse);
-    void _jb(Processeur* proc, int len, Registre* adresse);
-    void _jbe(Processeur* proc, int len, Registre* adresse);
-    void _je(Processeur* proc, int len, Registre* adresse);
-    void _jg(Processeur* proc, int len, Registre* adresse);
-    void _jle(Processeur* proc, int len, Registre* adresse);
+    void _jne(Processeur* proc, int lenInstr, Registre* adresse);
+    void _ja(Processeur* proc, int lenInstr, Registre* adresse);
+    void _jb(Processeur* proc, int lenInstr, Registre* adresse);
+    void _jbe(Processeur* proc, int lenInstr, Registre* adresse);
+    void _je(Processeur* proc, int lenInstr, Registre* adresse);
+    void _jg(Processeur* proc, int lenInstr, Registre* adresse);
+    void _jle(Processeur* proc, int lenInstr, Registre* adresse);
     void _ret(Processeur* proc);
     
     /*----------------- flags ------------------*/
     
-    void _cmp(Processeur* proc, int len, Registre* a, Registre* b);
+    void _cmp(Processeur* proc, int lenInstr, Registre* a, Registre* b);
     
     /*------------------ pile ------------------*/
     
-    void _push(Processeur* proc, int len, Registre* a);
-    void _pop(Processeur* proc, int len, Registre* reg);
+    void _push(Processeur* proc, int lenInstr, Registre* a);
+    void _pop(Processeur* proc, int lenInstr, Registre* reg);
     
 #ifdef __cplusplus
 }

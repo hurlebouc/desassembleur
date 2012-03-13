@@ -8,128 +8,67 @@
 
 #include "processeur.h"
 
-#define RAX proc->rax
-#define EAX proc->eax
-#define AX  proc->ax
-#define AH  proc->ah
-#define AL  proc->al
 
-#define RBX proc->rbx
-#define EBX proc->ebx
-#define BX  proc->bx
-#define BH  proc->bh
-#define BL  proc->bl
-
-#define RCX proc->rcx
-#define ECX proc->ecx
-#define CX  proc->cx
-#define CH  proc->ch
-#define CL  proc->cl
-
-#define RDX proc->rdx
-#define EDX proc->edx
-#define DX  proc->dx
-#define DH  proc->dh
-#define DL  proc->dl
-
-#define RDI proc->rdi
-#define EDI proc->edi
-
-#define RSI proc->rsi
-#define ESI proc->esi
-
-#define RBP proc->rbp
-#define EBP proc->ebp
-
-#define RSP proc->rsp
-#define ESP proc->esp
-
-#define RIP proc->rip
-#define EIP proc->eip
-
-#define RFLAGS proc->rflags
-#define EFLAGS proc->eflags
-
-#define R8  proc->r8
-#define R9  proc->r9
-#define R10  proc->r10
-#define R11  proc->r11
-#define R12  proc->r12
-#define R13  proc->r13
-#define R14  proc->r14
-#define R15  proc->r15
-
-#define CS  proc->cs
-#define DS  proc->ds
-#define SS  proc->ss
-#define ES  proc->es
-#define FS  proc->fs
-#define GS  proc->gs
-
-#define CF proc->CF
-#define PF proc->PF
-#define AF proc->AF
-#define ZF proc->ZF
-#define SF proc->SF
-#define TF proc->TF
-#define IF proc->IF
-#define DF proc->DF
-#define OF proc->OF
-
-#define STACK proc->stack
 
 Processeur* newProcesseur(){
     Processeur* proc = malloc(sizeof(Processeur));
-    AL = newRegistreFeuille(8, 0);
-    AH = newRegistreFeuille(8, 0);
-    AX = newRegistreDeuxFils(AH, AL);
-    EAX = newRegistreFilsUnique(AX);
-    RAX = newRegistreFilsUnique(EAX);
+    _AL = newRegistreFeuille(8, 0);
+    _AH = newRegistreFeuille(8, 0);
+    _AX = newRegistreDeuxFils(_AH, _AL);
+    _EAX = newRegistreFilsUnique(_AX);
+    _RAX = newRegistreFilsUnique(_EAX);
     
-    BL = newRegistreFeuille(8, 0);
-    BH = newRegistreFeuille(8, 0);
-    BX = newRegistreDeuxFils(BH, BL);
-    EBX = newRegistreFilsUnique(BX);
-    RBX = newRegistreFilsUnique(EBX);
+    _BL = newRegistreFeuille(8, 0);
+    _BH = newRegistreFeuille(8, 0);
+    _BX = newRegistreDeuxFils(_BH, _BL);
+    _EBX = newRegistreFilsUnique(_BX);
+    _RBX = newRegistreFilsUnique(_EBX);
     
-    CL = newRegistreFeuille(8, 0);
-    CH = newRegistreFeuille(8, 0);
-    CX = newRegistreDeuxFils(CH, CL);
-    ECX = newRegistreFilsUnique(CX);
-    RCX = newRegistreFilsUnique(ECX);
+    _CL = newRegistreFeuille(8, 0);
+    _CH = newRegistreFeuille(8, 0);
+    _CX = newRegistreDeuxFils(_CH, _CL);
+    _ECX = newRegistreFilsUnique(_CX);
+    _RCX = newRegistreFilsUnique(_ECX);
     
-    DL = newRegistreFeuille(8, 0);
-    DH = newRegistreFeuille(8, 0);
-    DX = newRegistreDeuxFils(DH, DL);
-    EDX = newRegistreFilsUnique(DX);
-    RDX = newRegistreFilsUnique(EDX);
+    _DL = newRegistreFeuille(8, 0);
+    _DH = newRegistreFeuille(8, 0);
+    _DX = newRegistreDeuxFils(_DH, _DL);
+    _EDX = newRegistreFilsUnique(_DX);
+    _RDX = newRegistreFilsUnique(_EDX);
     
-    EDI = newRegistreFeuille(32, 0);
-    RDI = newRegistreFilsUnique(EDI);
+    _EDI = newRegistreFeuille(32, 0);
+    _RDI = newRegistreFilsUnique(_EDI);
     
-    ESI = newRegistreFeuille(32, 0);
-    RSI = newRegistreFilsUnique(ESI);
+    _ESI = newRegistreFeuille(32, 0);
+    _RSI = newRegistreFilsUnique(_ESI);
     
-    EBP = newRegistreFeuille(32, 0);
-    RBP = newRegistreFilsUnique(EBP);
+    _EBP = newRegistreFeuille(32, 0);
+    _RBP = newRegistreFilsUnique(_EBP);
     
-    ESP = newRegistreFeuille(32, 0);
-    RSP = newRegistreFilsUnique(ESP);
+    _ESP = newRegistreFeuille(32, 0);
+    _RSP = newRegistreFilsUnique(_ESP);
     
-    EIP = newRegistreFeuille(32, 0);
-    RIP = newRegistreFilsUnique(EIP);
+    _EIP = newRegistreFeuille(32, 0);
+    _RIP = newRegistreFilsUnique(_EIP);
     
-    EFLAGS = newRegistreFeuille(32, 0);
-    RFLAGS = newRegistreFilsUnique(EFLAGS);
+    _EFLAGS = newRegistreFeuille(32, 0);
+    _RFLAGS = newRegistreFilsUnique(_EFLAGS);
     
-    R8 = newRegistreFeuille(64, 0);
-    R9 = newRegistreFeuille(64, 0);
-    R10 = newRegistreFeuille(64, 0);
-    R11 = newRegistreFeuille(64, 0);
-    R12 = newRegistreFeuille(64, 0);
-    R13 = newRegistreFeuille(64, 0);
-    R14 = newRegistreFeuille(64, 0);
-    R15 = newRegistreFeuille(64, 0);
+    _R8 = newRegistreFeuille(64, 0);
+    _R9 = newRegistreFeuille(64, 0);
+    _R10 = newRegistreFeuille(64, 0);
+    _R11 = newRegistreFeuille(64, 0);
+    _R12 = newRegistreFeuille(64, 0);
+    _R13 = newRegistreFeuille(64, 0);
+    _R14 = newRegistreFeuille(64, 0);
+    _R15 = newRegistreFeuille(64, 0);
+    
+    _CS = newRegistreFeuille(64, 0);
+    _DS = newRegistreFeuille(64, 0);
+    _SS = newRegistreFeuille(64, 0);
+    _ES = newRegistreFeuille(64, 0);
+    _FS = newRegistreFeuille(64, 0);
+    _GS = newRegistreFeuille(64, 0);
     
     STACK = newLinkedList();
     
@@ -137,73 +76,73 @@ Processeur* newProcesseur(){
 }
 
 void terminateProcesseur(Processeur* proc){
-    terminateRegistre(RAX);
-    terminateRegistre(RBX);
-    terminateRegistre(RCX);
+    terminateRegistre(_RAX);
+    terminateRegistre(_RBX);
+    terminateRegistre(_RCX);
 }
 
 void _call(Processeur* proc, int len, Registre* adresse){
-    addFirstLL(STACK, (void *) (RIP + len));
-    copieVal(RIP, adresse);
+    addFirstLL(STACK, (void *) (_RIP + len));
+    copieVal(_RIP, adresse);
 }
 
 void _jmp(Processeur* proc, Registre* adresse){
-    copieVal(RIP, adresse);
+    copieVal(_RIP, adresse);
 }
 
 void _jne(Processeur* proc, int len, Registre* adresse){
-    if (!ZF) {
+    if (!_ZF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _je(Processeur* proc, int len, Registre* adresse){
-    if (ZF) {
+    if (_ZF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _ja(Processeur* proc, int len, Registre* adresse){
-    if (!ZF && !CF) {
+    if (!_ZF && !_CF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _jb(Processeur* proc, int len, Registre* adresse){
-    if (CF) {
+    if (_CF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _jbe(Processeur* proc, int len, Registre* adresse){
-    if (ZF || CF) {
+    if (_ZF || _CF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _jg(Processeur* proc, int len, Registre* adresse){
-    if (!ZF && SF == OF) {
+    if (!_ZF && _SF == _OF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
 void _jle(Processeur* proc, int len, Registre* adresse){
-    if (ZF || SF != OF) {
+    if (_ZF || _SF != _OF) {
         _jmp(proc, adresse);
     } else {
-        RIP += len;
+        _RIP += len;
     }
 }
 
@@ -212,10 +151,12 @@ void _and(Processeur* proc, Registre* destination, Registre* masque){
     uint64_t mask = getValeur(masque);
     dest &= mask;
     setValeur(destination, dest);
+    
+    // peut-être encore des choses à faire sur le registre de flags
 }
 
-void _move(Registre* dest, Registre* source){
-    *dest = *source;
+void _mov(Processeur* proc, Registre* dest, Registre* source){
+    
 }
 
 

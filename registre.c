@@ -35,6 +35,14 @@ Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
     return reg;
 }
 
+void terminateRegistre(Registre* reg){
+    if (reg->filsh != NULL) {
+        terminateRegistre(reg->filsl);
+        terminateRegistre(reg->filsh);
+    }
+    free(reg);
+}
+
 uint64_t getValeur(Registre* reg){
     if (reg->filsl == NULL) {
         return reg->valeur;
@@ -43,8 +51,14 @@ uint64_t getValeur(Registre* reg){
 }
 
 uint64_t setValeur(Registre* reg, uint64_t n){
-    uint64_t p = pow((long double) 2, reg->taille);
-    uint64_t reste = n % p;
+    uint64_t p = pow(2, reg->taille);
+    
+    uint64_t reste;
+    if (p==0) {
+        reste = n;
+    } else {
+        reste = n % p;
+    }
     //this->valeur = reste;
     if (reg->filsl != NULL) {
         uint64_t pl = pow(2, reg->filsl->taille);

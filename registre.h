@@ -33,6 +33,7 @@ extern "C" {
     void terminateRegistre(Registre* reg);
     
     uint64_t getValeur(Registre* reg);
+    
     uint64_t setValeur(Registre* reg, uint64_t n); // retourne ce qu'il reste à attribuer
     void copieVal(Registre* dest, Registre* src);
     

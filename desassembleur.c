@@ -14,8 +14,7 @@ desasembleur* newDesassembleur(desasembleur* desas){
     if (desas == NULL) {
         desas = malloc(sizeof(desasembleur));
         desas->disasm = malloc(sizeof(DISASM));;
-        desas->proc = malloc(sizeof(Processeur));
-        desas->proc->stack = newLinkedList();
+        desas->proc = newProcesseur();
     }
     /* ============================= met tous les champs à zéro (important !)*/
     (void) memset(desas->disasm, 0, sizeof (DISASM));
@@ -26,12 +25,13 @@ desasembleur* newDesassembleur(desasembleur* desas){
 void terminateDesassembleur(desasembleur* desas){
     free(desas->disasm);
     terminateLinkedList(desas->proc->stack); // on utilisera pas de lien vers l'extérieur
-    free(desas->proc);
+    terminateProcesseur(desas->proc);
     free(desas);
 }
 
 int litInstruction(desasembleur* desas){
     int len = Disasm(desas->disasm);
+    Processeur* proc = desas->proc;
     
     // Partie chiante ...
     
