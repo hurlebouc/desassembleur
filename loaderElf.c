@@ -1,20 +1,34 @@
 #include "loaderElf.h"
 
-unsigned long loaderElf(void *debut, DISASM* prog) {
-    unsigned long pe = (unsigned long) debut;
-    unsigned long debutvirtuel = 0;
-    Elf32_Ehdr *header = (Elf32_Ehdr *) debut; //les premier bits du elf contiennent un header général
+unsigned long loaderElf(desasembleur* desas, Fichier* fichier) {
+    
+    
+    char* chemin = fichier->chemin;
+    int fd = open(chemin, O_RDONLY);
+    struct stat stat_buf;
+    fstat(fd, &stat_buf);
+    size_t size = stat_buf.st_size;
+    /*============================= chargement en mémoire====================*/
+//    void* debutReel = mmap(0, size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
+    void* debutReel = mmap(0, size, PROT_READ | PROT_WRITE, 0 | MAP_PRIVATE, fd, 0);
+    
+    DISASM* prog = desas->disasm;
+    
+    
+    unsigned long per = (unsigned long) debutReel;
+    unsigned long debutVirtuel = 0;
+    Elf32_Ehdr *header = (Elf32_Ehdr *) debutReel; //les premier bits du elf contiennent un header général
     if (header->e_type != ET_EXEC) {//vérifie que c'est bien un fichier executable pure
         printf("Ce fichier n'est pas un executable\n");
     } else {
         //comme c'est un executable, il y a forcement un tableau de header de section que l'on va examiner
-        Elf32_Shdr *shdr = (Elf32_Shdr *) (debut + header->e_shoff);
+        Elf32_Shdr *shdr = (Elf32_Shdr *) (debutReel + header->e_shoff);
         
         
         // il y a plusieurs string table, et celle qui comprend les noms des sections est la suivante
         printf("index de strtable : %d\n", header->e_shstrndx);
         //on recupere son adresse dans premierchar
-        char* premierchar = (char *) (debut + shdr[header->e_shstrndx].sh_offset);
+        char* premierchar = (char *) (debutReel + shdr[header->e_shstrndx].sh_offset);
         int length = (int) (shdr[header->e_shstrndx].sh_size) / sizeof (char);
         printf("length : %d\n", length);
         
@@ -32,16 +46,16 @@ unsigned long loaderElf(void *debut, DISASM* prog) {
             //c'est ici qu'on compare le nom de section
             if (strcmp(name, ".text") == 0) {
                 //enregistre sa localisation dans pe
-                pe += shdr[i].sh_offset;
+                per += shdr[i].sh_offset;
                 
                 printf("offset du .text : %d\n", shdr[i].sh_offset);
                 
-                debutvirtuel=0x10000000+shdr[i].sh_offset;
-                prog->EIP = (UIntPtr) pe;
+                debutVirtuel=0x10000000+shdr[i].sh_offset;
+                prog->EIP = (UIntPtr) per;
                 //l'emplacement du point d'entrée dans le buffer
                 prog->Archi = 32;
                 prog->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
-                prog->VirtualAddr =debutvirtuel ;
+                prog->VirtualAddr = debutVirtuel ;
                 //trouve l'adresse du _start et non du main au sein de la section text
                 //tester/regarder si le start est au début de la section text
                 prog->SecurityBlock = (unsigned int) (shdr[i].sh_size);
@@ -50,9 +64,9 @@ unsigned long loaderElf(void *debut, DISASM* prog) {
                 
             }
         }
-        printf("Debutvirtuel: %lx\n",debutvirtuel);
+        printf("Debutvirtuel: %lx\n",debutVirtuel);
     }
-    return debutvirtuel;
+    return debutVirtuel;
 }
 
 

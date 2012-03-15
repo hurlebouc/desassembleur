@@ -19,12 +19,13 @@ extern "C" {
 #include <stdlib.h>
 #include <stdio.h>
 #include <libelf.h>
-#include <sys/mman.h>	
-#include <fcntl.h>
-#include "BeaEngine.h"
+    
+#include "processeur.h"
+#include "Fichier.h"
+#include "desassembleur.h"
 
 
-unsigned long loaderElf(void *debut,DISASM* prog);
+unsigned long loaderElf(desasembleur* desas, Fichier* fichier);
 
 #ifdef __cplusplus
 }
