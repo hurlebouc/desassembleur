@@ -85,7 +85,7 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
         int halt = 0;
         int Error = 0;
         while ((!Error) && (i < retrieve->SecurityBlock) && (!halt)) {
-            lenght = Disasm(&retrieve);
+            lenght = Disasm(retrieve);
             if (lenght != UNKNOWN_OPCODE) {
                 (void) puts(retrieve->CompleteInstr);
                 retrieve->EIP = retrieve->EIP + (UIntPtr) length;

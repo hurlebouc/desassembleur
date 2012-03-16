@@ -19,7 +19,7 @@ int main(int argc, char* argv []) {
     strcat(chemin_vide, "/vide.txt");
     Fichier* res_vide = newFichier(chemin_vide);
     cleanFile(res_vide);
-    Fichier* binaire = newFichier("/home/phil/Informatique2a/Projet2A/ElfDecryptage/test");
+    Fichier* binaire = newFichier("../../../../tests/recc");
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
