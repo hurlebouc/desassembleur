@@ -5,12 +5,19 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>BeaEngine.h</itemPath>
+      <itemPath>Fichier.h</itemPath>
+      <itemPath>Graphe.h</itemPath>
       <itemPath>LinkedList.h</itemPath>
-      <itemPath>LoaderMach.h</itemPath>
+      <itemPath>Vide.h</itemPath>
       <itemPath>beaengine/basic_types.h</itemPath>
+      <itemPath>commandes.h</itemPath>
+      <itemPath>desassembleur.h</itemPath>
       <itemPath>dyndesass.h</itemPath>
       <itemPath>beaengine/export.h</itemPath>
+      <itemPath>loader.h</itemPath>
       <itemPath>beaengine/macros.h</itemPath>
+      <itemPath>processeur.h</itemPath>
+      <itemPath>registre.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -19,10 +26,18 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Fichier.c</itemPath>
+      <itemPath>Graphe.c</itemPath>
       <itemPath>LinkedList.c</itemPath>
-      <itemPath>LoaderMach.c</itemPath>
+      <itemPath>Vide.c</itemPath>
+      <itemPath>commandes.c</itemPath>
+      <itemPath>desassembleur.c</itemPath>
       <itemPath>dyndesass.c</itemPath>
+      <itemPath>loader.c</itemPath>
+      <itemPath>loaderElf.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>processeur.c</itemPath>
+      <itemPath>registre.c</itemPath>
       <itemPath>test7.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -141,6 +156,7 @@
         <linkerTool>
           <linkerLibItems>
             <linkerLibFileItem>lib/Linux.gnu.Debug_32/libBeaEngine_s_d.a</linkerLibFileItem>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

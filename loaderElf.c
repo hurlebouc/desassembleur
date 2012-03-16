@@ -1,6 +1,6 @@
 #include "loaderElf.h"
 
-unsigned long loaderElf(desasembleur* desas, Fichier* fichier) {
+void loaderElf(desasembleur* desas, Fichier* fichier) {
     
     
     char* chemin = fichier->chemin;
@@ -26,23 +26,23 @@ unsigned long loaderElf(desasembleur* desas, Fichier* fichier) {
         
         
         // il y a plusieurs string table, et celle qui comprend les noms des sections est la suivante
-        printf("index de strtable : %d\n", header->e_shstrndx);
+        //printf("index de strtable : %d\n", header->e_shstrndx);
         //on recupere son adresse dans premierchar
         char* premierchar = (char *) (debutReel + shdr[header->e_shstrndx].sh_offset);
         int length = (int) (shdr[header->e_shstrndx].sh_size) / sizeof (char);
-        printf("length : %d\n", length);
+        //printf("length : %d\n", length);
         
         //on va parcourir tout les header de section jusqu'a tomber sur celui de la section
         // .text qui contient le code qui va être executé
         int i = 0;
         for (i = 0; i < header->e_shnum; i++) {
             char* name = malloc(sizeof (char) * 5);
-            printf("le shname : %d\n", shdr[i].sh_name);
+            //printf("le shname : %d\n", shdr[i].sh_name);
             int k = 0;
             for (k = 0; k < 5; k++) {
                 name[k] = premierchar[shdr[i].sh_name + k];
             }
-            printf("le vrai nom %s\n", name);
+            //printf("le vrai nom %s\n", name);
             //c'est ici qu'on compare le nom de section
             if (strcmp(name, ".text") == 0) {
                 //enregistre sa localisation dans pe
@@ -51,11 +51,14 @@ unsigned long loaderElf(desasembleur* desas, Fichier* fichier) {
                 printf("offset du .text : %d\n", shdr[i].sh_offset);
                 
                 debutVirtuel=0x10000000+shdr[i].sh_offset;
+                
                 prog->EIP = (UIntPtr) per;
+                printf("EIP: %ld \n",prog->EIP);
                 //l'emplacement du point d'entrée dans le buffer
                 prog->Archi = 32;
                 prog->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
                 prog->VirtualAddr = debutVirtuel ;
+                printf("debutVirtuel: %ld \n",debutVirtuel);
                 //trouve l'adresse du _start et non du main au sein de la section text
                 //tester/regarder si le start est au début de la section text
                 prog->SecurityBlock = (unsigned int) (shdr[i].sh_size);
@@ -64,9 +67,57 @@ unsigned long loaderElf(desasembleur* desas, Fichier* fichier) {
                 
             }
         }
-        printf("Debutvirtuel: %lx\n",debutVirtuel);
+        
+        /*Cherche à récupérer l'adresse du main qui est le dernier element
+         mis sur la pile d'appel par le dynamic linker lors de son
+         initialisation (ie: avant de commencer, celui ci transmet sur la
+         pile un vecteur d'information dont le dernier element est l'addresse
+         est l'adresse du main*/
+
+        DISASM* retrieve = malloc(sizeof (DISASM));
+
+        retrieve->EIP = prog->EIP;
+        retrieve->Archi = 32;
+        retrieve->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+        retrieve->SecurityBlock = shdr[i].sh_size;
+        int lenght;
+        unsigned long mainAddress;
+        int halt = 0;
+        int Error = 0;
+        while ((!Error) && (i < retrieve->SecurityBlock) && (!halt)) {
+            lenght = Disasm(&retrieve);
+            if (lenght != UNKNOWN_OPCODE) {
+                (void) puts(retrieve->CompleteInstr);
+                retrieve->EIP = retrieve->EIP + (UIntPtr) length;
+                i++;
+                if (strcmp(retrieve->Instruction.Mnemonic, "push ") == 0) {
+                    mainAddress = retrieve->Instruction.Immediat;
+                }
+                if (strcmp(retrieve->Instruction.Mnemonic, "hlt ") == 0) {
+                    halt = 1;
+                }
+            } else {
+                Error = 1;
+            }
+        }
+        prog->EIP = (UIntPtr) mainAddress;
+        //l'emplacement du point d'entrée dans le buffer
+        prog->Archi = 32;
+        prog->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+        prog->VirtualAddr = debutVirtuel;
+        //trouve l'adresse du _start et non du main au sein de la section text
+        //tester/regarder si le start est au début de la section text
+        //pe = debut de la section text
+        prog->SecurityBlock = (unsigned int) (shdr[i].sh_size - (mainAddress - per));
+        //taille qui lui reste a décompiler dans la section
+
+        printf("EIP: %ld \n",prog->EIP);
+        printf("debutVirtuel: %ld \n",debutVirtuel);
     }
-    return debutVirtuel;
+        
+        
+       
+
 }
 
 
