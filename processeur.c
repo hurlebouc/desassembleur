@@ -70,7 +70,7 @@ Processeur* newProcesseur(){
     _FS = newRegistreFeuille(64, 0);
     _GS = newRegistreFeuille(64, 0);
     
-    STACK = newLinkedList();
+    _STACK = newLinkedList();
     
     return proc;
 }
@@ -79,11 +79,37 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_RAX);
     terminateRegistre(_RBX);
     terminateRegistre(_RCX);
+    terminateRegistre(_RDX);
+    terminateRegistre(_RDI);
+    terminateRegistre(_RSI);
+    terminateRegistre(_RSP);
+    terminateRegistre(_RBP);
+    terminateRegistre(_RIP);
+    terminateRegistre(_RIP);
+    terminateRegistre(_R8);
+    terminateRegistre(_R9);
+    terminateRegistre(_R10);
+    terminateRegistre(_R11);
+    terminateRegistre(_R12);
+    terminateRegistre(_R13);
+    terminateRegistre(_R14);
+    terminateRegistre(_R15);
+    terminateRegistre(_CS);
+    terminateRegistre(_DS);
+    terminateRegistre(_SS);
+    terminateRegistre(_ES);
+    terminateRegistre(_FS);
+    terminateRegistre(_GS);
 }
 
 void _call(Processeur* proc, int len, Registre* adresse){
-    addFirstLL(STACK, (void *) (_RIP + len));
+    addFirstLL(_STACK, (void *) (_RIP + len));
     copieVal(_RIP, adresse);
+}
+
+void _ret(Processeur* proc){
+    uint64_t adresse = (uint64_t) removeFirstLL(_STACK);
+    setValeur(_RIP, adresse);
 }
 
 void _jmp(Processeur* proc, Registre* adresse){
@@ -154,10 +180,12 @@ void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masqu
     
     
     // peut-être encore des choses à faire sur le registre de flags
+    incr(_RIP, lenInstr);
 }
 
 void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
     
+    incr(_RIP, lenInstr);
 }
 
 

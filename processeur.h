@@ -85,7 +85,7 @@ extern "C" {
 #define _DF proc->_df
 #define _OF proc->_of
     
-#define STACK proc->stack
+#define _STACK proc->stack
     
     typedef struct _Processeur{
         LinkedList* stack;
