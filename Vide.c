@@ -34,8 +34,9 @@ void terminatelVides(LinkedList* lVides){
 
 LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille){
     char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, LOCAL);
-    strcat(chemin_log, "/vide.log");
+    strcpy(chemin_log, ROOT);
+//    strcat(chemin_log, "/vide.log");
+    strcat(chemin_log, CHEMIN_LOG_VIDE);
     Fichier* fichierlog = newFichier(chemin_log);
     char temp[MAX_BUFFER];
     

@@ -16,7 +16,7 @@
 #include "testVide.h"
 #include "CUnit/CUCurses.h"
 
-char* LOCAL = ".";
+char* ROOT = "./";
 
 #define TRUE 1
 #define FALSE 0

@@ -7,7 +7,7 @@
 //
 
 #include "processeur.h"
-
+#include "_macro_Build.h"
 
 
 Processeur* newProcesseur(){
@@ -85,7 +85,7 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_RSP);
     terminateRegistre(_RBP);
     terminateRegistre(_RIP);
-    terminateRegistre(_RIP);
+    terminateRegistre(_RFLAGS);
     terminateRegistre(_R8);
     terminateRegistre(_R9);
     terminateRegistre(_R10);
@@ -184,7 +184,7 @@ void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masqu
 }
 
 void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
-    
+    copieVal(dest, source);
     incr(_RIP, lenInstr);
 }
 

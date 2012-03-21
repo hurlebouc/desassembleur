@@ -16,13 +16,13 @@ extern "C" {
 #define AUTO_STEP 0
 #define ALL_STEP 1
 
-
+#include "macro.h"
 #include "LinkedList.h"
 #include "Graphe.h"
 #include "desassembleur.h"
 #include "Fichier.h"
 
-extern char* LOCAL;
+extern char* ROOT;
 
 //#include <mach-o/loader.h>
 

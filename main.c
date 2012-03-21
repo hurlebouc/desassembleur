@@ -11,12 +11,12 @@
 #include "loader.h"
 #include "commandes.h"
 
-char* LOCAL = ".";
+char* ROOT = "./";
 
 int main(int argc, char* argv []) {
     char chemin_vide[FILENAME_MAX];
-    strcpy(chemin_vide, LOCAL);
-    strcat(chemin_vide, "/vide.txt");
+    strcpy(chemin_vide, ROOT);
+    strcat(chemin_vide, "vide.txt");
     Fichier* res_vide = newFichier(chemin_vide);
     cleanFile(res_vide);
     Fichier* binaire = newFichier("../../../../tests/recc");

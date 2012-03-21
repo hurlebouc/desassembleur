@@ -127,8 +127,9 @@ static int depilage(DISASM* prog, LinkedList* pileAppel, Fichier* fichier){
 
 void fermeture(desasembleur* desas, Graphe pi[]){
     char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, LOCAL);
-    strcat(chemin_log, "/fermeture.log");
+    strcpy(chemin_log, ROOT);
+//    strcat(chemin_log, "/fermeture.log");
+    strcat(chemin_log, CHEMIN_LOG_FERMETURE);
     Fichier* fichierlog = newFichier(chemin_log);
     
     char temp[MAX_BUFFER];
@@ -151,19 +152,19 @@ void fermeture(desasembleur* desas, Graphe pi[]){
         unsigned long IP = iniAdress + len;
         sprintf(temp,  "0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
         pushlog(fichierlog, temp);
-//        sprintf(temp, "%d  %d  %d  %d  %d  %d  %d  %d  %d  %d  %d  \n",
-//                prog->Instruction.Flags.AF_,
-//                prog->Instruction.Flags.CF_, 
-//                prog->Instruction.Flags.DF_, 
-//                prog->Instruction.Flags.IF_, 
-//                prog->Instruction.Flags.NT_, 
-//                prog->Instruction.Flags.OF_, 
-//                prog->Instruction.Flags.PF_, 
-//                prog->Instruction.Flags.RF_, 
-//                prog->Instruction.Flags.SF_, 
-//                prog->Instruction.Flags.TF_,
-//                prog->Instruction.Flags.ZF_);
-//        pushlog(fichierlog, temp);
+        sprintf(temp, "%d  %d  %d  %d  %d  %d  %d  %d  %d  %d  %d  \n",
+                prog->Instruction.Flags.OF_,
+                prog->Instruction.Flags.SF_, 
+                prog->Instruction.Flags.ZF_, 
+                prog->Instruction.Flags.AF_, 
+                prog->Instruction.Flags.PF_, 
+                prog->Instruction.Flags.CF_, 
+                prog->Instruction.Flags.TF_, 
+                prog->Instruction.Flags.IF_, 
+                prog->Instruction.Flags.DF_, 
+                prog->Instruction.Flags.NT_,
+                prog->Instruction.Flags.RF_);
+        pushlog(fichierlog, temp);
 //        fprintf(graveur, "0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
         Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddrLue = iniAdress;
@@ -970,8 +971,9 @@ static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
 
 Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
     char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, LOCAL);
-    strcat(chemin_log, "/assemblage.log");
+    strcpy(chemin_log, ROOT);
+//    strcat(chemin_log, "/assemblage.log");
+    strcat(chemin_log, CHEMIN_LOG_ASSEMBLAGE);
     Fichier* fichierlog = newFichier(chemin_log);
     
     pushlog(fichierlog, "début de l'assemblage\n");

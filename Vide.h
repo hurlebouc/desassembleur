@@ -13,11 +13,12 @@
 extern "C" {
 #endif
 
+#include "macro.h"
 #include <stdlib.h>
 #include "LinkedList.h"
 #include "Graphe.h"
 #include "Fichier.h"
-extern char* LOCAL;
+extern char* ROOT;
 
 typedef struct _Vide{
     unsigned long taille;
