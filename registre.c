@@ -75,3 +75,7 @@ uint64_t setValeur(Registre* reg, uint64_t n){
 void copieVal(Registre* dest, Registre* src){
     setValeur(dest, getValeur(src));
 }
+
+void incr(Registre* reg, int n){
+    setValeur(reg, getValeur(reg) + n);
+}

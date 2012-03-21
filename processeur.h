@@ -164,14 +164,14 @@ extern "C" {
     
     /*------------ Modifs registres ------------*/
     
-    void _and(Processeur* proc, Registre* a, Registre* b);
-    void _add(Processeur* proc, Registre* destination, Registre* masque); //{destion} &= {masque}
-    void _lea(Processeur* proc, Registre* a, Registre* b);
-    void _shl(Processeur* proc, Registre* reg, Registre* val); // shift left
-    void _shr(Processeur* proc, Registre* reg, Registre* val);
-    void _mov(Processeur* proc, Registre* a, Registre* b);
-    void _sub(Processeur* proc, Registre* a, Registre* b);
-    void _xor(Processeur* proc, Registre* a, Registre* b); //xor
+    void _and(Processeur* proc, int lenInstr, Registre* a, Registre* b);
+    void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque); //{destion} &= {masque}
+    void _lea(Processeur* proc, int lenInstr, Registre* a, Registre* b);
+    void _shl(Processeur* proc, int lenInstr, Registre* reg, Registre* val); // shift left
+    void _shr(Processeur* proc, int lenInstr, Registre* reg, Registre* val);
+    void _mov(Processeur* proc, int lenInstr, Registre* a, Registre* b);
+    void _sub(Processeur* proc, int lenInstr, Registre* a, Registre* b);
+    void _xor(Processeur* proc, int lenInstr, Registre* a, Registre* b); //xor
     
     
     /*---------------- sauts -------------------*/

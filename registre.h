@@ -40,6 +40,7 @@ extern "C" {
     
     uint64_t setValeur(Registre* reg, uint64_t n); // retourne ce qu'il reste à attribuer
     void copieVal(Registre* dest, Registre* src);
+    void incr(Registre* reg, int len);
     
 //    /*- REMARQUES SUR LES FONCTIONS SUIVANTES -*/
 //    

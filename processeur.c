@@ -94,7 +94,7 @@ void _jne(Processeur* proc, int len, Registre* adresse){
     if (!_ZF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -102,7 +102,7 @@ void _je(Processeur* proc, int len, Registre* adresse){
     if (_ZF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -110,7 +110,7 @@ void _ja(Processeur* proc, int len, Registre* adresse){
     if (!_ZF && !_CF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -118,7 +118,7 @@ void _jb(Processeur* proc, int len, Registre* adresse){
     if (_CF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -126,7 +126,7 @@ void _jbe(Processeur* proc, int len, Registre* adresse){
     if (_ZF || _CF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -134,7 +134,7 @@ void _jg(Processeur* proc, int len, Registre* adresse){
     if (!_ZF && _SF == _OF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
@@ -142,20 +142,21 @@ void _jle(Processeur* proc, int len, Registre* adresse){
     if (_ZF || _SF != _OF) {
         _jmp(proc, adresse);
     } else {
-        _RIP += len;
+        incr(_RIP, len);
     }
 }
 
-void _and(Processeur* proc, Registre* destination, Registre* masque){
+void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
     uint64_t dest = getValeur(destination);
     uint64_t mask = getValeur(masque);
     dest &= mask;
     setValeur(destination, dest);
     
+    
     // peut-être encore des choses à faire sur le registre de flags
 }
 
-void _mov(Processeur* proc, Registre* dest, Registre* source){
+void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
     
 }
 

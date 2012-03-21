@@ -35,10 +35,18 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
+	${OBJECTDIR}/loader.o \
+	${OBJECTDIR}/loaderElf.o \
+	${OBJECTDIR}/processeur.o \
 	${OBJECTDIR}/test7.o \
+	${OBJECTDIR}/desassembleur.o \
 	${OBJECTDIR}/dyndesass.o \
-	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/LoaderMach.o
+	${OBJECTDIR}/Fichier.o \
+	${OBJECTDIR}/commandes.o \
+	${OBJECTDIR}/Graphe.o \
+	${OBJECTDIR}/registre.o \
+	${OBJECTDIR}/Vide.o \
+	${OBJECTDIR}/main.o
 
 
 # C Compiler Flags
@@ -72,25 +80,65 @@ ${OBJECTDIR}/LinkedList.o: LinkedList.c
 	${RM} $@.d
 	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/LinkedList.o LinkedList.c
 
+${OBJECTDIR}/loader.o: loader.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/loader.o loader.c
+
+${OBJECTDIR}/loaderElf.o: loaderElf.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/loaderElf.o loaderElf.c
+
+${OBJECTDIR}/processeur.o: processeur.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/processeur.o processeur.c
+
 ${OBJECTDIR}/test7.o: test7.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
+
+${OBJECTDIR}/desassembleur.o: desassembleur.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/desassembleur.o desassembleur.c
 
 ${OBJECTDIR}/dyndesass.o: dyndesass.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/dyndesass.o dyndesass.c
 
+${OBJECTDIR}/Fichier.o: Fichier.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/Fichier.o Fichier.c
+
+${OBJECTDIR}/commandes.o: commandes.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/commandes.o commandes.c
+
+${OBJECTDIR}/Graphe.o: Graphe.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/Graphe.o Graphe.c
+
+${OBJECTDIR}/registre.o: registre.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/registre.o registre.c
+
+${OBJECTDIR}/Vide.o: Vide.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/Vide.o Vide.c
+
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
-
-${OBJECTDIR}/LoaderMach.o: LoaderMach.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -g -I/opt/local/include/libelf -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoaderMach.o LoaderMach.c
 
 # Subprojects
 .build-subprojects:
