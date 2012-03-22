@@ -17,6 +17,15 @@ extern "C" {
 #include "LinkedList.h"
 #include "registre.h"
     
+#define CF_POWER 1
+#define PF_POWER 4 
+#define AF_POWER 16
+#define ZF_POWER 64
+#define SF_POWER 128
+#define TF_POWER 256
+#define IF_POWER 512
+#define DF_POWER 1024
+#define OF_POWER 2048
     
     typedef struct _Processeur{
         LinkedList* stack;

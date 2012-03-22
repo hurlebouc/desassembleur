@@ -102,6 +102,17 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_GS);
 }
 
+static int nbrup(uint8_t n){
+    int res = 0;
+    for (int i = 0; i<8; i++) {
+        if (n%2 == 1) {
+            res++;
+        }
+        n = n/2;
+    }
+    return res;
+}
+
 void _call(Processeur* proc, int len, Registre* adresse){
     addFirstLL(_STACK, (void *) (_RIP + len));
     copieVal(_RIP, adresse);
@@ -172,21 +183,49 @@ void _jle(Processeur* proc, int len, Registre* adresse){
     }
 }
 
+/* DONE */
+
 void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
     uint64_t dest = getValeur(destination);
     uint64_t mask = getValeur(masque);
     dest &= mask;
     setValeur(destination, dest);
+    int64_t signe = dest;
+    uint8_t weakbits = dest;
+    int nbr_up = nbrup(weakbits);
     
-    
-    // peut-être encore des choses à faire sur le registre de flags
+    if (dest == 0) {
+        _ZF = 1;
+    }
+    if (signe<0) {
+        _SF = 1;
+    }
+    if (nbr_up % 2 == 0) {
+        _PF = 1;
+    }
+    _OF = 0;
+    _CF = 0;
     incr(_RIP, lenInstr);
 }
+
+/* DONE */
 
 void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
     copieVal(dest, source);
     incr(_RIP, lenInstr);
 }
+
+void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
+    incr(_RIP, lenInstr);
+    
+}
+
+
+
+
+
+
+
 
 
 
