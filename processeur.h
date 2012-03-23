@@ -88,15 +88,15 @@ extern "C" {
         Registre*	fs;     // tenir compte des 32 bits et 64 bits
         Registre*	gs;     // tenir compte des 32 bits et 64 bits
         
-        int8_t    _cf;     // carry flag (retenue)
+        int8_t    _cf;     // carry flag (retenue) ////////////////
         int8_t    _pf;     // parity flag
-        int8_t    _af;     // auxiliary flag (retenue aux)
+        int8_t    _af;     // auxiliary flag (retenue aux) ////////
         int8_t    _zf;     // zero flag
         int8_t    _sf;     // sign flag
-        int8_t    _tf;     // single step flag (debugage)
+        int8_t    _tf;     // trap flag (debugage)
         int8_t    _if;     // interrupt flag
         int8_t    _df;     // direction flag (chaine)
-        int8_t    _of;     // overflow flag
+        int8_t    _of;     // overflow flag ///////////////////////
     }Processeur;
     
     Processeur* newProcesseur();

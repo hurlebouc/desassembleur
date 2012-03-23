@@ -183,41 +183,95 @@ void _jle(Processeur* proc, int len, Registre* adresse){
     }
 }
 
+/*------------------- AUXILIAR FUNCTION ----------------*/
+
+/*
+ * Donne la valeur du p-eme bit de n
+ */
+
+static int getbits(uint64_t n, int p){
+    for (int i = 0; i<p-1; i++) {
+        n=n/2;
+    }
+    return  n % 2;
+}
+
+static int sf_aux(Registre* reg){
+    uint64_t n = getValeur(reg);
+    int t = reg->taille;
+    if (getbits(n, t) == 1) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+static int pf_aux(Registre* reg){
+    uint8_t weakbits = getValeur(reg);
+    int nbr_up = nbrup(weakbits);
+    return 1 - (nbr_up % 2);
+}
+
+static int zf_aux(Registre* a, Registre* b){
+    if (getValeur(a) == getValeur(b)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/*---------------------------------------------------------*/
+
+/*
+ * REGLE D'ÉCRITURE DES INSTRUCTIONS
+ * =================================
+ *
+ * La première instruction doit être l'incrémentation du registre IP
+ * Si ZF doit être modifier, il doit l'être juste après.
+ * Les autres registres doivent être modifié à la fin.
+ */
+
+
+void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
+    incr(_RIP, lenInstr);
+    copieVal(dest, source);
+}
+
 /* DONE */
 
 void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
+    incr(_RIP, lenInstr);
+    _ZF = zf_aux(destination, masque);
+    
     uint64_t dest = getValeur(destination);
     uint64_t mask = getValeur(masque);
     dest &= mask;
     setValeur(destination, dest);
-    int64_t signe = dest;
-    uint8_t weakbits = dest;
-    int nbr_up = nbrup(weakbits);
-    
-    if (dest == 0) {
-        _ZF = 1;
-    }
-    if (signe<0) {
-        _SF = 1;
-    }
-    if (nbr_up % 2 == 0) {
-        _PF = 1;
-    }
+    _SF = sf_aux(destination);
+    _PF = pf_aux(destination);
     _OF = 0;
     _CF = 0;
-    incr(_RIP, lenInstr);
-}
-
-/* DONE */
-
-void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
-    copieVal(dest, source);
-    incr(_RIP, lenInstr);
 }
 
 void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
     incr(_RIP, lenInstr);
+    _ZF = zf_aux(destination, masque);
     
+    uint64_t a = getValeur(destination);
+    uint64_t b = getValeur(masque);
+    uint64_t c = a+b;
+    setValeur(destination, c);
+    c = getValeur(destination); // on lit la valeur effectif du registre
+    if (c<=a) { // cas de depassement
+        _OF = 1; // pas sur
+        _CF = 1;
+    } else {
+        _OF = 0;
+        _CF = 0;
+    }
+    if (a==b) {_ZF = 1;} else {_ZF = 0;}
+    _PF = pf_aux(destination);
+    _SF = sf_aux(destination);
 }
 
 

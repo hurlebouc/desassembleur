@@ -13,6 +13,10 @@
 
 char* ROOT = "./";
 
+//static int g(int n){
+//    return n*n;
+//}
+
 int main(int argc, char* argv []) {
     char chemin_vide[FILENAME_MAX];
     strcpy(chemin_vide, ROOT);
@@ -29,6 +33,11 @@ int main(int argc, char* argv []) {
     closeFichier(res_vide);
     closeFichier(binaire);
     terminateDesassembleur(desas);
+    
+//    void* f = g;
+//    
+//    printf("%d : taille : %lu\n", H(f), *g);
+    
     printf("done.\n");
     return 0;
 }
