@@ -151,7 +151,7 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <commandLine>-std=c99</commandLine>
+          <commandLine>-std=c99 -Wformat</commandLine>
         </cTool>
         <linkerTool>
           <linkerLibItems>

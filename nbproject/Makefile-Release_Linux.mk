@@ -37,13 +37,13 @@ OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/loader.o \
 	${OBJECTDIR}/loaderElf.o \
-	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/processeur.o \
+	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/desassembleur.o \
 	${OBJECTDIR}/dyndesass.o \
 	${OBJECTDIR}/Fichier.o \
-	${OBJECTDIR}/Graphe.o \
 	${OBJECTDIR}/commandes.o \
+	${OBJECTDIR}/Graphe.o \
 	${OBJECTDIR}/registre.o \
 	${OBJECTDIR}/Vide.o \
 	${OBJECTDIR}/main.o
@@ -90,15 +90,15 @@ ${OBJECTDIR}/loaderElf.o: loaderElf.c
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/loaderElf.o loaderElf.c
 
-${OBJECTDIR}/test7.o: test7.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
-
 ${OBJECTDIR}/processeur.o: processeur.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/processeur.o processeur.c
+
+${OBJECTDIR}/test7.o: test7.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
 
 ${OBJECTDIR}/desassembleur.o: desassembleur.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -115,15 +115,15 @@ ${OBJECTDIR}/Fichier.o: Fichier.c
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Fichier.o Fichier.c
 
-${OBJECTDIR}/Graphe.o: Graphe.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Graphe.o Graphe.c
-
 ${OBJECTDIR}/commandes.o: commandes.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/commandes.o commandes.c
+
+${OBJECTDIR}/Graphe.o: Graphe.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Graphe.o Graphe.c
 
 ${OBJECTDIR}/registre.o: registre.c 
 	${MKDIR} -p ${OBJECTDIR}
