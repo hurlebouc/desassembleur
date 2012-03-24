@@ -34,6 +34,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/instruction.o \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/loader.o \
 	${OBJECTDIR}/loaderElf.o \
@@ -42,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/desassembleur.o \
 	${OBJECTDIR}/dyndesass.o \
 	${OBJECTDIR}/Fichier.o \
+	${OBJECTDIR}/liste_instr.o \
 	${OBJECTDIR}/commandes.o \
 	${OBJECTDIR}/Graphe.o \
 	${OBJECTDIR}/registre.o \
@@ -74,6 +76,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: lib/Linux.gnu.Deb
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/desassembleur-code ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/instruction.o: instruction.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/instruction.o instruction.c
 
 ${OBJECTDIR}/LinkedList.o: LinkedList.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -114,6 +121,11 @@ ${OBJECTDIR}/Fichier.o: Fichier.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Fichier.o Fichier.c
+
+${OBJECTDIR}/liste_instr.o: liste_instr.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/liste_instr.o liste_instr.c
 
 ${OBJECTDIR}/commandes.o: commandes.c 
 	${MKDIR} -p ${OBJECTDIR}
