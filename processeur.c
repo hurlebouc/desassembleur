@@ -262,7 +262,7 @@ void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masqu
     uint64_t c = a+b;
     setValeur(destination, c);
     c = getValeur(destination); // on lit la valeur effectif du registre
-    if (c<=a) { // cas de depassement
+    if (c<a) { // cas de depassement
         _OF = 1; // pas sur
         _CF = 1;
     } else {
