@@ -19,7 +19,7 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
     unsigned long debutVirtuel = 0;
     Elf32_Ehdr *header = (Elf32_Ehdr *) debutReel; //les premier bits du elf contiennent un header général
     unsigned long per = (unsigned long) debutReel;
-    printf("debut réel %lx \n", debutReel);
+    printf("debut réel %lx \n", (unsigned long) debutReel);
     if (header->e_type != ET_EXEC) {//vérifie que c'est bien un fichier executable pure
         printf("Ce fichier n'est pas un executable\n");
     } else {
@@ -31,7 +31,7 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
         //printf("index de strtable : %d\n", header->e_shstrndx);
         //on recupere son adresse dans premierchar
         char* premierchar = (char *) (debutReel + shdr[header->e_shstrndx].sh_offset);
-        int length = (int) (shdr[header->e_shstrndx].sh_size) / sizeof (char);
+//        int length = (int) (shdr[header->e_shstrndx].sh_size) / sizeof (char);
         //printf("length : %d\n", length);
 
         //on va parcourir tout les header de section jusqu'a tomber sur celui de la section
@@ -48,9 +48,9 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
             //c'est ici qu'on compare le nom de section
             if (strcmp(name, ".text") == 0) {
                 //enregistre sa localisation dans pe
-                per = debutReel + shdr[i].sh_offset;
+                per = ((UInt64) debutReel) + shdr[i].sh_offset;
 
-                printf("offset du .text : %lx\n", shdr[i].sh_offset);
+                printf("offset du .text : %x\n", shdr[i].sh_offset);
 
                 debutVirtuel = 0x1000000 + shdr[i].sh_offset;
 
@@ -96,7 +96,7 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
             if (lenght != UNKNOWN_OPCODE) {
                 (void) puts(retrieve.CompleteInstr);
                 retrieve.EIP = retrieve.EIP + (UIntPtr) lenght;
-                printf("nombre de tour dans la boucle %lu \n", i);
+                printf("nombre de tour dans la boucle %d \n", i);
                 i++;
                 //printf("SEcurity BLOCK %lu \n", retrieve.SecurityBlock);
                 printf("mnémonic:%s!\n", retrieve.Instruction.Mnemonic);
@@ -111,11 +111,11 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
             } else {
                 Error = 1;
             }
-            printf("Halt: %lu, error: %lu, i: %lu \n", halt, Error, i);
+            printf("Halt: %d, error: %d, i: %d \n", halt, Error, i);
                 }
         printf("MAIN ADRESSE: est ce bien celui du push? %lx \n",mainAddress);
         mainAddress=mainAddress-header->e_entry;//offset dans la partie .text du main
-        per=debutReel+mainAddress;
+        per=((UInt64) debutReel) + mainAddress;
         printf("Est ce bien l'offset du main dans le fichier: %lx \n",mainAddress);
         per=(UIntPtr) per + mainAddress;
         prog->EIP = (UIntPtr) per;
@@ -128,7 +128,7 @@ void loaderElf(desasembleur* desas, Fichier* fichier) {
         //tester/regarder si le start est au début de la section text
         //pe = debut de la section text
    
-        printf("Taille du bloc sécurité: %lx \n",prog->SecurityBlock);
+        printf("Taille du bloc sécurité: %x \n",prog->SecurityBlock);
         //taille qui lui reste a décompiler dans la section
 
         printf("EIP: %lx \n", prog->EIP);

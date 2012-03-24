@@ -12,20 +12,24 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    
+    
+#include "macro.h"
 #include "Fichier.h"
 #include "desassembleur.h"
 #ifdef __APPLE__
 #include "LoaderMach.h"
 #endif
-#ifdef __linux__
+//#ifdef __linux__
 #include "loaderElf.h"
-#endif
-
-void load(desasembleur* desas, Fichier* fichier);
-
+//#endif
+    
+    extern int SYS;
+    
+    void load(desasembleur* desas, Fichier* fichier);
+    
 #ifdef __cplusplus
 }
 #endif
-    
+
 #endif

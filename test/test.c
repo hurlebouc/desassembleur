@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 
+#include "macro.h"
+
 #include "CUnit/Basic.h"
 #include "CUnit/Console.h"
 #include "CUnit/Automated.h"
@@ -17,6 +19,7 @@
 #include "CUnit/CUCurses.h"
 
 char* ROOT = "./";
+int SYS = DESASSEMBLEUR_MAC;
 
 #define TRUE 1
 #define FALSE 0
