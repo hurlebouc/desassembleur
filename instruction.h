@@ -20,7 +20,10 @@ typedef struct _instruction{
     void* of_aux;
     void* cf_aux;
     void* af_aux;
-    void* f;        // stock le resultat dans _res et ne fait rien d'autre
+    int zf_aux;
+    int pf_aux;
+    int sf_aux;
+    void* f;        // f renvoie un pointeur sur le registre qu'il a modifié (autre que le registre de flags)
 }instruction;
 
 void do_instr(instruction*, Registre*, Registre*,int, Processeur*);

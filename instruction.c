@@ -51,19 +51,33 @@ static int zf_aux(Registre* a, Registre* b){
     }
 }
 
-static int app_aux(int aux(Registre* a, Registre* b), Registre*a, Registre*b){
+static int app_aux(int aux(const Registre*, const Registre*), const Registre*a, const Registre*b){
     return aux(a,b);
 }
 
-static Registre* app_f(Registre* f(const Registre*, const Registre*, const Processeur*), Registre*a, Registre*b, Processeur* proc){
+static Registre* app_f(Registre* f(Registre*, Registre*, Processeur*), Registre*a, Registre*b, Processeur* proc){
     return f(a,b,proc);
 }
 
 void do_instr(instruction* instr, Registre* a, Registre* b,int lenInstr, Processeur* proc){
     incr(_RIP, lenInstr);
-    _ZF = zf_aux(a, b);
-    Registre* _res = app_f(instr->f, a, b, proc);
-    _SF = sf_aux(_res);
+    
+    if (instr->zf_aux) {
+        _ZF = zf_aux(a, b);
+    }
+    
+    _AF = app_aux(instr->af_aux, a, b);
+    _CF = app_aux(instr->cf_aux, a, b);
+    _OF = app_aux(instr->of_aux, a, b);
+    
+    Registre* _res = app_f(instr->f, a, b, proc); // modification de l'état du processeur
+    
+    if (instr->sf_aux) {
+        _SF = sf_aux(_res);
+    }
+    if (instr->pf_aux) {
+        _PF = pf_aux(_res);
+    }
 }
 
 
