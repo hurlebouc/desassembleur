@@ -9,7 +9,7 @@
 #include "liste_instr.h"
 
 char* ROOT = "./";
-int SYS = DESASSEMBLEUR_LINUX;
+int SYS = DESASSEMBLEUR_MAC;
 
 int main(int argc, char* argv []) {
     char chemin_vide[FILENAME_MAX];
@@ -17,7 +17,7 @@ int main(int argc, char* argv []) {
     strcat(chemin_vide, "vide.txt");
     Fichier* res_vide = newFichier(chemin_vide);
     cleanFile(res_vide);
-    Fichier* binaire = newFichier("../../../../tests/linux");
+    Fichier* binaire = newFichier("../../../../tests/recc");
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);

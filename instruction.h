@@ -24,11 +24,20 @@ typedef struct _instruction{
     int pf_aux;
     int sf_aux;
     void* f;        // f renvoie un pointeur sur le registre qu'il a modifié 
-                    // ne modifie par le registre de flags ni IP
+                    // ne modifie par le registre de flags
+                    // par contre il doit modifier le registre IP.
 }Instruction;
 
 void do_instr(Instruction*, Registre*, Registre*,int, Processeur*);
-Instruction* newInstruction(void* of,void* cf,void* af,int zf,int pf,int sf, void*f);
+Instruction* newInstruction(
+                            int of(const Registre* a, const Registre*),
+                            int cf(const Registre* a, const Registre*),
+                            int af(const Registre* a, const Registre*),
+                            int zf,
+                            int pf,
+                            int sf, 
+                            Registre* f(Registre*, Registre*, Processeur*, int)
+                            );
 void terminateInstruction(Instruction*);
 
 /*-------------------------------------------------------------------*/

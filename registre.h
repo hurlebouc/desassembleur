@@ -32,7 +32,7 @@ extern "C" {
     
     void terminateRegistre(Registre* reg);
     
-    uint64_t getValeur(Registre* reg);
+    uint64_t getValeur(const Registre* reg);
     
     /**
      * Le paramètre n est trop petit : il faut utiliser un type plus grand
@@ -42,43 +42,6 @@ extern "C" {
     void copieVal(Registre* dest, Registre* src);
     void incr(Registre* reg, int len);
     
-//    /*- REMARQUES SUR LES FONCTIONS SUIVANTES -*/
-//    
-//    /* Lorsque les parametres des instructions ne sont pas des registres 
-//     * on rentrera la valeurs dans des registres factices de taille maximum
-//     * On évite ainsi d'utiliser des fonctions à tour larigot...
-//     */
-//    
-//    void _and(registre* destination, registre* masque); //{destion} &= {masque}
-//    void _add(registre* a, registre* b); 
-//    void _move(registre* destination, registre* source);
-//    void _lea(registre* a, registre* b);
-//    void _shl(registre* val); // shift left
-//    void _shr(registre* val);
-//    void _sub(registre* a, registre* b);
-//    void _xor(registre* a, registre* b); //xor
-//    
-//    /*---------------- sauts -------------------*/
-//    
-//    void _call(int len, registre* adresse);
-//    void _jmp(registre* adresse);
-//    void _jne(int len, registre* adresse);
-//    void _ja(int len, registre* adresse);
-//    void _jb(int len, registre* adresse);
-//    void _jbe(int len, registre* adresse);
-//    void _je(int len, registre* adresse);
-//    void _jg(int len, registre* adresse);
-//    void _jle(int len, registre* adresse);
-//    void _ret();
-//    
-//    /*----------------- flags ------------------*/
-//    
-//    void _cmp(int len, registre* a, registre* b);
-//    
-//    /*------------------ pile ------------------*/
-//    
-//    void _push(int len, registre* a);
-//    void _pop(int len, registre* reg);
     
 #ifdef __cplusplus
 }

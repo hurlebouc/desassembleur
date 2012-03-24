@@ -43,7 +43,7 @@ void terminateRegistre(Registre* reg){
     free(reg);
 }
 
-uint64_t getValeur(Registre* reg){
+uint64_t getValeur(const Registre* reg){
     if (reg->filsl == NULL) {
         return reg->valeur;
     }
