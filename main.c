@@ -10,12 +10,10 @@
 #include "desassembleur.h"
 #include "loader.h"
 #include "commandes.h"
+#include "instruction.h"
+#include "liste_instr.h"
 
 char* ROOT = "./";
-
-//static int g(int n){
-//    return n*n;
-//}
 
 int main(int argc, char* argv []) {
     char chemin_vide[FILENAME_MAX];
@@ -34,9 +32,8 @@ int main(int argc, char* argv []) {
     closeFichier(binaire);
     terminateDesassembleur(desas);
     
-//    void* f = g;
-//    
-//    printf("%d : taille : %lu\n", H(f), *g);
+    test* t = init_t();
+    printf("%d\n", do_test(t, 4));
     
     printf("done.\n");
     return 0;

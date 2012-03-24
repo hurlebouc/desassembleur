@@ -59,18 +59,24 @@ static Registre* app_f(Registre* f(Registre*, Registre*, Processeur*), Registre*
     return f(a,b,proc);
 }
 
-void do_instr(instruction* instr, Registre* a, Registre* b,int lenInstr, Processeur* proc){
+void do_instr(Instruction* instr, Registre* a, Registre* b,int lenInstr, Processeur* proc){
     incr(_RIP, lenInstr);
     
     if (instr->zf_aux) {
         _ZF = zf_aux(a, b);
     }
     
-    _AF = app_aux(instr->af_aux, a, b);
-    _CF = app_aux(instr->cf_aux, a, b);
-    _OF = app_aux(instr->of_aux, a, b);
+    if (app_aux(instr->af_aux, a, b) != -1) {
+        _AF = app_aux(instr->af_aux, a, b);
+    }
+    if (app_aux(instr->cf_aux, a, b) != -1) {
+        _CF = app_aux(instr->cf_aux, a, b);
+    }
+    if (app_aux(instr->of_aux, a, b) != -1) {
+        _OF = app_aux(instr->of_aux, a, b);
+    }
     
-    Registre* _res = app_f(instr->f, a, b, proc); // modification de l'état du processeur
+    Registre* _res = app_f(instr->f, a, b, proc); // modification de l'état du processeur (sauf IP et flags)
     
     if (instr->sf_aux) {
         _SF = sf_aux(_res);
@@ -80,6 +86,36 @@ void do_instr(instruction* instr, Registre* a, Registre* b,int lenInstr, Process
     }
 }
 
+Instruction* newInstruction(void* of,void* cf,void* af,int zf,int pf,int sf, void*f){
+    Instruction* res = malloc(sizeof(res));
+    res->of_aux = of;
+    res->cf_aux = cf;
+    res->af_aux = af;
+    res->zf_aux = zf;
+    res->pf_aux = pf;
+    res->sf_aux = sf;
+    res->f = f;
+    return res;
+}
+
+void terminateInstruction(Instruction* instr){
+    free(instr);
+}
+
+/*---------------------------------------------------*/
+
+static int app_test(int f(int), int a){
+    return f(a);
+}
+
+int do_test(test* t, int n){
+    return app_test(t->f, n);
+}
 
 
+test* newTest(void* f){
+    test* res = malloc(sizeof(test));
+    res->f = f;
+    return res;
+}
 

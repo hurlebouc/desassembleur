@@ -23,9 +23,22 @@ typedef struct _instruction{
     int zf_aux;
     int pf_aux;
     int sf_aux;
-    void* f;        // f renvoie un pointeur sur le registre qu'il a modifié (autre que le registre de flags)
-}instruction;
+    void* f;        // f renvoie un pointeur sur le registre qu'il a modifié 
+                    // ne modifie par le registre de flags ni IP
+}Instruction;
 
-void do_instr(instruction*, Registre*, Registre*,int, Processeur*);
+void do_instr(Instruction*, Registre*, Registre*,int, Processeur*);
+Instruction* newInstruction(void* of,void* cf,void* af,int zf,int pf,int sf, void*f);
+void terminateInstruction(Instruction*);
+
+/*-------------------------------------------------------------------*/
+
+typedef struct _test{
+    void* f;
+}test;
+
+int do_test(test*, int);
+test* newTest(void*);
 
 #endif
+
