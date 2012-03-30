@@ -112,3 +112,12 @@ static Registre* f_add(Registre* destination, Registre* masque, Processeur* proc
 Instruction* init_add(){
     return newInstruction(of_add, cf_add, af_add, 1, 1, 1, f_add);
 }
+
+/* ----------------------- MOV -----------------------*/
+
+
+
+
+
+
+
