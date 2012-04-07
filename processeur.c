@@ -239,40 +239,40 @@ void _mov(Processeur* proc, int lenInstr, Registre* dest, Registre* source){
 
 /* DONE */
 
-void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
-    incr(_RIP, lenInstr);
-    _ZF = zf_aux(destination, masque);
-    
-    uint64_t dest = getValeur(destination);
-    uint64_t mask = getValeur(masque);
-    dest &= mask;
-    setValeur(destination, dest);
-    _SF = sf_aux(destination);
-    _PF = pf_aux(destination);
-    _OF = 0;
-    _CF = 0;
-}
-
-void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
-    incr(_RIP, lenInstr);
-    _ZF = zf_aux(destination, masque);
-    
-    uint64_t a = getValeur(destination);
-    uint64_t b = getValeur(masque);
-    uint64_t c = a+b;
-    setValeur(destination, c);
-    c = getValeur(destination); // on lit la valeur effectif du registre
-    if (c<a) { // cas de depassement
-        _OF = 1; // pas sur
-        _CF = 1;
-    } else {
-        _OF = 0;
-        _CF = 0;
-    }
-    if (a==b) {_ZF = 1;} else {_ZF = 0;}
-    _PF = pf_aux(destination);
-    _SF = sf_aux(destination);
-}
+//void _and(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
+//    incr(_RIP, lenInstr);
+//    _ZF = zf_aux(destination, masque);
+//    
+//    uint64_t dest = getValeur(destination);
+//    uint64_t mask = getValeur(masque);
+//    dest &= mask;
+//    setValeur(destination, dest);
+//    _SF = sf_aux(destination);
+//    _PF = pf_aux(destination);
+//    _OF = 0;
+//    _CF = 0;
+//}
+//
+//void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque){
+//    incr(_RIP, lenInstr);
+//    _ZF = zf_aux(destination, masque);
+//    
+//    uint64_t a = getValeur(destination);
+//    uint64_t b = getValeur(masque);
+//    uint64_t c = a+b;
+//    setValeur(destination, c);
+//    c = getValeur(destination); // on lit la valeur effectif du registre
+//    if (c<a) { // cas de depassement
+//        _OF = 1; // pas sur
+//        _CF = 1;
+//    } else {
+//        _OF = 0;
+//        _CF = 0;
+//    }
+//    if (a==b) {_ZF = 1;} else {_ZF = 0;}
+//    _PF = pf_aux(destination);
+//    _SF = sf_aux(destination);
+//}
 
 
 
