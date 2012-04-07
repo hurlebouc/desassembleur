@@ -17,7 +17,7 @@ int main(int argc, char* argv []) {
     strcat(chemin_vide, "vide.txt");
     Fichier* res_vide = newFichier(chemin_vide);
     cleanFile(res_vide);
-    Fichier* binaire = newFichier("../../../../tests/recc");
+    Fichier* binaire = newFichier("/home/phil/Informatique2a/UML/Topcased-5.1.0/eclipse");
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);

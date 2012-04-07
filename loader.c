@@ -16,10 +16,12 @@ void load(desasembleur* desas, Fichier* fichier){
     //#ifdef __linux__
     //    loaderElf(desas, fichier);
     //#endif
-    
+     loaderElf(desas, fichier);
+/*
     if (SYS == DESASSEMBLEUR_MAC) {
         loaderMach(desas, fichier);
     } else {
         loaderElf(desas, fichier);
     }
+*/
 }
