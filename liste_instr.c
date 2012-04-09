@@ -114,7 +114,24 @@ Instruction* init_add(){
 }
 
 /* ----------------------- MOV -----------------------*/
+static int of_mov(){
+        return 0;}
 
+static int cf_mov(){
+        return 0;}
+static int af_mov(){
+        return 0;}
+
+static Registre* f_mov(Registre* gauche, Registre* droite, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+    uint64_t a = getValeur(gauche);
+    setValeur(droite, a);
+    return droite;
+}
+
+Instruction* init_mov(){
+    return newInstruction(of_mov, cf_mov, af_mov, 0, 0, 0, f_mov);
+}
 
 
 
