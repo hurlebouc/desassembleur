@@ -175,7 +175,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
                         addFirstLL(s->listePeres, i);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
-                    } else {
+                    } else {     // cas où un call est en fin de bloc et donc l'appel est indéfini
                         pushlog(fichierlog, "WARNING : un call n'a aucun fils\n");
                         i->interet = CALL_TERMINAL;
                         stop = depilage(prog, pileAppel, fichierlog);

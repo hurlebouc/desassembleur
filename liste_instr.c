@@ -115,18 +115,23 @@ Instruction* init_add(){
 
 /* ----------------------- MOV -----------------------*/
 static int of_mov(){
-        return 0;}
+        return -1;}
 
 static int cf_mov(){
-        return 0;}
+        return -1;}
 static int af_mov(){
-        return 0;}
+        return -1;}
 
 static Registre* f_mov(Registre* gauche, Registre* droite, Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
     uint64_t a = getValeur(gauche);
     setValeur(droite, a);
     return droite;
+    /*
+     * Que se passe t'il si les deux registres n'ont pas la même taille ?
+     * Dans ce cas, comment se passe une extention d'une valeur (signé, non signé) ?
+     * Si la destinantion est plus petites que la source et qu'il y a overflow, est-ce que le mov modife les registres de flags
+     */
 }
 
 Instruction* init_mov(){
