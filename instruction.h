@@ -28,15 +28,24 @@ typedef struct _instruction{
                     // par contre il doit modifier le registre IP.
 }Instruction;
 
-void do_instr(Instruction*, Registre*, Registre*,int, Processeur*);
+void do_instr(Instruction*, Registre*, Registre*,Registre*,int, Processeur*);
 Instruction* newInstruction(
-                            int of(const Registre* a, const Registre*),
-                            int cf(const Registre* a, const Registre*),
-                            int af(const Registre* a, const Registre*),
+                            int of(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
+                            int cf(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
+                            int af(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
                             int zf,
                             int pf,
                             int sf, 
-                            Registre* f(Registre*, Registre*, Processeur*, int)
+                            Registre* f(Registre*, 
+                                        Registre*, 
+                                        Registre*,
+                                        Processeur*, int)
                             );
 void terminateInstruction(Instruction*);
 

@@ -40,19 +40,19 @@ static int getbits(uint64_t n, int p){
 
 /* ----------------------- AND -----------------------*/
 
-static int of_and(const Registre* a, const Registre* b){
+static int of_and(const Registre* a, const Registre* b, const Registre* c){
     return 0;
 }
 
-static int cf_and(const Registre* a, const Registre* b){
+static int cf_and(const Registre* a, const Registre* b, const Registre* c){
     return 0;
 }
 
-static int af_and(const Registre* a, const Registre* b){
+static int af_and(const Registre* a, const Registre* b, const Registre* c){
     return -1;
 }
 
-static Registre* f_and(Registre* destination, Registre* masque, Processeur* proc, int lenInstr){
+static Registre* f_and(Registre* destination, Registre* masque, Registre* c,Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
     uint64_t dest = getValeur(destination);
     uint64_t mask = getValeur(masque);
@@ -67,7 +67,7 @@ Instruction* init_and(){
 
 /* ----------------------- ADD -----------------------*/
 
-static int of_add(const Registre* a, const Registre* b){
+static int of_add(const Registre* a, const Registre* b, const Registre* stub){
     uint64_t aa = getValeur(a);
     uint64_t bb = getValeur(b);
     uint64_t c = aa+bb;
@@ -80,7 +80,7 @@ static int of_add(const Registre* a, const Registre* b){
     }
 }
 
-static int cf_add(const Registre* a, const Registre* b){
+static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
     uint64_t aa = getValeur(a);
     uint64_t bb = getValeur(b);
     uint64_t c = aa+bb;
@@ -93,14 +93,14 @@ static int cf_add(const Registre* a, const Registre* b){
     }
 }
 
-static int af_add(const Registre* a, const Registre* b){
+static int af_add(const Registre* a, const Registre* b, const Registre* stub){
     uint64_t aa = getValeur(a) % 8; // donne les 3 bits les plus faibles
     uint64_t bb = getValeur(b) % 8;
     
     return (aa + bb)/ 8;
 }
 
-static Registre* f_add(Registre* destination, Registre* masque, Processeur* proc, int lenInstr){
+static Registre* f_add(Registre* destination, Registre* masque, Registre* stub , Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
     uint64_t a = getValeur(destination);
     uint64_t b = getValeur(masque);
@@ -114,15 +114,18 @@ Instruction* init_add(){
 }
 
 /* ----------------------- MOV -----------------------*/
-static int of_mov(){
-        return -1;}
+static int of_mov(const Registre* a, const Registre* b, const Registre* stub){
+    return -1;
+}
 
-static int cf_mov(){
-        return -1;}
-static int af_mov(){
-        return -1;}
+static int cf_mov(const Registre* a, const Registre* b, const Registre* stub){
+    return -1;
+}
+static int af_mov(const Registre* a, const Registre* b, const Registre* stub){
+    return -1;
+}
 
-static Registre* f_mov(Registre* gauche, Registre* droite, Processeur* proc, int lenInstr){
+static Registre* f_mov(Registre* gauche, Registre* droite, Registre* stub, Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
     uint64_t a = getValeur(gauche);
     setValeur(droite, a);

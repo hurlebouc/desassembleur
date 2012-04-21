@@ -13,9 +13,9 @@
 
 test* init_t(void);
 
-Instruction* init_add(void);
-Instruction* init_and(void);
-Instruction* init_mov(void);
+Instruction*  init_add(void);
+Instruction*  init_and(void);
+Instruction*  init_mov(void);
 
 /* ====================================== opcodes_A_M */
 Instruction*  init_aaa_(void);

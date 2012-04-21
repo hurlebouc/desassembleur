@@ -279,6 +279,6 @@ int litInstruction(desasembleur* desas){
     }
     
     
-    do_instr(instruction, reg[0], reg[1], len, proc);
+    do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
     return len;
 }

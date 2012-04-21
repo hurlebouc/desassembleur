@@ -51,32 +51,32 @@ static int zf_aux(Registre* a, Registre* b){
     }
 }
 
-static int app_aux(int aux(const Registre*, const Registre*), const Registre*a, const Registre*b){
-    return aux(a,b);
+static int app_aux(int aux(const Registre*, const Registre*, const Registre*), const Registre*a, const Registre*b, const Registre*c){
+    return aux(a,b,c);
 }
 
-static Registre* app_f(Registre* f(Registre*, Registre*, Processeur*, int), Registre*a, Registre*b, Processeur* proc, int lenInstr){
-    return f(a,b,proc,lenInstr);
+static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*, int), Registre*a, Registre*b, Registre*c, Processeur* proc, int lenInstr){
+    return f(a,b,c,proc,lenInstr);
 }
 
-void do_instr(Instruction* instr, Registre* a, Registre* b,int lenInstr, Processeur* proc){
+void do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
 //    incr(_RIP, lenInstr);
     
     if (instr->zf_aux) {
         _ZF = zf_aux(a, b);
     }
     
-    if (app_aux(instr->af_aux, a, b) != -1) {
-        _AF = app_aux(instr->af_aux, a, b);
+    if (app_aux(instr->af_aux, a, b,c) != -1) {
+        _AF = app_aux(instr->af_aux, a, b, c);
     }
-    if (app_aux(instr->cf_aux, a, b) != -1) {
-        _CF = app_aux(instr->cf_aux, a, b);
+    if (app_aux(instr->cf_aux, a, b,c) != -1) {
+        _CF = app_aux(instr->cf_aux, a, b, c);
     }
-    if (app_aux(instr->of_aux, a, b) != -1) {
-        _OF = app_aux(instr->of_aux, a, b);
+    if (app_aux(instr->of_aux, a, b,c) != -1) {
+        _OF = app_aux(instr->of_aux, a, b, c);
     }
     
-    Registre* _res = app_f(instr->f, a, b, proc, lenInstr); // modification de l'état du processeur (sauf flags)
+    Registre* _res = app_f(instr->f, a, b, c, proc, lenInstr); // modification de l'état du processeur (sauf flags)
     
     if (instr->sf_aux) {
         _SF = sf_aux(_res);
@@ -87,13 +87,22 @@ void do_instr(Instruction* instr, Registre* a, Registre* b,int lenInstr, Process
 }
 
 Instruction* newInstruction(
-                            int of(const Registre* a, const Registre*),
-                            int cf(const Registre* a, const Registre*),
-                            int af(const Registre* a, const Registre*),
+                            int of(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
+                            int cf(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
+                            int af(const Registre*, 
+                                   const Registre*,
+                                   const Registre*),
                             int zf,
                             int pf,
                             int sf, 
-                            Registre* f(Registre*, Registre*, Processeur*, int)
+                            Registre* f(Registre*, 
+                                        Registre*, 
+                                        Registre*,
+                                        Processeur*, int)
                             ){
     Instruction* res = malloc(sizeof(res));
     res->of_aux = of;
