@@ -35,21 +35,27 @@
 
 #define _RDI proc->rdi
 #define _EDI proc->edi
+#define _DI  proc->di
 
 #define _RSI proc->rsi
 #define _ESI proc->esi
+#define _SI  proc->si
 
 #define _RBP proc->rbp
 #define _EBP proc->ebp
+#define _BP  proc->bp
 
 #define _RSP proc->rsp
 #define _ESP proc->esp
+#define _SP  proc->sp
 
 #define _RIP proc->rip
 #define _EIP proc->eip
+#define _IP  proc->ip
 
 #define _RFLAGS proc->rflags
 #define _EFLAGS proc->eflags
+#define _FLAGS  proc->flags
 
 #define _R8  proc->r8
 #define _R9  proc->r9

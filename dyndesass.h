@@ -31,8 +31,8 @@ void desassemblage_inconditionnel(DISASM* prog);
 void fermeture(desasembleur* desas, Graphe pi[]);
 Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]);
 
-Graphe* ControleFlow(DISASM* prog);
-Graphe* ControleFlow2(desasembleur* desas);
+//Graphe* ControleFlow(DISASM* prog);
+//Graphe* ControleFlow2(desasembleur* desas);
 Graphe* ControleFlow3(desasembleur* desas);
 
 void afficheCF(Graphe* g);

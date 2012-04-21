@@ -58,14 +58,11 @@ static int depilage(DISASM* prog, LinkedList* pileAppel, Fichier* fichier){
 void fermeture(desasembleur* desas, Graphe pi[]){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
-//    strcat(chemin_log, "/fermeture.log");
     strcat(chemin_log, CHEMIN_LOG_FERMETURE);
     Fichier* fichierlog = newFichier(chemin_log);
     
     char temp[MAX_BUFFER];
-//    FILE* graveur;
     
-//    printf("%s\n",CHEMIN_LOG);
     DISASM* prog = desas->disasm;
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;

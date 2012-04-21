@@ -56,21 +56,27 @@ extern "C" {
         
         Registre*	rdi;
         Registre*   edi;    // ne pas détruire
+        Registre*   di;
         
         Registre*	rsi;
         Registre*   esi;    // ne pas détruire
+        Registre*   si;
         
         Registre*	rbp;    // souvent une copie de rsp
         Registre*   ebp;    // ne pas détruire
+        Registre*   bp;
         
         Registre*	rsp;    // stack pointer
         Registre*   esp;    // ne pas détruire
+        Registre*   sp;
         
         Registre*	rip;
         Registre*   eip;    // ne pas détruire
+        Registre*   ip;
         
         Registre*	rflags;
         Registre*   eflags; // ne pas détruire
+        Registre*   flags;
         
         Registre*	r8;
         Registre*	r9;

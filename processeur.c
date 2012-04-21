@@ -36,22 +36,28 @@ Processeur* newProcesseur(){
     _EDX = newRegistreFilsUnique(_DX);
     _RDX = newRegistreFilsUnique(_EDX);
     
-    _EDI = newRegistreFeuille(32, 0);
+    _DI = newRegistreFeuille(16, 0);
+    _EDI = newRegistreFilsUnique(_DI);
     _RDI = newRegistreFilsUnique(_EDI);
     
-    _ESI = newRegistreFeuille(32, 0);
+    _SI = newRegistreFeuille(16, 0);
+    _ESI = newRegistreFilsUnique(_SI);
     _RSI = newRegistreFilsUnique(_ESI);
     
-    _EBP = newRegistreFeuille(32, 0);
+    _BP = newRegistreFeuille(16, 0);
+    _EBP = newRegistreFilsUnique(_BP);
     _RBP = newRegistreFilsUnique(_EBP);
     
-    _ESP = newRegistreFeuille(32, 0);
+    _SP = newRegistreFeuille(16, 0);
+    _ESP = newRegistreFilsUnique(_SP);
     _RSP = newRegistreFilsUnique(_ESP);
     
-    _EIP = newRegistreFeuille(32, 0);
+    _IP = newRegistreFeuille(16, 0);
+    _EIP = newRegistreFilsUnique(_IP);
     _RIP = newRegistreFilsUnique(_EIP);
     
-    _EFLAGS = newRegistreFeuille(32, 0);
+    _FLAGS = newRegistreFeuille(16, 0);
+    _EFLAGS = newRegistreFilsUnique(_FLAGS);
     _RFLAGS = newRegistreFilsUnique(_EFLAGS);
     
     _R8 = newRegistreFeuille(64, 0);

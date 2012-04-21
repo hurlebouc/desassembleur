@@ -27,6 +27,7 @@ extern "C" {
 #define BEA_USE_STDCALL /* specify the usage of a stdcall version of BeaEngine */
 #include "BeaEngine.h"
 #include "processeur.h"
+#include "liste_instr.h"
 
 
 
