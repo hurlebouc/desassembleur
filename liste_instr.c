@@ -72,7 +72,9 @@ static int of_add(const Registre* a, const Registre* b, const Registre* stub){
     uint64_t bb = getValeur(b);
     uint64_t c = aa+bb;
     uint64_t p = pow(2, a->taille);
-    c = c % p;
+    if (p!= 0) {
+        c = c % p;
+    }
     if (c<aa) {
         return 1;
     } else {
@@ -85,7 +87,9 @@ static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
     uint64_t bb = getValeur(b);
     uint64_t c = aa+bb;
     uint64_t p = pow(2, a->taille);
-    c = c % p;
+    if (p!= 0) {
+        c = c % p;
+    }
     if (c<aa) {
         return 1;
     } else {

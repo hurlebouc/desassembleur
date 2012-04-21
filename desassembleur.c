@@ -214,13 +214,17 @@ int litInstruction(desasembleur* desas){
     
     switch (instr.Opcode) {
         case 0x00:
-//            instruction = init_add_EbGb();
+            //instruction = init_add_EbGb();
+            instruction = init_add();
+            break;
+        case 0x01:
+            //instruction = init_add_EbGb();
             instruction = init_add();
             break;
             
         default:
-            printf("litInstruction() : opcode inconnu\n");
-            exit(EXIT_FAILURE);
+//            printf("litInstruction() : opcode inconnu\n");
+//            exit(EXIT_FAILURE);
             break;
     }
     
@@ -270,6 +274,8 @@ int litInstruction(desasembleur* desas){
                 ;
                 break;
             case CONSTANT_TYPE + ABSOLUTE_:
+                //printf("%lx\t%x\t%lx\t%s\n", desas->disasm->VirtualAddr, desas->disasm->Instruction.Opcode, desas->disasm->Instruction.Immediat ,desas->disasm->CompleteInstr);
+                reg[i] = newRegistreFeuille(64, desas->disasm->Instruction.Immediat);
                 ;
                 break;
                 
@@ -277,8 +283,9 @@ int litInstruction(desasembleur* desas){
                 break;
         }
     }
+    if (instruction != NULL) {
+        do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
+    }
     
-    
-    do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
     return len;
 }

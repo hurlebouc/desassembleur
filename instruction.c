@@ -104,7 +104,7 @@ Instruction* newInstruction(
                                         Registre*,
                                         Processeur*, int)
                             ){
-    Instruction* res = malloc(sizeof(res));
+    Instruction* res = malloc(sizeof(Instruction));
     res->of_aux = of;
     res->cf_aux = cf;
     res->af_aux = af;

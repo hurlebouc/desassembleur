@@ -72,7 +72,8 @@ void fermeture(desasembleur* desas, Graphe pi[]){
     
     while (!stop) {
         
-        int len = Disasm(prog);
+        //int len = Disasm(prog);
+        int len = litInstruction(desas);
         int brancheType = prog->Instruction.BranchType;
         unsigned long iniAdress = prog->VirtualAddr;
         unsigned long cibleAdress = prog->Instruction.AddrValue;
