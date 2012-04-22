@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#include "macro.h"
+#include "../macro.h"
 
 #include "CUnit/Basic.h"
 #include "CUnit/Console.h"
@@ -18,7 +18,8 @@
 #include "testVide.h"
 #include "CUnit/CUCurses.h"
 
-char* ROOT = "./";
+char* ROOT;
+char* TESTS;
 int SYS = DESASSEMBLEUR_MAC;
 
 #define TRUE 1
@@ -28,8 +29,12 @@ int init_suite_success(void) { return 0; }
 int clean_suite_success(void) { return 0; }
 
 
-int main()
+int main(int argc, char* argv [])
 {
+    
+    //printf("%d \n %s \n", argc, argv[1]);
+    ROOT = argv[0];
+    TESTS = argv[1];
     CU_pSuite pSuite = NULL;
     
     /*------------------------ INITIALISATION DU TESTEUR ---------------------*/

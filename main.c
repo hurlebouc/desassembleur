@@ -8,16 +8,26 @@
 #include "instruction.h"
 #include "liste_instr.h"
 
-char* ROOT = "./";
+char* ROOT;
+char* TESTS;
+
 int SYS = DESASSEMBLEUR_MAC;
 
 int main(int argc, char* argv []) {
+    
+    ROOT = argv[0];
+    TESTS = argv[1];
+    
     char chemin_vide[FILENAME_MAX];
     strcpy(chemin_vide, ROOT);
     strcat(chemin_vide, "vide.txt");
     Fichier* res_vide = newFichier(chemin_vide);
     cleanFile(res_vide);
-    Fichier* binaire = newFichier("../../../../tests/recc");
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "recc");
+    Fichier* binaire = newFichier(chemin_bin);
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);

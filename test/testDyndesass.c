@@ -6,15 +6,26 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+extern char* TESTS;
+
 #include "testDyndesass.h"
+#include <stdio.h>
 
 void cfg_recc(void){
         
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
-    Fichier* modele = newFichier("../../../../tests/recc.dot");
-    Fichier* binaire = newFichier("../../../../tests/recc");
+    
+    char chemin_modele[FILENAME_MAX];
+    strcpy(chemin_modele, TESTS); 
+    strcat(chemin_modele, "recc.dot");
+    Fichier* modele = newFichier(chemin_modele);
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "recc");
+    Fichier* binaire = newFichier(chemin_bin);
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
@@ -34,8 +45,16 @@ void cfg_entropie(void){
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
-    Fichier* modele = newFichier("../../../../tests/entropie.dot");
-    Fichier* binaire = newFichier("../../../../tests/entropie");
+    
+    char chemin_modele[FILENAME_MAX];
+    strcpy(chemin_modele, TESTS); 
+    strcat(chemin_modele, "entropie.dot");
+    Fichier* modele = newFichier(chemin_modele);
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "entropie");
+    Fichier* binaire = newFichier(chemin_bin);
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
@@ -55,8 +74,16 @@ void cfg_disas(void){
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
-    Fichier* modele = newFichier("../../../../tests/disas.dot");
-    Fichier* binaire = newFichier("../../../../tests/disas");
+    
+    char chemin_modele[FILENAME_MAX];
+    strcpy(chemin_modele, TESTS); 
+    strcat(chemin_modele, "disas.dot");
+    Fichier* modele = newFichier(chemin_modele);
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "disas");
+    Fichier* binaire = newFichier(chemin_bin);
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
@@ -76,8 +103,16 @@ void cfg_handbrake(void){
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
-    Fichier* modele = newFichier("../../../../tests/handbrake.dot");
-    Fichier* binaire = newFichier("../../../../tests/handbrake");
+    
+    char chemin_modele[FILENAME_MAX];
+    strcpy(chemin_modele, TESTS); 
+    strcat(chemin_modele, "handbrake.dot");
+    Fichier* modele = newFichier(chemin_modele);
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "handbrake");
+    Fichier* binaire = newFichier(chemin_bin);
     
     desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
