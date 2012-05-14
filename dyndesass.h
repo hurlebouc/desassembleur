@@ -29,7 +29,7 @@ extern char* ROOT;
 void desassemblage_inconditionnel(DISASM* prog);
 
 void fermeture(desasembleur* desas, Graphe pi[]);
-Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]);
+Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]);
 
 //Graphe* ControleFlow(DISASM* prog);
 //Graphe* ControleFlow2(desasembleur* desas);

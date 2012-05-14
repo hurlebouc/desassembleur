@@ -35,11 +35,11 @@ static int Disasm2(DISASM* prog){
     return len;
 }
 
-/*--------------------------------------------------------------------------------------------------*/
-/*                                                                                                  */
-/*                                         PRE-TRAITEMENT                                           */
-/*                                                                                                  */
-/*--------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*                            PRE-TRAITEMENT                                  */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
 
 static int depilage(DISASM* prog, LinkedList* pileAppel, Fichier* fichier){
     unsigned long iniAdress = prog->VirtualAddr;
@@ -319,7 +319,7 @@ void fermeture(desasembleur* desas, Graphe pi[]){
  * Si on decide que on ne fait pas une fleche depuis les ret, il suffit d ajouter "ret " au "hlt "
  */
 
-static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
+static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     char temp[MAX_BUFFER];
     
     Disasm(prog);
@@ -427,7 +427,7 @@ static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
             prog->VirtualAddr = addrCible; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->SecurityBlock = (int) (secuIni - ecart); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             
-            assembleGraphe_aux(prog, etatCible, fichierlog);
+            simplifieGraphe_aux(prog, etatCible, fichierlog);
             tete = tete->suiv;
         }
         return;
@@ -446,11 +446,12 @@ static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         exit(EXIT_FAILURE);
     }
     
-    Graphe* tete = g->listeFils->valeur;
+    LinkedList* filsUnique = g->listeFils;
+    Graphe* tete = filsUnique->valeur;
     
-    LinkedList* filsUnique = newLinkedList();
-    addFirstLL(filsUnique, (void*) tete);
-    g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
+//    LinkedList* filsUnique = newLinkedList();
+//    addFirstLL(filsUnique, (void*) tete);
+//    g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
     len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
     
@@ -469,7 +470,7 @@ static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         filsUnique->valeur = tete;
         len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
     }
-    assembleGraphe_aux(prog, tete, fichierlog);
+    simplifieGraphe_aux(prog, tete, fichierlog);
     return;
 }
 
@@ -478,7 +479,7 @@ static void assembleGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
  * pour en faire un seul graphe
  */
 
-Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
+Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
 //    strcat(chemin_log, "/assemblage.log");
@@ -488,7 +489,7 @@ Graphe* assembleGraphe(desasembleur* desas, Graphe pi[]){
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;
     Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
-    assembleGraphe_aux(prog, g, fichierlog);
+    simplifieGraphe_aux(prog, g, fichierlog);
     g->assemble=1;
     pushlog(fichierlog, "fin de l'assemblage");
     closeFichier(fichierlog);
@@ -508,15 +509,15 @@ Graphe* ControleFlow3(desasembleur* desas){
     prog->EIP = debutReel;
     prog->SecurityBlock = (unsigned int) sb;
     prog->VirtualAddr = virtualAddr;
-    Graphe* g = assembleGraphe(desas, pi);
+    Graphe* g = simplifieGraphe(desas, pi);
     return g;
 }
 
-/*--------------------------------------------------------------------------------------------------*/
-/*                                                                                                  */
-/*                                           AFFICHAGE                                              */
-/*                                                                                                  */
-/*--------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*                                AFFICHAGE                                   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
 
 /**
  * TODO :   Amélioration des couleurs en fonctions des différents cas.

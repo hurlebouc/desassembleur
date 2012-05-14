@@ -76,8 +76,8 @@
 		B416F7F214FE83B3002E062D /* loaderElf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loaderElf.h; sourceTree = "<group>"; };
 		B416F7F514FE8C9E002E062D /* loaderElf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = loaderElf.c; sourceTree = "<group>"; };
 		B427933014DEB046007D0319 /* BeaEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BeaEngine.h; sourceTree = "<group>"; };
-		B427933114DEB046007D0319 /* dyndesass.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dyndesass.c; sourceTree = "<group>"; };
-		B427933214DEB046007D0319 /* dyndesass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyndesass.h; sourceTree = "<group>"; };
+		B427933114DEB046007D0319 /* dyndesass.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = dyndesass.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		B427933214DEB046007D0319 /* dyndesass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = dyndesass.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B427933314DEB046007D0319 /* LinkedList.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = LinkedList.c; sourceTree = "<group>"; };
 		B427933414DEB046007D0319 /* LinkedList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
 		B427933514DEB046007D0319 /* LoaderMach.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = LoaderMach.c; sourceTree = "<group>"; };
@@ -99,11 +99,11 @@
 		B453216C15061895001C6689 /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
 		B479109614FFE5320004216E /* Vide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vide.h; sourceTree = "<group>"; };
 		B479109814FFE5450004216E /* Vide.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vide.c; sourceTree = "<group>"; };
-		B4ABD601150174EB00238EC7 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = test.c; path = test/test.c; sourceTree = "<group>"; };
+		B4ABD601150174EB00238EC7 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = test.c; path = test/test.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		B4ABD6031501753600238EC7 /* runTest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = runTest.sh; path = test/runTest.sh; sourceTree = "<group>"; };
 		B4ABD60515017E9200238EC7 /* libcunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcunit.a; path = lib/libcunit.a; sourceTree = "<group>"; };
 		B4AF79E51501568800573ABD /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
-		B4B456AA1505314F001A49E2 /* commandes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commandes.h; sourceTree = "<group>"; };
+		B4B456AA1505314F001A49E2 /* commandes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = commandes.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B4B456AB1505316D001A49E2 /* commandes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = commandes.c; sourceTree = "<group>"; };
 		B4B456AE15053755001A49E2 /* desassembleur.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = desassembleur.h; sourceTree = "<group>"; };
 		B4B456AF15053760001A49E2 /* desassembleur.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = desassembleur.c; sourceTree = "<group>"; };
@@ -111,10 +111,10 @@
 		B4E455A615077C5300D0A41A /* processeur.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = processeur.h; sourceTree = "<group>"; };
 		B4E455A71507852800D0A41A /* testVide.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testVide.c; path = test/testVide.c; sourceTree = "<group>"; };
 		B4FA7C7F150F3BE00023615C /* registre.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = registre.h; sourceTree = "<group>"; };
-		B4FF379215038CF400D78BD0 /* testDyndesass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testDyndesass.c; path = test/testDyndesass.c; sourceTree = "<group>"; };
+		B4FF379215038CF400D78BD0 /* testDyndesass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = testDyndesass.c; path = test/testDyndesass.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		B4FF379915038DE500D78BD0 /* Fichier.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Fichier.c; sourceTree = "<group>"; };
 		B4FF379A15038DE500D78BD0 /* Fichier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fichier.h; sourceTree = "<group>"; };
-		B4FF37A91503CBC200D78BD0 /* testDyndesass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testDyndesass.h; path = test/testDyndesass.h; sourceTree = "<group>"; };
+		B4FF37A91503CBC200D78BD0 /* testDyndesass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = testDyndesass.h; path = test/testDyndesass.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
