@@ -25,7 +25,7 @@ extern "C" {
 #include "desassembleur.h"
 
 
-void loaderElf(desasembleur* desas, Fichier* fichier);
+void loaderElf(Desasembleur* desas, Fichier* fichier);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,6 @@
 #include "loaderElf.h"
 
-void loaderElf(desasembleur* desas, Fichier* fichier) {
+void loaderElf(Desasembleur* desas, Fichier* fichier) {
 
 
     char* chemin = fichier->chemin;

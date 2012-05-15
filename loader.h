@@ -26,7 +26,7 @@ extern "C" {
     
     extern int SYS;
     
-    void load(desasembleur* desas, Fichier* fichier);
+    void load(Desasembleur* desas, Fichier* fichier);
     
 #ifdef __cplusplus
 }

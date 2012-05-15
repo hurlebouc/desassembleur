@@ -37,7 +37,7 @@ static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
     initialiserFlags(proc, getValeur(proc->rflags));
 }
 
-void loaderMach(desasembleur* desas, Fichier* fichier) {
+void loaderMach(Desasembleur* desas, Fichier* fichier) {
     
     char* chemin = fichier->chemin;
     int fd = open(chemin, O_RDONLY);

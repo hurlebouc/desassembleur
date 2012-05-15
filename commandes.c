@@ -8,30 +8,35 @@
 
 #include "commandes.h"
 
-void afficherCFG(desasembleur* desas){
-    Graphe*g = ControleFlow3(desas);
-    printf("\n");
-    afficheCF(g);
+void afficherCFG(Fichier* binaire){
+    Desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
+    Graphe*g = ControleFlow_simplifie(desas);
+    afficheGraphe(g);
+    terminateDesassembleur(desas);
 }
 
-void enregistrerCFG(desasembleur* desas, Fichier* tmp){
-    Graphe*g = ControleFlow3(desas);
-    enregistreCF(g, tmp);
+void enregistrerCFG(Fichier* binaire, Fichier* tmp){
+    Desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
+    Graphe*g = ControleFlow_simplifie(desas);
+    enregistreGraphe(g, tmp);
+    terminateDesassembleur(desas);
 }
 
-void afficherVide(desasembleur* desas){
+void afficherVide(Desasembleur* desas){
     unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
-    fermeture(desas, pi);
+    buildGraphe(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
     afficherVides(lVides, taille);
     terminatelVides(lVides);
 }
 
-void enregistrerVide(desasembleur* desas, Fichier* fichier){
+void enregistrerVide(Desasembleur* desas, Fichier* fichier){
     unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
-    fermeture(desas, pi);
+    buildGraphe(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
     enregistrerVides(lVides, taille, fichier);
     terminatelVides(lVides);

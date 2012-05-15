@@ -55,20 +55,22 @@ static int depilage(DISASM* prog, LinkedList* pileAppel, Fichier* fichier){
     return 0;
 }
 
-void fermeture(desasembleur* desas, Graphe pi[]){
+Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
     strcat(chemin_log, CHEMIN_LOG_FERMETURE);
-    Fichier* fichierlog = newFichier(chemin_log);
-    
+    Fichier* fichierlog = newFichier(chemin_log);    
     char temp[MAX_BUFFER];
     
     DISASM* prog = desas->disasm;
     LinkedList* pileAppel = newLinkedList();
     int stop = 0;
     unsigned long debut = desas->debutVirtuel;
-    //unsigned long taille = prog->SecurityBlock;
     unsigned long fin = prog->SecurityBlock + prog->VirtualAddr;
+    
+    /* Mémorisation des paramètres initiaux */
+    
+    unsigned long virtualAddr_init = prog->VirtualAddr;
     
     while (!stop) {
         
@@ -293,6 +295,9 @@ void fermeture(desasembleur* desas, Graphe pi[]){
     }
     pushlog(fichierlog, "fin de la lecture\n");
     closeFichier(fichierlog);
+    
+    Graphe* g = &pi[virtualAddr_init - debut];
+    return g;
 }
 
 
@@ -479,7 +484,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
  * pour en faire un seul graphe
  */
 
-Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]){
+Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
 //    strcat(chemin_log, "/assemblage.log");
@@ -488,7 +493,7 @@ Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]){
     
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;
-    Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
+//    Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
     simplifieGraphe_aux(prog, g, fichierlog);
     g->assemble=1;
     pushlog(fichierlog, "fin de l'assemblage");
@@ -496,34 +501,44 @@ Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]){
     return g;
 }
 
-Graphe* ControleFlow3(desasembleur* desas){
+Graphe* ControleFlow_entier(Desasembleur* desas){
+    DISASM* prog = desas->disasm;
+    unsigned long sb = prog->SecurityBlock;
+    unsigned long virtualAddr = prog->VirtualAddr;
+    unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
+    Graphe* pi = calloc(sizeof(Graphe),taille);
+    Graphe* g = buildGraphe(desas, pi);
+    return g;
+}
+
+Graphe* ControleFlow_simplifie(Desasembleur* desas){
     DISASM* prog = desas->disasm;
     unsigned long sb = prog->SecurityBlock;
     unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
     unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
     Graphe* pi = calloc(sizeof(Graphe),taille);
-    fermeture(desas, pi);
+    Graphe* g = buildGraphe(desas, pi);
     //afficherPI(pi, taille);
     
     prog->EIP = debutReel;
     prog->SecurityBlock = (unsigned int) sb;
     prog->VirtualAddr = virtualAddr;
-    Graphe* g = simplifieGraphe(desas, pi);
+    simplifieGraphe(desas, g);
     return g;
 }
 
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*                                AFFICHAGE                                   */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                                AFFICHAGE                                  */
+/*                                                                           */
+/*---------------------------------------------------------------------------*/
 
 /**
  * TODO :   Amélioration des couleurs en fonctions des différents cas.
  */
 
-static void afficheCF_aux(Graphe* g){
+static void afficheGraphe_aux(Graphe* g){
     if (g->affiche) {
         printf("\"%lx\";\n", g->VirtualAddrLue);
         return;
@@ -566,12 +581,12 @@ static void afficheCF_aux(Graphe* g){
             printf("\"%lx\" [style=filled fillcolor=green]", g->VirtualAddrLue);
         }
         printf(";\n");
-        afficheCF_aux(etatCible);
+        afficheGraphe_aux(etatCible);
         tete = tete->suiv;
     }
 }
 
-static void enregistreCF_aux(Graphe* g, FILE* graveur){
+static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
     if (g->affiche) {
         fprintf(graveur, "\"%lx\";\n", g->VirtualAddrLue);
         return;
@@ -614,22 +629,22 @@ static void enregistreCF_aux(Graphe* g, FILE* graveur){
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=green]", g->VirtualAddrLue);
         }
         fprintf(graveur, ";\n");
-        enregistreCF_aux(etatCible,graveur);
+        enregistreGraphe_aux(etatCible,graveur);
         tete = tete->suiv;
     }
 }
 
-void afficheCF(Graphe* g){
+void afficheGraphe(Graphe* g){
     printf("digraph mon_graphe {\n");
-    afficheCF_aux(g);
+    afficheGraphe_aux(g);
     printf("}\n");
     return;
 }
 
-void enregistreCF(Graphe* g, Fichier* tmp){
+void enregistreGraphe(Graphe* g, Fichier* tmp){
     FILE* graveur = ouvrirEcriture(tmp);
     fprintf(graveur, "digraph mon_graphe {\n");
-    enregistreCF_aux(g, graveur);
+    enregistreGraphe_aux(g, graveur);
     fprintf(graveur, "}");
     fclose(graveur);
     return;

@@ -27,16 +27,15 @@ void cfg_recc(void){
     strcat(chemin_bin, "recc");
     Fichier* binaire = newFichier(chemin_bin);
     
-    desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+//    Desasembleur* desas = newDesassembleur(NULL);
+//    load(desas, binaire);
     
-    enregistrerCFG(desas, temp);
+    enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -56,16 +55,16 @@ void cfg_entropie(void){
     strcat(chemin_bin, "entropie");
     Fichier* binaire = newFichier(chemin_bin);
     
-    desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+//    Desasembleur* desas = newDesassembleur(NULL);
+//    load(desas, binaire);
     
-    enregistrerCFG(desas, temp);
+    enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-    terminateDesassembleur(desas);
+//    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -85,16 +84,16 @@ void cfg_disas(void){
     strcat(chemin_bin, "disas");
     Fichier* binaire = newFichier(chemin_bin);
     
-    desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+//    Desasembleur* desas = newDesassembleur(NULL);
+//    load(desas, binaire);
     
-    enregistrerCFG(desas, temp);
+    enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-    terminateDesassembleur(desas);
+//    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -114,16 +113,16 @@ void cfg_handbrake(void){
     strcat(chemin_bin, "handbrake");
     Fichier* binaire = newFichier(chemin_bin);
     
-    desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+//    Desasembleur* desas = newDesassembleur(NULL);
+//    load(desas, binaire);
     
-    enregistrerCFG(desas, temp);
+    enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-    terminateDesassembleur(desas);
+//    terminateDesassembleur(desas);
     CU_ASSERT_EQUAL(diff, -1);
 }
 

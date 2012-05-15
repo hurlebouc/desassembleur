@@ -34,7 +34,7 @@ struct lecteurRegistre {
     struct x86_thread_state state;
 };
 
-void loaderMach(desasembleur* desas, Fichier* fichier);
+void loaderMach(Desasembleur* desas, Fichier* fichier);
 
 #ifdef __cplusplus
 }

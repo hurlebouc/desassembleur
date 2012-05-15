@@ -8,7 +8,7 @@
 
 #include "loader.h"
 
-void load(desasembleur* desas, Fichier* fichier){
+void load(Desasembleur* desas, Fichier* fichier){
     
     //#ifdef __APPLE__
     //    loaderMach(desas, fichier);

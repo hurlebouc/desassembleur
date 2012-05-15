@@ -11,10 +11,10 @@
 #include "_macro_Build.h"
 
 
-desasembleur* newDesassembleur(desasembleur* desas){
+Desasembleur* newDesassembleur(Desasembleur* desas){
     
     if (desas == NULL) {
-        desas = malloc(sizeof(desasembleur));
+        desas = malloc(sizeof(Desasembleur));
         desas->disasm = malloc(sizeof(DISASM));;
         desas->proc = newProcesseur();
     }
@@ -24,7 +24,7 @@ desasembleur* newDesassembleur(desasembleur* desas){
     return desas;
 }
 
-void terminateDesassembleur(desasembleur* desas){
+void terminateDesassembleur(Desasembleur* desas){
     free(desas->disasm);
     terminateLinkedList(desas->proc->stack); // on utilisera pas de lien vers l'extérieur
     terminateProcesseur(desas->proc);
@@ -204,7 +204,7 @@ static void setRegistre(int i, ARGTYPE* argument, Processeur *proc, Registre** r
     }
 }
 
-int litInstruction(desasembleur* desas){
+int litInstruction(Desasembleur* desas){
     int len = Disasm(desas->disasm);
     Processeur* proc = desas->proc;
     INSTRTYPE instr = desas->disasm->Instruction;

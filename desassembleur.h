@@ -35,14 +35,14 @@ typedef struct _desassembleur{
     Processeur* proc;
     DISASM* disasm;
     unsigned long debutVirtuel;    // debut virtuel du bloc
-}desasembleur;
+}Desasembleur;
 
 
 
-desasembleur* newDesassembleur(desasembleur* desas);
-void terminateDesassembleur(desasembleur* desas);
+Desasembleur* newDesassembleur(Desasembleur* desas);
+void terminateDesassembleur(Desasembleur* desas);
 
-int litInstruction(desasembleur* desas);
+int litInstruction(Desasembleur* desas);
 
 #ifdef __cplusplus
 }

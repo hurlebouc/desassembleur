@@ -14,12 +14,13 @@ extern "C" {
 #endif
 
 #include "dyndesass.h"
+#include "loader.h"
 #include "Vide.h"
 
-void afficherCFG(desasembleur* desas);
-void enregistrerCFG(desasembleur* desas, Fichier* tmp);
-void afficherVide(desasembleur* desas);
-void enregistrerVide(desasembleur* desas, Fichier* fichier);
+void afficherCFG(Fichier* binaire);
+void enregistrerCFG(Fichier* binaire, Fichier* dest);
+void afficherVide(Desasembleur* desas);
+void enregistrerVide(Desasembleur* desas, Fichier* fichier);
 
 #ifdef __cplusplus
 }

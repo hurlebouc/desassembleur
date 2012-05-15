@@ -9,37 +9,35 @@
 #include "liste_instr.h"
 
 char* ROOT;
-char* TESTS;
 
 int SYS = DESASSEMBLEUR_MAC;
 
 int main(int argc, char* argv []) {
     
     ROOT = argv[0];
-    TESTS = argv[1];
+    char* test = argv[1];
     
-    char chemin_vide[FILENAME_MAX];
-    strcpy(chemin_vide, ROOT);
-    strcat(chemin_vide, "vide.txt");
-    Fichier* res_vide = newFichier(chemin_vide);
-    cleanFile(res_vide);
+    char chemin_res[FILENAME_MAX];
+    strcpy(chemin_res, ROOT);
+    strcat(chemin_res, "graphe.dot");
+    Fichier* res = newFichier(chemin_res);
+    cleanFile(res);
     
-    char chemin_bin[FILENAME_MAX];
-    strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "recc");
-    Fichier* binaire = newFichier(chemin_bin);
+    Fichier* binaire = newFichier(test);
     
-    desasembleur* desas = newDesassembleur(NULL);
+    Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
     
+    Graphe* g = ControleFlow_entier(desas);
+    g->assemble = 1;
+    enregistreGraphe(g, res);
     
-    enregistrerVide(desas, res_vide);
-    closeFichier(res_vide);
+    closeFichier(res);
     closeFichier(binaire);
     terminateDesassembleur(desas);
     
-    test* t = init_t();
-    printf("%d\n", do_test(t, 4));
+//    test* t = init_t();
+//    printf("%d\n", do_test(t, 4));
     
     printf("done.\n");
     return 0;

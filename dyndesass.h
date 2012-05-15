@@ -28,18 +28,19 @@ extern char* ROOT;
 
 void desassemblage_inconditionnel(DISASM* prog);
 
-void fermeture(desasembleur* desas, Graphe pi[]);
-Graphe* simplifieGraphe(desasembleur* desas, Graphe pi[]);
+Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]);
+Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g);
 
 //Graphe* ControleFlow(DISASM* prog);
 //Graphe* ControleFlow2(desasembleur* desas);
-Graphe* ControleFlow3(desasembleur* desas);
+Graphe* ControleFlow_entier(Desasembleur* desas);
+Graphe* ControleFlow_simplifie(Desasembleur* desas);
 
-void afficheCF(Graphe* g);
+void afficheGraphe(Graphe* g);
 void afficherPI(Graphe* pi, unsigned long taille);
 void afficheCrible(int* crible, unsigned long taille, unsigned long pev);
 
-void enregistreCF(Graphe* g, Fichier* tmp);
+void enregistreGraphe(Graphe* g, Fichier* tmp);
 
 #ifdef __cplusplus
 }
