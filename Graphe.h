@@ -55,6 +55,7 @@ extern "C" {
 typedef struct _Graphe{
     unsigned long VirtualAddrLue;       //adresse de l'instruction lue
 //    unsigned long VirtualAddrPointee; //adresse de l'instruction pointée
+    uintptr_t aif;                          // address in file
     char interet;                        // voir les macros
     char typeLiaison;                    // voir les macros
     char assemble;                       //1 si neud déja vue (simplifieGraphe)

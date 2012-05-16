@@ -141,7 +141,7 @@
 		B427932414DEAFC0007D0319 = {
 			isa = PBXGroup;
 			children = (
-				B427935614DEB5EB007D0319 /* librairie */,
+				B427935614DEB5EB007D0319 /* librairies */,
 				B427934B14DEB0EC007D0319 /* desasembleur.1 */,
 				B4334F12151A33BB006E2986 /* macros */,
 				B427933A14DEB066007D0319 /* headers */,
@@ -209,7 +209,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B427935614DEB5EB007D0319 /* librairie */ = {
+		B427935614DEB5EB007D0319 /* librairies */ = {
 			isa = PBXGroup;
 			children = (
 				B4ABD60515017E9200238EC7 /* libcunit.a */,
@@ -217,7 +217,7 @@
 				B427933B14DEB09B007D0319 /* beaengine */,
 				B427935414DEB157007D0319 /* libBeaEngine_s_d.a */,
 			);
-			name = librairie;
+			name = librairies;
 			sourceTree = "<group>";
 		};
 		B4334F12151A33BB006E2986 /* macros */ = {

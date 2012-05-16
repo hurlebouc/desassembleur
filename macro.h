@@ -14,5 +14,6 @@
 #define CHEMIN_LOG_VIDE "vide.log"
 #define DESASSEMBLEUR_LINUX 0
 #define DESASSEMBLEUR_MAC 1
+//#define DEBUG_MODE
 
 #endif

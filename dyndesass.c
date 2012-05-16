@@ -98,6 +98,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
         Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddrLue = iniAdress;
         i->tailleInstruction = len;
+        i->aif = prog->EIP;
         for (int k = 1; k<len; k++) {
             if (iniAdress + k < fin) {
                 pi[iniAdress + k  - debut].recouvert = EST_RECOUVERT;
@@ -328,10 +329,29 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
 static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     char temp[MAX_BUFFER];
     
+#ifdef DEBUG_MODE
     Disasm(prog);
     sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
     pushlog(fichierlog, temp);
     
+    if (g->VirtualAddrLue != prog->VirtualAddr) {
+        sprintf(temp, "le graphe et le programme en mémoire sont différents");
+        pushlog(fichierlog, temp);
+        exit(EXIT_FAILURE);
+    }
+#endif
+
+    DISASM prog2;
+    (void) memset(&prog2, 0, sizeof (DISASM));
+    prog2.EIP = g->aif;
+    prog2.VirtualAddr = g->VirtualAddrLue;
+    prog2.SecurityBlock = g->tailleInstruction;
+    prog2.Archi = ARCHI_PROC;
+    prog2.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    Disasm(&prog2);
+    sprintf(temp, "%lx \t %s\n",g->VirtualAddrLue, prog2.CompleteInstr);
+    pushlog(fichierlog, temp);
+        
     if (g->VirtualAddrLue == 0) {
         pushlog(fichierlog, "le graphe contient un etat qui n'a pas pas été lu lors de la pré-lecture\n");
         exit(EXIT_FAILURE);
@@ -417,21 +437,24 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
             exit(EXIT_FAILURE);
         }
         
+#ifdef DEBUG_MODE
         unsigned long EIPini = prog->EIP;// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         unsigned long VirtualAddrIni = prog->VirtualAddr;// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         long secuIni = prog->SecurityBlock;// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
         
         LinkedList* tete = g->listeFils;
         int totFils = (int) sizeLL(g->listeFils);
         for (int i = 0; i<totFils; i++) { // on visite tous les fils.
             Graphe* etatCible = tete->valeur;
             
-            
+#ifdef DEBUG_MODE
             unsigned long addrCible = etatCible->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             long ecart = addrCible - VirtualAddrIni; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->EIP = EIPini + ecart; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->VirtualAddr = addrCible; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->SecurityBlock = (int) (secuIni - ecart); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
             
             simplifieGraphe_aux(prog, etatCible, fichierlog);
             tete = tete->suiv;
@@ -445,7 +468,9 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
     pushlog(fichierlog, "un non depart d un fleche\n");
        
+#ifdef DEBUG_MODE
     int len = Disasm2(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
     
     if (g->listeFils == NULL || g->listeFils->longueur == 0) {
         pushlog(fichierlog, "etat terminal non marqué (interet nul)\n");
@@ -459,14 +484,18 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
 //    addFirstLL(filsUnique, (void*) tete);
 //    g->listeFils = filsUnique; // on sait que g n est pas de depart d une fleche
     
+#ifdef DEBUG_MODE
     len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
     
     while (tete->interet == 0) {
         
+#ifdef DEBUG_MODE
         tete->assemble=1; // normlament on pourrait se contenter des la dernière tete
         prog->EIP += len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         prog->VirtualAddr +=len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         prog->SecurityBlock = prog->SecurityBlock - len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
         
         if (tete->listeFils == NULL || tete->listeFils->longueur == 0) {
             pushlog(fichierlog, "etat terminal non marqué (interet nul)\n");
@@ -474,7 +503,10 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         }
         tete = tete->listeFils->valeur;
         filsUnique->valeur = tete;
+        
+#ifdef DEBUG_MODE
         len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+#endif
     }
     simplifieGraphe_aux(prog, tete, fichierlog);
     return;
@@ -488,13 +520,11 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
 Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
-//    strcat(chemin_log, "/assemblage.log");
     strcat(chemin_log, CHEMIN_LOG_ASSEMBLAGE);
     Fichier* fichierlog = newFichier(chemin_log);
     
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;
-//    Graphe* g = &pi[prog->VirtualAddr - desas->debutVirtuel]; // la premiere instruction est forcement non vide
     simplifieGraphe_aux(prog, g, fichierlog);
     g->assemble=1;
     pushlog(fichierlog, "fin de l'assemblage");
