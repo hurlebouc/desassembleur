@@ -204,7 +204,7 @@ static void setRegistre(int i, ARGTYPE* argument, Processeur *proc, Registre** r
     }
 }
 
-int litInstruction(Desasembleur* desas){
+void litInstruction(Desasembleur *desas) {
     int len = Disasm(desas->disasm);
     Processeur* proc = desas->proc;
     INSTRTYPE instr = desas->disasm->Instruction;
@@ -286,6 +286,11 @@ int litInstruction(Desasembleur* desas){
     if (instruction != NULL) {
         do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
     }
+}
+
+int desassemble(Desasembleur* desas){
+    int len = Disasm(desas->disasm);
+//    extracted_function(desas, len);
     
     return len;
 }

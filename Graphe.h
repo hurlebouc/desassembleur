@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "LinkedList.h"
+#include "desassembleur.h"
 
 #define EST_RECOUVERT 1
 #define EST_LU 1
@@ -52,22 +53,33 @@ extern "C" {
 #define SAUT_COND_TERMINAL          -11
 
 
-typedef struct _Graphe{
-    unsigned long VirtualAddrLue;       //adresse de l'instruction lue
-//    unsigned long VirtualAddrPointee; //adresse de l'instruction pointée
-    uintptr_t aif;                          // address in file
-    char interet;                        // voir les macros
-    char typeLiaison;                    // voir les macros
-    char assemble;                       //1 si neud déja vue (simplifieGraphe)
-    char lu;                             // 1 si deja lu (dans buildGraphe)
-    char affiche;                        // (afficheGraphe ou enregistreGraphe)
-//    char debutFonction;                  // premiere inst d'une fonction
-    char tailleInstruction;
-    char recouvert;                      // 1 si PAS premier byte d'une instr
+    typedef struct _Graphe{
+        unsigned long VirtualAddrLue;   //adresse de l'instruction lue
+//      unsigned long VirtualAddrPointee;//adresse de l'instruction pointée
+        uintptr_t aif;                  // address in file
+        char interet;                   // voir les macros
+        char typeLiaison;               // voir les macros
+        char assemble;                  //1 si neud déja vue (simplifieGraphe)
+        char lu;                        // 1 si deja lu (dans buildGraphe)
+        char affiche;                   // (afficheGraphe ou enregistreGraphe)
+//      char debutFonction;             // premiere inst d'une fonction
+        char tailleInstruction;
+        char recouvert;                      // 1 si PAS premier byte d'une instr
+        
+        LinkedList* listeFils;
+        LinkedList* listePeres;
+    }Graphe;
     
-    LinkedList* listeFils;
-    LinkedList* listePeres;
-}Graphe;
+    Graphe* newGraphe();
+        
+    /**
+     * Permet de liberer la mémoire. Dans le contexte du désassemblage, 
+     * cette fonction ne devrait pas être utilisée car chaque graphe fait 
+     * partie d'un tableau libéré par la suite.
+     */
+    void terminateGraphe(Graphe* g);
+    
+    void optimizePool(Graphe*);
 
 #ifdef __cplusplus
 }

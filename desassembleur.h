@@ -42,7 +42,8 @@ typedef struct _desassembleur{
 Desasembleur* newDesassembleur(Desasembleur* desas);
 void terminateDesassembleur(Desasembleur* desas);
 
-int litInstruction(Desasembleur* desas);
+int desassemble(Desasembleur* desas);
+    void litInstruction(Desasembleur *desas);
 
 #ifdef __cplusplus
 }
