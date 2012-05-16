@@ -17,9 +17,14 @@ extern "C" {
 #include "desassembleur.h"
 
 #define EST_RECOUVERT 1
+    
+/*== Valeurs possibles de lecture (appels reccursifs)==*/
+    
 #define EST_LU 1
+#define EST_AFFICHE 2
+#define EST_LIBERE 3
 
-/*====== Valeurs possibles de type de liaison =====*/
+/*======== Valeurs possibles de type de liaison =======*/
 
 #define TERMINAISON 0
 #define JUMP_COND   1 
@@ -28,7 +33,7 @@ extern "C" {
 #define RET         4
 #define FIN         5
 
-/*========== Valeurs possibles d'interet =========*/
+/*============ Valeurs possibles d'interet ===========*/
 
 #define SANS_INTERET                 0
 #define GO_AND_LEAVE                 1
@@ -61,10 +66,8 @@ extern "C" {
         char typeLiaison;               // voir les macros
         char assemble;                  //1 si neud déja vue (simplifieGraphe)
         char lu;                        // 1 si deja lu (dans buildGraphe)
-        char affiche;                   // (afficheGraphe ou enregistreGraphe)
-//      char debutFonction;             // premiere inst d'une fonction
         char tailleInstruction;
-        char recouvert;                      // 1 si PAS premier byte d'une instr
+        char recouvert;                 // 1 si PAS premier byte d'une instr
         
         LinkedList* listeFils;
         LinkedList* listePeres;
@@ -72,12 +75,11 @@ extern "C" {
     
     Graphe* newGraphe();
         
-    /**
-     * Permet de liberer la mémoire. Dans le contexte du désassemblage, 
-     * cette fonction ne devrait pas être utilisée car chaque graphe fait 
-     * partie d'un tableau libéré par la suite.
-     */
     void terminateGraphe(Graphe* g);
+    void terminateGrapheSimple(Graphe* g);
+    
+    void removeLink(Graphe* pere, Graphe* fils);
+    void addLink(Graphe* pere, Graphe* fils);
     
     void optimizePool(Graphe*);
 

@@ -32,7 +32,7 @@ void terminatelVides(LinkedList* lVides){
     terminateLinkedList(lVides);
 }
 
-LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille){
+LinkedList* newLLFromclassificationVides(Graphe* pi[], unsigned long taille){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
 //    strcat(chemin_log, "/vide.log");
@@ -41,19 +41,20 @@ LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille){
     char temp[MAX_BUFFER];
     
     LinkedList* lVides = newLinkedList(); /* liste des listes de vides */
-    unsigned long debutVirtuel = pi->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!! faute ici !!!!!!!!
+    unsigned long debutVirtuel = (*pi)->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!! faute ici !!!!!!!!
     unsigned long i = 0;
     while (i<taille) {
-        if (pi[i].lu != EST_LU && pi[i].recouvert != EST_RECOUVERT) {
+//        if (pi[i]->lu != EST_LU && pi[i]->recouvert != EST_RECOUVERT) {
+        if (pi[i] == NULL) {
             unsigned long debutVide = i;
             Vide* v = malloc(sizeof(Vide));
             v->debut = debutVirtuel+i;
             i++;
-            while (i<taille && (!pi[i++].lu)) {}
+//            while (i<taille && (!pi[i++]->lu)) {}
+            while (i<taille && (pi[i++]==NULL)) {}
             v->taille = i - debutVide - 1;
             sprintf(temp, "trou de 0x%lx à 0x%lx\n", v->debut, v->debut + v->taille-1);
             pushlog(fichierlog, temp);
-//            printf("trou de 0x%lx à 0x%lx\n", v->debut, v->debut + v->taille-1);
             LinkedList* container = recherche(lVides, v->taille);
             if (container == NULL) {
                 LinkedList* lClasseVides = newLinkedList();
@@ -63,8 +64,8 @@ LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille){
                 LinkedList* lClasseVides = container->valeur;
                 addLastLL(lClasseVides, v);
             }
-        } else if (pi[i].lu == EST_LU){
-            i += pi[i].tailleInstruction; // pour gagner du temps mais pas nécessaire
+        } else if (pi[i]->recouvert != EST_RECOUVERT){
+            i += pi[i]->tailleInstruction; // pour gagner du temps mais pas nécessaire
         } else {
             i++;
         }

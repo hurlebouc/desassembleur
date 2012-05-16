@@ -22,11 +22,12 @@ void enregistrerCFG(Fichier* binaire, Fichier* tmp){
     Graphe*g = ControleFlow_simplifie(desas);
     enregistreGraphe(g, tmp);
     terminateDesassembleur(desas);
+//    terminateGraphe(g);
 }
 
 void afficherVide(Desasembleur* desas){
     unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
-    Graphe* pi = calloc(sizeof(Graphe),taille);
+    Graphe** pi = calloc(sizeof(Graphe*),taille);
     buildGraphe(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
     afficherVides(lVides, taille);
@@ -35,7 +36,7 @@ void afficherVide(Desasembleur* desas){
 
 void enregistrerVide(Desasembleur* desas, Fichier* fichier){
     unsigned long taille = desas->disasm->SecurityBlock + desas->disasm->VirtualAddr - desas->debutVirtuel;
-    Graphe* pi = calloc(sizeof(Graphe),taille);
+    Graphe** pi = calloc(sizeof(Graphe*),taille);
     buildGraphe(desas, pi);
     LinkedList* lVides = newLLFromclassificationVides(pi, taille);
     enregistrerVides(lVides, taille, fichier);

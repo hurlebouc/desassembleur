@@ -66,7 +66,7 @@ static Graphe* initGraph(Graphe* pi[], unsigned long index){
     return pi[index];
 }
 
-Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
+Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
     strcat(chemin_log, CHEMIN_LOG_FERMETURE);
@@ -109,15 +109,15 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                 prog->Instruction.Flags.NT_,
                 prog->Instruction.Flags.RF_);
         pushlog(fichierlog, temp);
-//        Graphe* i = initGraph(pi, iniAdress - debut);
-        Graphe* i = &pi[iniAdress - debut];
+        Graphe* i = initGraph(pi, iniAdress - debut);
+//        Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddrLue = iniAdress;
         i->tailleInstruction = len;
         i->aif = prog->EIP;
         for (int k = 1; k<len; k++) {
             if (iniAdress + k < fin) {
-//                pi[iniAdress + k  - debut] = GRAPHE_RECCOUVERT;
-                pi[iniAdress + k  - debut].recouvert = EST_RECOUVERT;
+                pi[iniAdress + k  - debut] = GRAPHE_RECCOUVERT;
+//                pi[iniAdress + k  - debut].recouvert = EST_RECOUVERT;
             }
         }
                 
@@ -133,7 +133,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
             i->lu = EST_LU;
             stop = depilage(prog, pileAppel, fichierlog);
             
-        } else if (/*crible[iniAdress - debut] != 0*/ i->lu == EST_LU){ // si on est deja passé par là
+        } else if (i->lu == EST_LU){ // si on est deja passé par là
             stop = depilage(prog, pileAppel, fichierlog); 
                         
         } else {
@@ -148,30 +148,32 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         i->interet = CALL_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
-//                        Graphe* t = initGraph(pi, cibleAdress - debut);
-                        Graphe* t = &pi[cibleAdress - debut];
+                        Graphe* t = initGraph(pi, cibleAdress - debut);
+//                        Graphe* t = &pi[cibleAdress - debut];
 //                        t->VirtualAddrPointee = cibleAdress;
 //                        t->interet = GO_AND_LEAVE;
                         t->interet = DEBUT_FONCTION;
 //                        t->debutFonction = 1;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, t);
-                        if (t->listePeres == NULL) {
-                            t->listePeres = newLinkedList();
-                        }
-                        addFirstLL(t->listePeres, i);
+                        addLink(i, t);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, t);
+//                        if (t->listePeres == NULL) {
+//                            t->listePeres = newLinkedList();
+//                        }
+//                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
-//                            Graphe* s = initGraph(pi, iniAdress + len - debut);
-                            Graphe* s = &pi[iniAdress + len - debut];
+                            Graphe* s = initGraph(pi, iniAdress + len - debut);
+//                            Graphe* s = &pi[iniAdress + len - debut];
 //                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
-                            addFirstLL(i->listeFils, s);
-                            if (s->listePeres == NULL) {
-                                s->listePeres = newLinkedList();
-                            }
-                            addFirstLL(s->listePeres, i);
+                            addLink(i, s);
+//                            addFirstLL(i->listeFils, s);
+//                            if (s->listePeres == NULL) {
+//                                s->listePeres = newLinkedList();
+//                            }
+//                            addFirstLL(s->listePeres, i);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
                             pushlog(fichierlog, "WARNING : il est impossible de revenir à ce call car");
@@ -184,16 +186,17 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                             pushlog(fichierlog, "WARNING : un call fait appel à une fonction hors du bloc\n");
                             i->interet = CALL_OUT_OF_BLOCK;
                         }
-//                        Graphe* s = initGraph(pi, iniAdress + len - debut);
-                        Graphe* s = &pi[iniAdress + len - debut];
+                        Graphe* s = initGraph(pi, iniAdress + len - debut);
+//                        Graphe* s = &pi[iniAdress + len - debut];
 //                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, s);
-                        if (s->listePeres == NULL) {
-                            s->listePeres = newLinkedList();
-                        }
-                        addFirstLL(s->listePeres, i);
+                        addLink(i, s);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, s);
+//                        if (s->listePeres == NULL) {
+//                            s->listePeres = newLinkedList();
+//                        }
+//                        addFirstLL(s->listePeres, i);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {     // cas où un call est en fin de bloc et donc l'appel est indéfini
@@ -211,16 +214,17 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         i->interet = SAUT_INCOND_INDEFINI;
                         stop = depilage(prog, pileAppel, fichierlog);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
-//                        Graphe* t = initGraph(pi, cibleAdress - debut);
-                        Graphe* t = &pi[cibleAdress - debut];
+                        Graphe* t = initGraph(pi, cibleAdress - debut);
+//                        Graphe* t = &pi[cibleAdress - debut];
 //                        t->VirtualAddrPointee = cibleAdress;
                         t->interet = GO_AND_LEAVE;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, t);
-                        if (t->listePeres == NULL) {
-                            t->listePeres = newLinkedList();
-                        }
-                        addFirstLL(t->listePeres, i);
+                        addLink(i, t);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, t);
+//                        if (t->listePeres == NULL) {
+//                            t->listePeres = newLinkedList();
+//                        }
+//                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
@@ -242,11 +246,12 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         i->typeLiaison = FIN;
                         stop = depilage(prog, pileAppel, fichierlog);
                     }else if (iniAdress + len < fin) {
-//                        Graphe* s = initGraph(pi, iniAdress + len - debut);
-                        Graphe* s = &pi[iniAdress + len - debut];
+                        Graphe* s = initGraph(pi, iniAdress + len - debut);
+//                        Graphe* s = &pi[iniAdress + len - debut];
 //                        s->VirtualAddrPointee = iniAdress + len;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, s);
+                        addLink(i, s);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
@@ -264,28 +269,30 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         i->interet = SAUT_COND_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
-//                        Graphe* t = initGraph(pi, cibleAdress - debut);
-                        Graphe* t = &pi[cibleAdress - debut];
+                        Graphe* t = initGraph(pi, cibleAdress - debut);
+//                        Graphe* t = &pi[cibleAdress - debut];
 //                        t->VirtualAddrPointee = cibleAdress;
                         t->interet = GO_AND_LEAVE;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, t);
-                        if (t->listePeres == NULL) {
-                            t->listePeres = newLinkedList();
-                        }
-                        addFirstLL(t->listePeres, i);
+                        addLink(i, t);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, t);
+//                        if (t->listePeres == NULL) {
+//                            t->listePeres = newLinkedList();
+//                        }
+//                        addFirstLL(t->listePeres, i);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
-//                            Graphe* s = initGraph(pi, iniAdress + len - debut);
-                            Graphe* s = &pi[iniAdress + len - debut];
+                            Graphe* s = initGraph(pi, iniAdress + len - debut);
+//                            Graphe* s = &pi[iniAdress + len - debut];
 //                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
-                            addFirstLL(i->listeFils, s);
-                            if (s->listePeres == NULL) {
-                                s->listePeres = newLinkedList();
-                            }
-                            addFirstLL(s->listePeres, i);
+                            addLink(i, s);
+//                            addFirstLL(i->listeFils, s);
+//                            if (s->listePeres == NULL) {
+//                                s->listePeres = newLinkedList();
+//                            }
+//                            addFirstLL(s->listePeres, i);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
                             pushlog(fichierlog, "WARNING : un saut conditionnel est dernière instruction du bloc\n");
@@ -296,16 +303,17 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                             pushlog(fichierlog, "WARNING : un saut conditionnel essai de sortir du bloc\n");
                             i->interet = SAUT_COND_OUT_OF_BLOCK;
                         }
-//                        Graphe* s = initGraph(pi, iniAdress + len - debut);
-                        Graphe* s = &pi[iniAdress + len - debut];
+                        Graphe* s = initGraph(pi, iniAdress + len - debut);
+//                        Graphe* s = &pi[iniAdress + len - debut];
 //                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
-                        i->listeFils = newLinkedList();
-                        addFirstLL(i->listeFils, s);
-                        if (s->listePeres == NULL) {
-                            s->listePeres = newLinkedList();
-                        }
-                        addFirstLL(s->listePeres, i);
+                        addLink(i, s);
+//                        i->listeFils = newLinkedList();
+//                        addFirstLL(i->listeFils, s);
+//                        if (s->listePeres == NULL) {
+//                            s->listePeres = newLinkedList();
+//                        }
+//                        addFirstLL(s->listePeres, i);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
@@ -322,8 +330,8 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
     pushlog(fichierlog, "fin de la lecture\n");
     closeFichier(fichierlog);
     
-//    Graphe* g = initGraph(pi, virtualAddr_init - debut);
-    Graphe* g = &pi[virtualAddr_init - debut];
+    Graphe* g = initGraph(pi, virtualAddr_init - debut);
+//    Graphe* g = &pi[virtualAddr_init - debut];
     return g;
 }
 
@@ -503,7 +511,8 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     }
     
     LinkedList* filsUnique = g->listeFils;
-    Graphe* tete = filsUnique->valeur;
+    Graphe* fils = filsUnique->valeur;
+    Graphe* nouvFils = fils;
     
 //    LinkedList* filsUnique = newLinkedList();
 //    addFirstLL(filsUnique, (void*) tete);
@@ -513,7 +522,8 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 #endif
     
-    while (tete->interet == 0) {
+    while (fils->interet == 0) {
+        pushlog(fichierlog, "simplification d'un fils\n");
         
 #ifdef DEBUG_MODE
         tete->assemble=1; // normlament on pourrait se contenter des la dernière tete
@@ -522,18 +532,29 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         prog->SecurityBlock = prog->SecurityBlock - len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 #endif
         
-        if (tete->listeFils == NULL || tete->listeFils->longueur == 0) {
+        if (fils->listeFils == NULL || fils->listeFils->longueur == 0) {
             pushlog(fichierlog, "etat terminal non marqué (interet nul)\n");
             exit(EXIT_FAILURE);
         }
-        tete = tete->listeFils->valeur;
-        filsUnique->valeur = tete;
+        nouvFils = fils->listeFils->valeur;
+        
+        removeLink(g, fils);
+        addLink(g, nouvFils);
+        terminateGrapheSimple(fils);
+        
+//        filsUnique->valeur = nouvFils;
+        
+//        fils = fils->listeFils->valeur;
+//        filsUnique->valeur = fils;
+        fils = nouvFils;
+        
         
 #ifdef DEBUG_MODE
         len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 #endif
     }
-    simplifieGraphe_aux(prog, tete, fichierlog);
+    simplifieGraphe_aux(prog, nouvFils, fichierlog);
+//    simplifieGraphe_aux(prog, fils, fichierlog);
     return;
 }
 
@@ -562,8 +583,9 @@ Graphe* ControleFlow_entier(Desasembleur* desas){
     unsigned long sb = prog->SecurityBlock;
     unsigned long virtualAddr = prog->VirtualAddr;
     unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
-    Graphe* pi = calloc(sizeof(Graphe),taille);
+    Graphe** pi = calloc(sizeof(Graphe*),taille);
     Graphe* g = buildGraphe(desas, pi);
+    free(pi);
     return g;
 }
 
@@ -573,8 +595,9 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
     unsigned long debutReel = prog->EIP;
     unsigned long virtualAddr = prog->VirtualAddr;
     unsigned long taille = sb + virtualAddr - desas->debutVirtuel;
-    Graphe* pi = calloc(sizeof(Graphe),taille);
+    Graphe** pi = calloc(sizeof(Graphe*),taille);
     Graphe* g = buildGraphe(desas, pi);
+    free(pi);
     
     prog->EIP = debutReel;
     prog->SecurityBlock = (unsigned int) sb;
@@ -594,13 +617,13 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
  */
 
 static void afficheGraphe_aux(Graphe* g){
-    if (g->affiche) {
+    if (g->lu == EST_AFFICHE) {
         printf("\"%lx\";\n", g->VirtualAddrLue);
         return;
     }
     if (g->listeFils == NULL) {
         printf("\"%lx\"", g->VirtualAddrLue);
-        g->affiche = 1;
+        g->lu = EST_AFFICHE;
         if (g->typeLiaison == RET) {
             printf("[style=filled fillcolor=grey]");
         }
@@ -613,7 +636,7 @@ static void afficheGraphe_aux(Graphe* g){
         printf(";\n");
         return;
     }
-    g->affiche = 1;
+    g->lu = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
@@ -642,13 +665,13 @@ static void afficheGraphe_aux(Graphe* g){
 }
 
 static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
-    if (g->affiche) {
+    if (g->lu == EST_AFFICHE) {
         fprintf(graveur, "\"%lx\";\n", g->VirtualAddrLue);
         return;
     }
     if (g->listeFils == NULL) {
         fprintf(graveur, "\"%lx\"", g->VirtualAddrLue);
-        g->affiche = 1;
+        g->lu = EST_AFFICHE;
         if (g->typeLiaison == RET) {
             fprintf(graveur, "[style=filled fillcolor=grey]");
         }
@@ -661,7 +684,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         fprintf(graveur, ";\n");
         return;
     }
-    g->affiche = 1;
+    g->lu = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.

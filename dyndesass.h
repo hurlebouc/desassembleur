@@ -28,7 +28,7 @@ extern char* ROOT;
 
 void desassemblage_inconditionnel(DISASM* prog);
 
-Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]);
+Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]);
 Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g);
 
 //Graphe* ControleFlow(DISASM* prog);

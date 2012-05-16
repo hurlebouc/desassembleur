@@ -25,7 +25,7 @@ typedef struct _Vide{
     unsigned long debut;
 }Vide;
 
-LinkedList* newLLFromclassificationVides(Graphe pi[], unsigned long taille);
+LinkedList* newLLFromclassificationVides(Graphe* pi[], unsigned long taille);
 void afficherVides(LinkedList* lVides, unsigned long tailleProgramme);
 void enregistrerVides(LinkedList* lVides, unsigned long tailleProgramme, Fichier* fichier);
 void terminatelVides(LinkedList* lVides);
