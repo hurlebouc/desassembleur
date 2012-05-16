@@ -80,7 +80,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
         unsigned long iniAdress = prog->VirtualAddr;
         unsigned long cibleAdress = prog->Instruction.AddrValue;
         unsigned long IP = iniAdress + len;
-        sprintf(temp,  "0x%lx \t %s \t (0x%lx)\n", iniAdress, prog->CompleteInstr, cibleAdress);
+        sprintf(temp,  "0x%lx \t %s \t (0x%lx) (op : %x)\n", iniAdress, prog->CompleteInstr, cibleAdress, prog->Instruction.Opcode);
         pushlog(fichierlog, temp);
         sprintf(temp, "%d  %d  %d  %d  %d  %d  %d  %d  %d  %d  %d  \n",
                 prog->Instruction.Flags.OF_,
@@ -132,9 +132,10 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = &pi[cibleAdress - debut];
-                        t->VirtualAddrPointee = cibleAdress;
-                        t->interet = GO_AND_LEAVE;
-                        t->debutFonction = 1;
+//                        t->VirtualAddrPointee = cibleAdress;
+//                        t->interet = GO_AND_LEAVE;
+                        t->interet = DEBUT_FONCTION;
+//                        t->debutFonction = 1;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
                         if (t->listePeres == NULL) {
@@ -145,7 +146,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = &pi[iniAdress + len - debut];
-                            s->VirtualAddrPointee = iniAdress + len;
+//                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
                             addFirstLL(i->listeFils, s);
                             if (s->listePeres == NULL) {
@@ -165,7 +166,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                             i->interet = CALL_OUT_OF_BLOCK;
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
-                        s->VirtualAddrPointee = iniAdress + len;
+//                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, s);
@@ -191,7 +192,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         stop = depilage(prog, pileAppel, fichierlog);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = &pi[cibleAdress - debut];
-                        t->VirtualAddrPointee = cibleAdress;
+//                        t->VirtualAddrPointee = cibleAdress;
                         t->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
@@ -221,7 +222,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         stop = depilage(prog, pileAppel, fichierlog);
                     }else if (iniAdress + len < fin) {
                         Graphe* s = &pi[iniAdress + len - debut];
-                        s->VirtualAddrPointee = iniAdress + len;
+//                        s->VirtualAddrPointee = iniAdress + len;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, s);
                         prog->VirtualAddr += len;
@@ -242,7 +243,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
                         Graphe* t = &pi[cibleAdress - debut];
-                        t->VirtualAddrPointee = cibleAdress;
+//                        t->VirtualAddrPointee = cibleAdress;
                         t->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, t);
@@ -254,7 +255,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = &pi[iniAdress + len - debut];
-                            s->VirtualAddrPointee = iniAdress + len;
+//                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
                             addFirstLL(i->listeFils, s);
                             if (s->listePeres == NULL) {
@@ -272,7 +273,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe pi[]){
                             i->interet = SAUT_COND_OUT_OF_BLOCK;
                         }
                         Graphe* s = &pi[iniAdress + len - debut];
-                        s->VirtualAddrPointee = iniAdress + len;
+//                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
                         i->listeFils = newLinkedList();
                         addFirstLL(i->listeFils, s);
@@ -565,7 +566,7 @@ static void afficheGraphe_aux(Graphe* g){
         Graphe* etatCible = tete->valeur;
         printf("\"%lx\"->\"%lx\"", g->VirtualAddrLue, etatCible->VirtualAddrLue);
         if (g->typeLiaison == CALL) {
-            if (etatCible->debutFonction) {
+            if (etatCible->interet == DEBUT_FONCTION) {
                 printf(" [color=red];\n");
             } else {
                 printf(";\n");
@@ -600,7 +601,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
             fprintf(graveur, "[style=filled fillcolor=red]");
         }
-        if (g->interet < -2) {
+        if (g->interet < DEPASSEMENT_BLOC) {
             fprintf(graveur, "[style=filled fillcolor=orange]");
         }
         fprintf(graveur, ";\n");
@@ -613,7 +614,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         Graphe* etatCible = tete->valeur;
         fprintf(graveur, "\"%lx\"->\"%lx\"", g->VirtualAddrLue, etatCible->VirtualAddrLue);
         if (g->typeLiaison == CALL) {
-            if (etatCible->debutFonction) {
+            if (etatCible->VirtualAddrLue != g->VirtualAddrLue + g->tailleInstruction) {
                 fprintf(graveur, " [color=red];\n");
             } else {
                 fprintf(graveur, ";\n");
@@ -625,7 +626,12 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddrLue);
         }
         if (g->typeLiaison == JUMP_COND) {
-            fprintf(graveur, " [color=green];\n");
+            if (etatCible->VirtualAddrLue != g->VirtualAddrLue + g->tailleInstruction) {
+                fprintf(graveur, " [color=green];\n");
+            } else {
+                fprintf(graveur, ";\n");
+            }
+//            fprintf(graveur, " [color=green];\n");
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=green]", g->VirtualAddrLue);
         }
         fprintf(graveur, ";\n");

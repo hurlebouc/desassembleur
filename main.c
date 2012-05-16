@@ -28,7 +28,7 @@ int main(int argc, char* argv []) {
     Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
     
-    Graphe* g = ControleFlow_entier(desas);
+    Graphe* g = ControleFlow_simplifie(desas);
     g->assemble = 1;
     enregistreGraphe(g, res);
     
