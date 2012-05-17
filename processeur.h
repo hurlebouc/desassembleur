@@ -36,55 +36,55 @@ extern "C" {
         LinkedList* stack;
         
         Registre*	rax;
-        Registre*   eax;    // ne pas détruire
-        Registre*   ax;     // ne pas détruire
-        Registre*   ah;     // ne pas détruire
-        Registre*   al;     // ne pas détruire
+        Registre*   eax;   
+        Registre*   ax;    
+        Registre*   ah;    
+        Registre*   al;    
         
         Registre*	rbx;
-        Registre*	ebx;    // ne pas détruire
-        Registre*	bx;     // ne pas détruire
-        Registre*	bh;     // ne pas détruire
-        Registre*	bl;     // ne pas détruire
+        Registre*	ebx;   
+        Registre*	bx;    
+        Registre*	bh;    
+        Registre*	bl;    
         
         Registre*	rcx;
-        Registre*	ecx;    // ne pas détruire
-        Registre*	cx;     // ne pas détruire
-        Registre*	ch;     // ne pas détruire
-        Registre*	cl;     // ne pas détruire
+        Registre*	ecx;   
+        Registre*	cx;    
+        Registre*	ch;    
+        Registre*	cl;    
         
         Registre*	rdx;
-        Registre*	edx;    // ne pas détruire
-        Registre*	dx;     // ne pas détruire
-        Registre*	dh;     // ne pas détruire
-        Registre*	dl;     // ne pas détruire
+        Registre*	edx;   
+        Registre*	dx;    
+        Registre*	dh;    
+        Registre*	dl;    
         
         Registre*	rdi;
-        Registre*   edi;    // ne pas détruire
+        Registre*   edi;   
         Registre*   di;
         Registre*   dil;
         
         Registre*	rsi;
-        Registre*   esi;    // ne pas détruire
+        Registre*   esi;  
         Registre*   si;
         Registre*   sil;
         
         Registre*	rbp;    // souvent une copie de rsp
-        Registre*   ebp;    // ne pas détruire
+        Registre*   ebp;
         Registre*   bp;
         Registre*   bpl;
         
         Registre*	rsp;    // stack pointer
-        Registre*   esp;    // ne pas détruire
+        Registre*   esp;
         Registre*   sp;
         Registre*   spl;
         
         Registre*	rip;
-        Registre*   eip;    // ne pas détruire
+        Registre*   eip;
         Registre*   ip;
         
         Registre*	rflags;
-        Registre*   eflags; // ne pas détruire
+        Registre*   eflags;
         Registre*   flags;
         
         Registre*	r8;

@@ -32,9 +32,9 @@ int clean_suite_success(void) { return 0; }
 int main(int argc, char* argv [])
 {
     
-    //printf("%d \n %s \n", argc, argv[1]);
     ROOT = argv[0];
     TESTS = argv[1];
+    printf("%lu\n", sizeof(Processeur));
     CU_pSuite pSuite = NULL;
     
     /*------------------------ INITIALISATION DU TESTEUR ---------------------*/
