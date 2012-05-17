@@ -29,7 +29,7 @@ int main(int argc, char* argv []) {
     load(desas, binaire);
     
     Graphe* g = ControleFlow_entier(desas);
-    g->assemble = 1;
+    g->etat = EST_ASSEMBLE;
     enregistreGraphe(g, res);
     terminateGraphe(g);
     

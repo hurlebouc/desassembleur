@@ -10,12 +10,11 @@
 
 Graphe* newGraphe(){
     Graphe* g = malloc(sizeof(Graphe));
-    g->VirtualAddrLue = 0;
+    g->VirtualAddr = 0;
     g->aif = 0;
     g->interet = 0;
     g->typeLiaison = 0;
-    g->assemble = 0;
-    g->lu = 0;
+    g->etat = 0;
     g->tailleInstruction = 0;
     g->recouvert = 0;
     g->listeFils = NULL;
@@ -30,21 +29,19 @@ void terminateGrapheSimple(Graphe* g){
     if (g->listePeres != NULL) {
         terminateLinkedList(g->listePeres);
     }
-//    printf("libération de %lx\n", g->VirtualAddrLue);
     free(g);
 }
 
 void terminateGraphe(Graphe* g){
     // Il faut eviter que se faire supprimer comme étant
     // un (arriere petit) fils de ses fils.
-    if (g->lu == EST_LIBERE) {
+    if (g->etat == EST_LIBERE) {
         return;
     }
-    g->lu = EST_LIBERE;
+    g->etat = EST_LIBERE;
     
     // suppression de la liste des fils de chaque pere
     if (g->listePeres != NULL) {
-//        printf("%lx : peres NULL\n", g->VirtualAddrLue);
         while (sizeLL(g->listePeres) != 0) {
             Graphe* pere = getFirstLL(g->listePeres);
             removeLink(pere, g);
@@ -68,7 +65,6 @@ void terminateGraphe(Graphe* g){
     if (g->listePeres != NULL) {
         terminateLinkedList(g->listePeres);
     }
-//    printf("libération de %lx\n", g->VirtualAddrLue);
     free(g);
 }
 

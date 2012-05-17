@@ -41,7 +41,7 @@ LinkedList* newLLFromclassificationVides(Graphe* pi[], unsigned long taille){
     char temp[MAX_BUFFER];
     
     LinkedList* lVides = newLinkedList(); /* liste des listes de vides */
-    unsigned long debutVirtuel = (*pi)->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!! faute ici !!!!!!!!
+    unsigned long debutVirtuel = (*pi)->VirtualAddr; // !!!!!!!!!!!!!!!!!!!!!! faute ici !!!!!!!!
     unsigned long i = 0;
     while (i<taille) {
 //        if (pi[i]->lu != EST_LU && pi[i]->recouvert != EST_RECOUVERT) {

@@ -27,6 +27,11 @@ extern "C" {
 #define DF_POWER 1024
 #define OF_POWER 2048
     
+    enum armement_flag {
+        LEVE,
+        BAISSE,
+    };
+    
     typedef struct _Processeur{
         LinkedList* stack;
         

@@ -21,8 +21,9 @@ extern "C" {
 /*== Valeurs possibles de lecture (appels reccursifs)==*/
     
 #define EST_LU 1
-#define EST_AFFICHE 2
-#define EST_LIBERE 3
+#define EST_ASSEMBLE 2
+#define EST_AFFICHE 3
+#define EST_LIBERE 4
 
 /*======== Valeurs possibles de type de liaison =======*/
 
@@ -58,15 +59,13 @@ extern "C" {
 #define SAUT_COND_TERMINAL          -11
     
     typedef struct _Graphe{
-        unsigned long VirtualAddrLue;   //adresse de l'instruction lue
-//      unsigned long VirtualAddrPointee;//adresse de l'instruction pointée
+        unsigned long VirtualAddr;   //adresse de l'instruction lue
         uintptr_t aif;                  // address in file
-        char interet;                   // voir les macros
-        char typeLiaison;               // voir les macros
-        char assemble;                  //1 si neud déja vue (simplifieGraphe)
-        char lu;                        // 1 si deja lu (dans buildGraphe)
-        char tailleInstruction;
-        char recouvert;                 // 1 si PAS premier byte d'une instr
+        int8_t interet;                 // voir les macros
+        int8_t typeLiaison;             // voir les macros
+        int8_t etat;                    // voir les macros
+        int8_t tailleInstruction;
+        int8_t recouvert;               // 1 si PAS premier byte d'une instr
         
         LinkedList* listeFils;
         LinkedList* listePeres;
