@@ -28,7 +28,6 @@ extern "C" {
 #include "BeaEngine.h"
 #include "processeur.h"
 #include "liste_instr.h"
-#include "pool.h"
     
     
     
@@ -39,12 +38,11 @@ extern "C" {
     }Desasembleur;
     
     
-    
+    PDISASM newDisasm();
     Desasembleur* newDesassembleur(Desasembleur*);
     void terminateDesassembleur(Desasembleur*);
     
     int desassemble(Desasembleur*);
-    void litInstruction(Desasembleur*, PoolList*);
     
 #ifdef __cplusplus
 }

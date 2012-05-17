@@ -20,7 +20,8 @@ extern "C" {
     
     typedef struct _registre{
         int                 taille;
-        uint64_t            valeur; // contient la valeur du Registre seulement en cas de feuille
+        uint64_t            valeur; // (seulement en cas de feuille)
+        int                 classe; // propagation des constantes
         struct _registre*   filsl; 
         struct _registre*   filsh;
     }Registre;

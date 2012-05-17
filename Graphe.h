@@ -66,6 +66,7 @@ extern "C" {
         int8_t etat;                    // voir les macros
         int8_t tailleInstruction;
         int8_t recouvert;               // 1 si PAS premier byte d'une instr
+        Processeur* pool;               // propation de constantes
         
         LinkedList* listeFils;
         LinkedList* listePeres;
