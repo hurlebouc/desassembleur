@@ -62,18 +62,22 @@ extern "C" {
         Registre*	rdi;
         Registre*   edi;    // ne pas détruire
         Registre*   di;
+        Registre*   dil;
         
         Registre*	rsi;
         Registre*   esi;    // ne pas détruire
         Registre*   si;
+        Registre*   sil;
         
         Registre*	rbp;    // souvent une copie de rsp
         Registre*   ebp;    // ne pas détruire
         Registre*   bp;
+        Registre*   bpl;
         
         Registre*	rsp;    // stack pointer
         Registre*   esp;    // ne pas détruire
         Registre*   sp;
+        Registre*   spl;
         
         Registre*	rip;
         Registre*   eip;    // ne pas détruire
@@ -84,14 +88,45 @@ extern "C" {
         Registre*   flags;
         
         Registre*	r8;
-        Registre*	r9;
-        Registre*	r10;
-        Registre*	r11;
-        Registre*	r12;
-        Registre*	r13;
-        Registre*	r14;
-        Registre*	r15;
+        Registre*   r8d;
+        Registre*   r8w;
+        Registre*   r8b;
         
+        Registre*	r9;
+        Registre*   r9d;
+        Registre*   r9w;
+        Registre*   r9b;
+        
+        Registre*	r10;
+        Registre*   r10d;
+        Registre*   r10w;
+        Registre*   r10b;
+        
+        Registre*	r11;
+        Registre*   r11d;
+        Registre*   r11w;
+        Registre*   r11b;
+        
+		Registre*	r12;
+        Registre*   r12d;
+        Registre*   r12w;
+        Registre*   r12b;
+        
+		Registre*	r13;
+        Registre*   r13d;
+        Registre*   r13w;
+        Registre*   r13b;
+        
+		Registre*	r14;
+        Registre*   r14d;
+        Registre*   r14w;
+        Registre*   r14b;
+        
+		Registre*	r15;
+        Registre*   r15d;
+        Registre*   r15w;
+        Registre*   r15b;
+                
         Registre*	cs;     // tenir compte des 32 bits et 64 bits
         Registre*   ds;     // tenir compte des 32 bits et 64 bits
         Registre*   ss;     // tenir compte des 32 bits et 64 bits

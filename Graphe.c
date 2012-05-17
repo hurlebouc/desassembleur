@@ -200,6 +200,9 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
                 case 16:
                     reg[i] = _SP;
                     break;
+                case 8:
+                    reg[i] = _SPL;
+                    break;
                 default:
                     break;
             }
@@ -214,6 +217,9 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
                     break;
                 case 16:
                     reg[i] = _BP;
+                    break;
+                case 8:
+                    reg[i] = _BPL;
                     break;
                 default:
                     break;
@@ -230,6 +236,9 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
                 case 16:
                     reg[i] = _SI;
                     break;
+                case 8:
+                    reg[i] = _SIL;
+                    break;
                 default:
                     break;
             }
@@ -245,26 +254,157 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
                 case 16:
                     reg[i] = _DI;
                     break;
+                case 8:
+                    reg[i] = _DIL;
+                    break;
                 default:
                     break;
             }
             break;
         case REG8:
-            reg[i] = _R8;
+            switch (size) {
+                case 64:
+                    reg[i] = _R8;
+                    break;
+                case 32:
+                    reg[i] = _R8D;
+                    break;
+                case 16:
+                    reg[i] = _R8W;
+                    break;
+                case 8:
+                    reg[i] = _R8B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG9:
-            reg[i] = _R9;
+            switch (size) {
+                case 64:
+                    reg[i] = _R9;
+                    break;
+                case 32:
+                    reg[i] = _R9D;
+                    break;
+                case 16:
+                    reg[i] = _R9W;
+                    break;
+                case 8:
+                    reg[i] = _R9B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG10:
-            reg[i] = _R10;
+            switch (size) {
+                case 64:
+                    reg[i] = _R10;
+                    break;
+                case 32:
+                    reg[i] = _R10D;
+                    break;
+                case 16:
+                    reg[i] = _R10W;
+                    break;
+                case 8:
+                    reg[i] = _R10B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG11:
-            reg[i] = _R11;
+            switch (size) {
+                case 64:
+                    reg[i] = _R11;
+                    break;
+                case 32:
+                    reg[i] = _R11D;
+                    break;
+                case 16:
+                    reg[i] = _R11W;
+                    break;
+                case 8:
+                    reg[i] = _R11B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG12:
-            reg[i] = _R12;
+            switch (size) {
+                case 64:
+                    reg[i] = _R12;
+                    break;
+                case 32:
+                    reg[i] = _R12D;
+                    break;
+                case 16:
+                    reg[i] = _R12W;
+                    break;
+                case 8:
+                    reg[i] = _R12B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG13:
-            reg[i] = _R13;
+            switch (size) {
+                case 64:
+                    reg[i] = _R13;
+                    break;
+                case 32:
+                    reg[i] = _R13D;
+                    break;
+                case 16:
+                    reg[i] = _R13W;
+                    break;
+                case 8:
+                    reg[i] = _R13B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG14:
-            reg[i] = _R14;
+            switch (size) {
+                case 64:
+                    reg[i] = _R14;
+                    break;
+                case 32:
+                    reg[i] = _R14D;
+                    break;
+                case 16:
+                    reg[i] = _R14W;
+                    break;
+                case 8:
+                    reg[i] = _R14B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case REG15:
-            reg[i] = _R15;
+            switch (size) {
+                case 64:
+                    reg[i] = _R15;
+                    break;
+                case 32:
+                    reg[i] = _R15D;
+                    break;
+                case 16:
+                    reg[i] = _R15W;
+                    break;
+                case 8:
+                    reg[i] = _R15B;
+                    break;
+                default:
+                    break;
+            }
+            break;
         default:
             break;
     }
