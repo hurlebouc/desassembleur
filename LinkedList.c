@@ -373,6 +373,22 @@ void afficheLinkedList(LinkedList* liste, short tailleElement) {
     printf("]\n");
 }
 
+unsigned long compare(LinkedList* l1, LinkedList* l2){
+    if (sizeLL(l1) != sizeLL(l2)) {
+        return -1;
+    } 
+    LinkedList* t1 = l1;
+    LinkedList* t2 = l2;
+    for (int i = 0; i<sizeLL(l1); i++) {
+        if (t1->valeur != t2->valeur) {
+            return i+1;
+        }
+        t1 = t1->suiv;
+        t2 = t2->suiv;
+    }
+    return 0; // les deux listes sont égales
+}
+
 //----------- EXPERIMENTAL-------------------------------
 
 LinkedList* copieLinkedList(LinkedList* liste) {

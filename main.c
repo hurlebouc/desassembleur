@@ -12,8 +12,20 @@ char* ROOT;
 
 int SYS = DESASSEMBLEUR_MAC;
 
+struct truc {
+    int (* f)(int);
+};
+
+static int f(int a){
+    return a*a;
+}
+
 int main(int argc, char* argv []) {
     
+    struct truc machin;
+    machin.f = f;
+    printf("%d\n", machin.f(20));
+        
     ROOT = argv[0];
     char* test = argv[1];
     

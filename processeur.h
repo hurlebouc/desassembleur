@@ -32,9 +32,11 @@ extern "C" {
         BAISSE,
     };
     
-    typedef struct _Processeur{
+    typedef struct _Processeur{ // 664 bytes
         LinkedList* stack;
+        uint8_t validite_pile;
         
+        // 80 registres
         Registre*	rax;
         Registre*   eax;   
         Registre*   ax;    

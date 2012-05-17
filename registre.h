@@ -23,7 +23,7 @@ extern "C" {
         VALEUR_DEFINIE,
     };
     
-    typedef struct _registre{
+    typedef struct _registre{ // 32 bytes
         int                 taille;
         uint64_t            valeur; // (seulement en cas de feuille)
         int                 classe; // propagation des constantes
