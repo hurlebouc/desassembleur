@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AD55533315650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
 		AD55533415650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
+		AD55533B156550F0007EB02A /* libcunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD55533A156550EF007EB02A /* libcunit.a */; };
 		B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40F68DA150F3B67006ED6E1 /* registre.c in Sources */ = {isa = PBXBuildFile; fileRef = B40F68D9150F3B67006ED6E1 /* registre.c */; };
@@ -27,7 +28,6 @@
 		B453216B1506188B001C6689 /* loader.c in Sources */ = {isa = PBXBuildFile; fileRef = B45321691506188B001C6689 /* loader.c */; };
 		B479109914FFE5450004216E /* Vide.c in Sources */ = {isa = PBXBuildFile; fileRef = B479109814FFE5450004216E /* Vide.c */; };
 		B4ABD602150174EB00238EC7 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = B4ABD601150174EB00238EC7 /* test.c */; };
-		B4ABD60715017EE500238EC7 /* libcunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABD60515017E9200238EC7 /* libcunit.a */; };
 		B4B456AC1505316D001A49E2 /* commandes.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B456AB1505316D001A49E2 /* commandes.c */; };
 		B4B456AD1505316D001A49E2 /* commandes.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B456AB1505316D001A49E2 /* commandes.c */; };
 		B4B456B015053761001A49E2 /* desassembleur.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B456AF15053760001A49E2 /* desassembleur.c */; };
@@ -72,6 +72,7 @@
 /* Begin PBXFileReference section */
 		AD55533215650314007EB02A /* pool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
 		AD5553361565032B007EB02A /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
+		AD55533A156550EF007EB02A /* libcunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcunit.a; path = lib/Darwin..Debug/libcunit.a; sourceTree = "<group>"; };
 		B40779251503D0670082F3D8 /* Modele.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Modele.c; path = test/Modele.c; sourceTree = "<group>"; };
 		B407792A150401BF0082F3D8 /* testVide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testVide.h; path = test/testVide.h; sourceTree = "<group>"; };
 		B40A6AEC151DD18500A19FC9 /* liste_instr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = liste_instr.c; sourceTree = "<group>"; };
@@ -105,7 +106,6 @@
 		B479109814FFE5450004216E /* Vide.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vide.c; sourceTree = "<group>"; };
 		B4ABD601150174EB00238EC7 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = test.c; path = test/test.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		B4ABD6031501753600238EC7 /* runTest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = runTest.sh; path = test/runTest.sh; sourceTree = "<group>"; };
-		B4ABD60515017E9200238EC7 /* libcunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcunit.a; path = lib/libcunit.a; sourceTree = "<group>"; };
 		B4AF79E51501568800573ABD /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4B456AA1505314F001A49E2 /* commandes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = commandes.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B4B456AB1505316D001A49E2 /* commandes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = commandes.c; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4FF37A71503942500D78BD0 /* libBeaEngine_s_d.a in Frameworks */,
-				B4ABD60715017EE500238EC7 /* libcunit.a in Frameworks */,
+				AD55533B156550F0007EB02A /* libcunit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +145,7 @@
 		B427932414DEAFC0007D0319 = {
 			isa = PBXGroup;
 			children = (
+				AD55533A156550EF007EB02A /* libcunit.a */,
 				B427935614DEB5EB007D0319 /* librairies */,
 				B427934B14DEB0EC007D0319 /* desasembleur.1 */,
 				B4334F12151A33BB006E2986 /* macros */,
@@ -218,7 +219,6 @@
 		B427935614DEB5EB007D0319 /* librairies */ = {
 			isa = PBXGroup;
 			children = (
-				B4ABD60515017E9200238EC7 /* libcunit.a */,
 				B427933014DEB046007D0319 /* BeaEngine.h */,
 				B427933B14DEB09B007D0319 /* beaengine */,
 				B427935414DEB157007D0319 /* libBeaEngine_s_d.a */,

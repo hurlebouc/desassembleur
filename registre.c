@@ -14,6 +14,7 @@ Registre* newRegistreFeuille(int t, uint64_t v){
     reg->valeur = v;
     reg->filsh = NULL;
     reg->filsl = NULL;
+    reg->classe = VALEUR_DEFINIE; 
     return reg;
 }
 
@@ -23,6 +24,7 @@ Registre* newRegistreFilsUnique(Registre* fils){
     reg->valeur = -1;
     reg->filsl = fils;
     reg->filsh = newRegistreFeuille(fils->taille, 0);
+    reg->classe = VALEUR_DEFINIE; 
     return reg;
 }
 
@@ -32,6 +34,7 @@ Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
     reg->filsl = filsl;
     reg->taille = filsh->taille + filsl->taille;
     reg->valeur = -1;
+    reg->classe = VALEUR_DEFINIE; 
     return reg;
 }
 
@@ -70,6 +73,18 @@ uint64_t setValeur(Registre* reg, uint64_t n){
         reg->valeur = reste;
     }
     return n - reste; // différent de 0 lorsque ne peut pas être stocké dans le registre
+}
+
+int getClasse(Registre* reg){
+    if (reg == NULL) {
+        return VALEUR_DEFINIE;
+    }
+    int n = getClasse(reg->filsh)*getClasse(reg->filsl)*reg->classe;
+    if (n == 0) {
+        return 0;
+    } else {
+        return reg->classe;
+    }
 }
 
 void copieVal(Registre* dest, Registre* src){

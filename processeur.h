@@ -113,39 +113,11 @@ extern "C" {
     Processeur* newProcesseur();
     void terminateProcesseur(Processeur* proc);
     
-    /*------------ Modifs registres ------------*/
     
-    void _and(Processeur* proc, int lenInstr, Registre* a, Registre* b);
-    void _add(Processeur* proc, int lenInstr, Registre* destination, Registre* masque); //{destion} &= {masque}
-    void _lea(Processeur* proc, int lenInstr, Registre* a, Registre* b);
-    void _shl(Processeur* proc, int lenInstr, Registre* reg, Registre* val); // shift left
-    void _shr(Processeur* proc, int lenInstr, Registre* reg, Registre* val);
-    void _mov(Processeur* proc, int lenInstr, Registre* a, Registre* b);
-    void _sub(Processeur* proc, int lenInstr, Registre* a, Registre* b);
-    void _xor(Processeur* proc, int lenInstr, Registre* a, Registre* b); //xor
+    /* ----------------------------- PROPAGATION --------------------------- */
     
-    
-    /*---------------- sauts -------------------*/
-    
-    void _call(Processeur* proc, int lenInstr, Registre* adresse);
-    void _jmp(Processeur* proc, Registre* adresse);
-    void _jne(Processeur* proc, int lenInstr, Registre* adresse);
-    void _ja(Processeur* proc, int lenInstr, Registre* adresse);
-    void _jb(Processeur* proc, int lenInstr, Registre* adresse);
-    void _jbe(Processeur* proc, int lenInstr, Registre* adresse);
-    void _je(Processeur* proc, int lenInstr, Registre* adresse);
-    void _jg(Processeur* proc, int lenInstr, Registre* adresse);
-    void _jle(Processeur* proc, int lenInstr, Registre* adresse);
-    void _ret(Processeur* proc);
-    
-    /*----------------- flags ------------------*/
-    
-    void _cmp(Processeur* proc, int lenInstr, Registre* a, Registre* b);
-    
-    /*------------------ pile ------------------*/
-    
-    void _push(Processeur* proc, int lenInstr, Registre* a);
-    void _pop(Processeur* proc, int lenInstr, Registre* reg);
+    int incluDans(Processeur* p1, Processeur* p2);
+    int inter(Processeur*, Processeur*);
     
 #ifdef __cplusplus
 }

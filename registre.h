@@ -18,6 +18,11 @@
 extern "C" {
 #endif
     
+    enum DefinitionValeur {
+        VALEUR_NON_DEFINIE = 0,
+        VALEUR_DEFINIE,
+    };
+    
     typedef struct _registre{
         int                 taille;
         uint64_t            valeur; // (seulement en cas de feuille)
@@ -43,6 +48,9 @@ extern "C" {
     void copieVal(Registre* dest, Registre* src);
     void incr(Registre* reg, int len);
     
+    /* ----------------------------- PROPAGATION --------------------------- */
+    
+    int getClasse(Registre*);
     
 #ifdef __cplusplus
 }
