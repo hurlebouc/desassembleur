@@ -536,16 +536,16 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
             pushlog(fichierlog, "etat terminal non marqué (interet nul)\n");
             exit(EXIT_FAILURE);
         }
+        
         nouvFils = fils->listeFils->valeur;
         
         removeLink(g, fils);
+        removeLink(fils, nouvFils);
         addLink(g, nouvFils);
         terminateGrapheSimple(fils);
         
 //        filsUnique->valeur = nouvFils;
         
-//        fils = fils->listeFils->valeur;
-//        filsUnique->valeur = fils;
         fils = nouvFils;
         
         

@@ -44,7 +44,7 @@ void terminateGraphe(Graphe* g){
     
     // suppression de la liste des fils de chaque pere
     if (g->listePeres != NULL) {
-        printf("%lx : peres NULL\n", g->VirtualAddrLue);
+//        printf("%lx : peres NULL\n", g->VirtualAddrLue);
         while (sizeLL(g->listePeres) != 0) {
             Graphe* pere = getFirstLL(g->listePeres);
             removeLink(pere, g);
@@ -68,7 +68,7 @@ void terminateGraphe(Graphe* g){
     if (g->listePeres != NULL) {
         terminateLinkedList(g->listePeres);
     }
-    printf("libération de %lx\n", g->VirtualAddrLue);
+//    printf("libération de %lx\n", g->VirtualAddrLue);
     free(g);
 }
 

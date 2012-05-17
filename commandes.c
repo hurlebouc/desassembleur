@@ -22,7 +22,7 @@ void enregistrerCFG(Fichier* binaire, Fichier* tmp){
     Graphe*g = ControleFlow_simplifie(desas);
     enregistreGraphe(g, tmp);
     terminateDesassembleur(desas);
-//    terminateGraphe(g);
+    terminateGraphe(g);
 }
 
 void afficherVide(Desasembleur* desas){
