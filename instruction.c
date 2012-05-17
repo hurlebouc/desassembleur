@@ -59,7 +59,7 @@ static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*,
     return f(a,b,c,proc,lenInstr);
 }
 
-void do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
+Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
 //    incr(_RIP, lenInstr);
     
     if (instr->zf_aux) {
@@ -84,6 +84,7 @@ void do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int len
     if (instr->pf_aux) {
         _PF = pf_aux(_res);
     }
+    return _res;
 }
 
 Instruction* newInstruction(

@@ -106,6 +106,7 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_ES);
     terminateRegistre(_FS);
     terminateRegistre(_GS);
+    free(proc);
 }
 
 static int nbrup(uint8_t n){

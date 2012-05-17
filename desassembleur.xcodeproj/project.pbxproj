@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD55533315650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
+		AD55533415650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
 		B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40F68DA150F3B67006ED6E1 /* registre.c in Sources */ = {isa = PBXBuildFile; fileRef = B40F68D9150F3B67006ED6E1 /* registre.c */; };
@@ -68,6 +70,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AD55533215650314007EB02A /* pool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
+		AD5553361565032B007EB02A /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
 		B40779251503D0670082F3D8 /* Modele.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Modele.c; path = test/Modele.c; sourceTree = "<group>"; };
 		B407792A150401BF0082F3D8 /* testVide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testVide.h; path = test/testVide.h; sourceTree = "<group>"; };
 		B40A6AEC151DD18500A19FC9 /* liste_instr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = liste_instr.c; sourceTree = "<group>"; };
@@ -160,6 +164,7 @@
 				B4E455A615077C5300D0A41A /* processeur.h */,
 				B43A2EDE151D0907007EB249 /* instruction.h */,
 				B40A6AF0151DD19A00A19FC9 /* liste_instr.h */,
+				AD5553361565032B007EB02A /* pool.h */,
 				B4B456AE15053755001A49E2 /* desassembleur.h */,
 				B427935714DEEC2D007D0319 /* Graphe.h */,
 				B453216E150618DC001C6689 /* loaders */,
@@ -189,6 +194,7 @@
 				B4E455A215077C4900D0A41A /* processeur.c */,
 				B43A2EE0151D0921007EB249 /* instruction.c */,
 				B40A6AEC151DD18500A19FC9 /* liste_instr.c */,
+				AD55533215650314007EB02A /* pool.c */,
 				B4B456AF15053760001A49E2 /* desassembleur.c */,
 				B427935814DEEC49007D0319 /* Graphe.c */,
 				B453216D150618C1001C6689 /* loaders */,
@@ -387,6 +393,7 @@
 				B40F68DA150F3B67006ED6E1 /* registre.c in Sources */,
 				B43A2EE1151D0921007EB249 /* instruction.c in Sources */,
 				B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */,
+				AD55533315650314007EB02A /* pool.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +418,7 @@
 				B40F68DB150F3B67006ED6E1 /* registre.c in Sources */,
 				B43A2EE2151D0921007EB249 /* instruction.c in Sources */,
 				B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */,
+				AD55533415650314007EB02A /* pool.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

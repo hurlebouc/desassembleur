@@ -56,8 +56,7 @@ extern "C" {
 #define SAUT_COND_INDEFINI          -9
 #define SAUT_COND_OUT_OF_BLOCK      -10
 #define SAUT_COND_TERMINAL          -11
-
-
+    
     typedef struct _Graphe{
         unsigned long VirtualAddrLue;   //adresse de l'instruction lue
 //      unsigned long VirtualAddrPointee;//adresse de l'instruction pointée

@@ -12,7 +12,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,7 +20,7 @@ extern "C" {
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-
+    
 #include "Fichier.h"
 #include "LinkedList.h"
 #define BEA_ENGINE_STATIC /* specify the usage of a static version of BeaEngine */
@@ -28,25 +28,26 @@ extern "C" {
 #include "BeaEngine.h"
 #include "processeur.h"
 #include "liste_instr.h"
-
-
-
-typedef struct _desassembleur{
-    Processeur* proc;
-    DISASM* disasm;
-    unsigned long debutVirtuel;    // debut virtuel du bloc
-}Desasembleur;
-
-
-
-Desasembleur* newDesassembleur(Desasembleur* desas);
-void terminateDesassembleur(Desasembleur* desas);
-
-int desassemble(Desasembleur* desas);
-    void litInstruction(Desasembleur *desas);
-
+#include "pool.h"
+    
+    
+    
+    typedef struct _desassembleur{
+        Processeur* proc;
+        DISASM* disasm;
+        unsigned long debutVirtuel;    // debut virtuel du bloc
+    }Desasembleur;
+    
+    
+    
+    Desasembleur* newDesassembleur(Desasembleur*);
+    void terminateDesassembleur(Desasembleur*);
+    
+    int desassemble(Desasembleur*);
+    void litInstruction(Desasembleur*, PoolList*);
+    
 #ifdef __cplusplus
 }
 #endif
-    
+
 #endif

@@ -31,6 +31,7 @@ int main(int argc, char* argv []) {
     Graphe* g = ControleFlow_entier(desas);
     g->assemble = 1;
     enregistreGraphe(g, res);
+    terminateGraphe(g);
     
     closeFichier(res);
     closeFichier(binaire);

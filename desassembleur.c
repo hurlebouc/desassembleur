@@ -204,7 +204,7 @@ static void setRegistre(int i, ARGTYPE* argument, Processeur *proc, Registre** r
     }
 }
 
-void litInstruction(Desasembleur *desas) {
+void litInstruction(Desasembleur *desas, PoolList* poollist) {
     int len = Disasm(desas->disasm);
     Processeur* proc = desas->proc;
     INSTRTYPE instr = desas->disasm->Instruction;
@@ -283,9 +283,14 @@ void litInstruction(Desasembleur *desas) {
                 break;
         }
     }
+    Registre* modified_register;
     if (instruction != NULL) {
-        do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
+        modified_register = do_instr(instruction, reg[0], reg[1], reg[2], len, proc);
     }
+    
+    /*
+     * appliquer les changements au pool
+     */
 }
 
 int desassemble(Desasembleur* desas){

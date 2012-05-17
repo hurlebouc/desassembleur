@@ -14,6 +14,7 @@ void afficherCFG(Fichier* binaire){
     Graphe*g = ControleFlow_simplifie(desas);
     afficheGraphe(g);
     terminateDesassembleur(desas);
+    terminateGraphe(g);
 }
 
 void enregistrerCFG(Fichier* binaire, Fichier* tmp){
