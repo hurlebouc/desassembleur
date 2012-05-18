@@ -109,7 +109,6 @@ void loaderMach(Desasembleur* desas, Fichier* fichier) {
         struct load_command *lc = (struct load_command *) addr;
         if (lc->cmd == LC_UNIXTHREAD) {
             struct lecteurRegistre* t = (struct lecteurRegistre*) addr;
-//            printf("point d'entrée : 0x%llx\n", t->state.uts.ts64.__rip);
             pev = t->state.uts.ts64.__rip;
             initialiseRegistre(desas->proc, t->state);
             fini = 1;

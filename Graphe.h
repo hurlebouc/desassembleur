@@ -58,8 +58,8 @@ extern "C" {
 #define SAUT_COND_OUT_OF_BLOCK      -10
 #define SAUT_COND_TERMINAL          -11
     
-    typedef struct _Graphe{     //45 bytes
-        unsigned long VirtualAddr;   //adresse de l'instruction lue
+    typedef struct _Graphe{             //45 bytes
+        unsigned long VirtualAddr;      //adresse de l'instruction lue
         uintptr_t aif;                  // address in file
         int8_t interet;                 // voir les macros
         int8_t typeLiaison;             // voir les macros
@@ -80,7 +80,7 @@ extern "C" {
     void removeLink(Graphe* pere, Graphe* fils);
     void addLink(Graphe* pere, Graphe* fils);
     
-    void optimizePool(Graphe*);
+    void optimizePool(Graphe*, const Processeur* initialPool);
 
 #ifdef __cplusplus
 }

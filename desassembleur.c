@@ -32,7 +32,6 @@ Desasembleur* newDesassembleur(Desasembleur* desas){
 
 void terminateDesassembleur(Desasembleur* desas){
     free(desas->disasm);
-    terminateLinkedList(desas->proc->stack); // on utilisera pas de lien vers l'extérieur
     terminateProcesseur(desas->proc);
     free(desas);
 }
@@ -41,7 +40,6 @@ void terminateDesassembleur(Desasembleur* desas){
 
 int desassemble(Desasembleur* desas){
     int len = Disasm(desas->disasm);
-//    extracted_function(desas, len);
     
     return len;
 }

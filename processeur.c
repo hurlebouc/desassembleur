@@ -151,6 +151,7 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_ES);
     terminateRegistre(_FS);
     terminateRegistre(_GS);
+    terminateLinkedList(proc->stack);
     free(proc);
 }
 
@@ -197,11 +198,6 @@ void inter(Processeur* p1, Processeur* p2){
             getValeur(r1) != getValeur(r2))) {
             r1->classe = REGISTRE_NON_DEFINI;
         }
-        if (getClasse(r2) != REGISTRE_NON_DEFINI && (
-            getClasse(r1) == REGISTRE_NON_DEFINI ||
-            getValeur(r2) != getValeur(r1))) {
-            r2->classe = REGISTRE_NON_DEFINI;
-        }
     }
     
     for (int i = 0; i<NOMBRE_FLAGS; i++) {
@@ -210,9 +206,6 @@ void inter(Processeur* p1, Processeur* p2){
         if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {
             f1 = FLAG_NON_DEFINI;
         }
-        if (f2 != FLAG_NON_DEFINI && (f1 == FLAG_NON_DEFINI || f1 != f2)) {
-            f2 = FLAG_NON_DEFINI;
-        }
     }
     
     if (p1->stack != PILE_NON_DEFINIE && 
@@ -220,12 +213,6 @@ void inter(Processeur* p1, Processeur* p2){
          compare(p1->stack, p2->stack) != 0)) {
             terminateLinkedList(p1->stack);
             p1->stack = PILE_NON_DEFINIE;
-        }
-    if (p2->stack != PILE_NON_DEFINIE && 
-        (p1->stack == PILE_NON_DEFINIE ||
-         compare(p1->stack, p2->stack) != 0)) {
-            terminateLinkedList(p2->stack);
-            p2->stack = PILE_NON_DEFINIE;
         }
     
 }

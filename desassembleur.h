@@ -32,9 +32,9 @@ extern "C" {
     
     
     typedef struct _desassembleur{
-        Processeur* proc;
         DISASM* disasm;
         unsigned long debutVirtuel;    // debut virtuel du bloc
+        Processeur* proc;
     }Desasembleur;
     
     

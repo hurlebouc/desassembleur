@@ -141,10 +141,10 @@ extern "C" {
 #define _nOF        8    // overflow flag ///////////////////////
     
 #define PILE_NON_DEFINIE NULL
-        
+    
     enum armement_flag {
         FLAG_BAS,
-        LEVE,
+        FLAG_HAUT,
         FLAG_NON_DEFINI = -1,
     };
     
@@ -168,7 +168,12 @@ extern "C" {
     /* ----------------------------- PROPAGATION --------------------------- */
     
     int incluDans(Processeur* p1, Processeur* p2);
-    void inter(Processeur*, Processeur*);
+    
+    /**
+     * Le l'intercection des deux pools se trouve dans le premier pool p1.
+     * L'autre n'est pas modifié.
+     */
+    void inter(Processeur*p1, Processeur*p2);
     
 #ifdef __cplusplus
 }

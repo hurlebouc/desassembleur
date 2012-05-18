@@ -20,6 +20,7 @@ Graphe* newGraphe(){
     g->recouvert = 0;
     g->listeFils = NULL;
     g->listePeres = NULL;
+    g->pool = newProcesseur();
     return g;
 }
 
@@ -30,6 +31,7 @@ void terminateGrapheSimple(Graphe* g){
     if (g->listePeres != NULL) {
         terminateLinkedList(g->listePeres);
     }
+    terminateProcesseur(g->pool);
     free(g);
 }
 
@@ -66,6 +68,7 @@ void terminateGraphe(Graphe* g){
     if (g->listePeres != NULL) {
         terminateLinkedList(g->listePeres);
     }
+    terminateProcesseur(g->pool);
     free(g);
 }
 
@@ -84,15 +87,6 @@ void addLink(Graphe* pere, Graphe* fils){
     addFirstLL(pere->listeFils, fils);
     addFirstLL(fils->listePeres, pere);
 }
-
-static void opimizePool_aux(Graphe* g){
-    
-}
-
-void optimizePool(Graphe* g){
-    
-}
-
 
 /*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
 
@@ -413,9 +407,10 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
 /**
  * Cette fonction lit l'instruction du noeud g à partir du (nouveau) pool de 
  * son père
+ * Ici g ne sert qu'à donner l'instruction (on utilise pas son pool)
  */
 
-static void litInstruction(Graphe* g, Processeur* newPool) {
+static void setPool(Graphe* g, Processeur* newPool) {
     DISASM* disasm = newDisasm();
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
@@ -497,8 +492,28 @@ static void litInstruction(Graphe* g, Processeur* newPool) {
                 break;
         }
     }
-    
     if (instruction != NULL) {
          do_instr(instruction, reg[0], reg[1], reg[2], len, newPool);
     }
 }
+
+/*
+ * Il ne faut pas que initialPool soit modifié car sinon on modifierait le 
+ * pool du père
+ */
+
+void optimizePool(Graphe* g, const Processeur* initialPool){
+    Processeur* copyPool = newProcesseurCopy(initialPool);
+    setPool(g, copyPool);
+    if (incluDans(g->pool, copyPool)){
+        terminateProcesseur(copyPool);
+        return;
+    }
+    inter(g->pool, copyPool); // l'intercection est dans g->pool
+    terminateProcesseur(copyPool);
+    int l = sizeLL(g->listeFils);
+    for (int i = 0; i<l; i++) {
+        optimizePool(getFirstLL(g->listeFils), g->pool);
+    }
+}
+
