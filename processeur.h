@@ -168,7 +168,7 @@ extern "C" {
     /* ----------------------------- PROPAGATION --------------------------- */
     
     int incluDans(Processeur* p1, Processeur* p2);
-    int inter(Processeur*, Processeur*);
+    void inter(Processeur*, Processeur*);
     
 #ifdef __cplusplus
 }

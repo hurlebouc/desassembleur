@@ -176,13 +176,56 @@ int incluDans(Processeur* p1, Processeur* p2){
         }
     }
     
-	if (p1->stack != PILE_NON_DEFINIE &&
-		compare(p1->stack, p2->stack) != 0) {
+	if (p1->stack != PILE_NON_DEFINIE && 
+        (p2->stack == PILE_NON_DEFINIE ||
+         compare(p1->stack, p2->stack) != 0)) {
 		return NON_INCLUS;
 	}
 	return res;
 }
 
-int inter(Processeur* p1, Processeur* p2){
+/*
+ * Peut être optimisée en faisant la différence entre les types de registres
+ */
+
+void inter(Processeur* p1, Processeur* p2){
+    for (int i = 0; i<NOMBRE_REGISTRES; i++) {
+        Registre* r1 = p1->tabRegistre[i];
+        Registre* r2 = p2->tabRegistre[i];
+        if (getClasse(r1) != REGISTRE_NON_DEFINI && (
+            getClasse(r2) == REGISTRE_NON_DEFINI ||
+            getValeur(r1) != getValeur(r2))) {
+            r1->classe = REGISTRE_NON_DEFINI;
+        }
+        if (getClasse(r2) != REGISTRE_NON_DEFINI && (
+            getClasse(r1) == REGISTRE_NON_DEFINI ||
+            getValeur(r2) != getValeur(r1))) {
+            r2->classe = REGISTRE_NON_DEFINI;
+        }
+    }
+    
+    for (int i = 0; i<NOMBRE_FLAGS; i++) {
+        uint8_t f1 = p1->tabFlags[i];
+        uint8_t f2 = p2->tabFlags[i];
+        if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {
+            f1 = FLAG_NON_DEFINI;
+        }
+        if (f2 != FLAG_NON_DEFINI && (f1 == FLAG_NON_DEFINI || f1 != f2)) {
+            f2 = FLAG_NON_DEFINI;
+        }
+    }
+    
+    if (p1->stack != PILE_NON_DEFINIE && 
+        (p2->stack == PILE_NON_DEFINIE ||
+         compare(p1->stack, p2->stack) != 0)) {
+            terminateLinkedList(p1->stack);
+            p1->stack = PILE_NON_DEFINIE;
+        }
+    if (p2->stack != PILE_NON_DEFINIE && 
+        (p1->stack == PILE_NON_DEFINIE ||
+         compare(p1->stack, p2->stack) != 0)) {
+            terminateLinkedList(p2->stack);
+            p2->stack = PILE_NON_DEFINIE;
+        }
     
 }
