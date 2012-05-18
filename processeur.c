@@ -10,7 +10,7 @@
 #include "_macro_Build.h"
 
 
-Processeur* newProcesseur(){
+Processeur* newProcesseur(void){
     Processeur* proc = malloc(sizeof(Processeur));
     _AL     =   newRegistreFeuille(8, 0);
     _AH     =   newRegistreFeuille(8, 0);
@@ -124,6 +124,19 @@ Processeur* newProcesseur(){
     _STACK  =   newLinkedList();
     
     return proc;
+}
+
+Processeur* newProcesseurCopy(const Processeur* p){
+    Processeur* res = newProcesseur();
+    res->stack = newLinkedListCopy(p->stack);
+    for (int i = 0; i<NOMBRE_REGISTRES; i++) {
+        res->tabRegistre[i]->classe = p->tabRegistre[i]->classe;
+        res->tabRegistre[i]->valeur = p->tabRegistre[i]->valeur;
+    }
+    for (int i = 0; i<NOMBRE_FLAGS; i++) {
+        res->tabFlags[i] = res->tabFlags[i];
+    }
+    return res;
 }
 
 void terminateProcesseur(Processeur* proc){

@@ -14,6 +14,19 @@ LinkedList* newLinkedList(void) {
     return res;
 }
 
+LinkedList* newLinkedListCopy(LinkedList* l){
+    if (l==NULL) {
+        return NULL;
+    }
+    LinkedList* res = newLinkedList();
+    LinkedList* tete = l;
+    while (tete != NULL) {
+        addLastLL(res, tete->valeur);
+        tete = tete->suiv;
+    }
+    return res;
+}
+
 unsigned long sizeExtLL(LinkedList* liste) {
     if (liste->valeur == NULL) {
         return 0;

@@ -20,6 +20,7 @@ extern "C" {
     
     
     LinkedList* newLinkedList(void);
+    LinkedList* newLinkedListCopy(LinkedList*);//copie uniquement les pointeurs
     unsigned long sizeLL(LinkedList* liste);
     unsigned long sizeExtLL(LinkedList* liste);
     

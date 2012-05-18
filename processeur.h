@@ -161,7 +161,9 @@ extern "C" {
         
     }Processeur;
     
-    Processeur* newProcesseur();
+    Processeur* newProcesseur(void);
+    Processeur* newProcesseurCopy(const Processeur*);
+    
     void terminateProcesseur(Processeur* proc);
     
     
