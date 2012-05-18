@@ -69,37 +69,37 @@ Processeur* newProcesseur(void){
     _R8D    =   newRegistreFilsUnique(_R8W);
     _R8     =   newRegistreFilsUnique(_R8D);
     
-	_R9B    =   newRegistreFeuille(9, 0);
+	_R9B    =   newRegistreFeuille(8, 0);
     _R9W    =   newRegistreFilsUnique(_R9B);
     _R9D    =   newRegistreFilsUnique(_R9W);
     _R9     =   newRegistreFilsUnique(_R9D);
     
-	_R10B   =   newRegistreFeuille(10, 0);
+	_R10B   =   newRegistreFeuille(8, 0);
 	_R10W   =   newRegistreFilsUnique(_R10B);
 	_R10D   =   newRegistreFilsUnique(_R10W);
 	_R10    =   newRegistreFilsUnique(_R10D);
     
-	_R11B   =   newRegistreFeuille(11, 0);
+	_R11B   =   newRegistreFeuille(8, 0);
 	_R11W   =   newRegistreFilsUnique(_R11B);
 	_R11D   =   newRegistreFilsUnique(_R11W);
 	_R11    =   newRegistreFilsUnique(_R11D);
     
-	_R12B   =   newRegistreFeuille(12, 0);
+	_R12B   =   newRegistreFeuille(8, 0);
 	_R12W   =   newRegistreFilsUnique(_R12B);
 	_R12D   =   newRegistreFilsUnique(_R12W);
 	_R12    =   newRegistreFilsUnique(_R12D);
     
-	_R13B   =   newRegistreFeuille(13, 0);
+	_R13B   =   newRegistreFeuille(8, 0);
 	_R13W   =   newRegistreFilsUnique(_R13B);
 	_R13D   =   newRegistreFilsUnique(_R13W);
 	_R13    =   newRegistreFilsUnique(_R13D);
     
-	_R14B   =   newRegistreFeuille(14, 0);
+	_R14B   =   newRegistreFeuille(8, 0);
 	_R14W   =   newRegistreFilsUnique(_R14B);
 	_R14D   =   newRegistreFilsUnique(_R14W);
 	_R14    =   newRegistreFilsUnique(_R14D);
     
-	_R15B   =   newRegistreFeuille(15, 0);
+	_R15B   =   newRegistreFeuille(8, 0);
 	_R15W   =   newRegistreFilsUnique(_R15B);
 	_R15D   =   newRegistreFilsUnique(_R15W);
 	_R15    =   newRegistreFilsUnique(_R15D);

@@ -42,6 +42,7 @@ int main(int argc, char* argv []) {
     
     Graphe* g = ControleFlow_entier(desas);
     g->etat = EST_ASSEMBLE;
+    optimizePool(g, desas->proc);
     enregistreGraphe(g, res);
     terminateGraphe(g);
     
