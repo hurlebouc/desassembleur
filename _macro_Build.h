@@ -9,114 +9,115 @@
 #ifndef desassembleur__macro_Build_h
 #define desassembleur__macro_Build_h
 
-#define _RAX proc->rax
-#define _EAX proc->eax
-#define _AX  proc->ax
-#define _AH  proc->ah
-#define _AL  proc->al
+#define _RAX proc->tabRegistre[_nRAX]
+#define _EAX proc->tabRegistre[_nEAX]
+#define _AX  proc->tabRegistre[_nAX]
+#define _AH  proc->tabRegistre[_nAH]
+#define _AL  proc->tabRegistre[_nAL]
 
-#define _RBX proc->rbx
-#define _EBX proc->ebx
-#define _BX  proc->bx
-#define _BH  proc->bh
-#define _BL  proc->bl
+#define _RBX proc->tabRegistre[_nRBX]
+#define _EBX proc->tabRegistre[_nEBX]
+#define _BX  proc->tabRegistre[_nBX]
+#define _BH  proc->tabRegistre[_nBH]
+#define _BL  proc->tabRegistre[_nBL]
 
-#define _RCX proc->rcx
-#define _ECX proc->ecx
-#define _CX  proc->cx
-#define _CH  proc->ch
-#define _CL  proc->cl
+#define _RCX proc->tabRegistre[_nRCX]
+#define _ECX proc->tabRegistre[_nECX]
+#define _CX  proc->tabRegistre[_nCX]
+#define _CH  proc->tabRegistre[_nCH]
+#define _CL  proc->tabRegistre[_nCL]
 
-#define _RDX proc->rdx
-#define _EDX proc->edx
-#define _DX  proc->dx
-#define _DH  proc->dh
-#define _DL  proc->dl
+#define _RDX proc->tabRegistre[_nRDX]
+#define _EDX proc->tabRegistre[_nEDX]
+#define _DX  proc->tabRegistre[_nDX]
+#define _DH  proc->tabRegistre[_nDH]
+#define _DL  proc->tabRegistre[_nDL]
 
-#define _RDI proc->rdi
-#define _EDI proc->edi
-#define _DI  proc->di
-#define _DIL proc->dil
+#define _RDI proc->tabRegistre[_nRDI]
+#define _EDI proc->tabRegistre[_nEDI]
+#define _DI  proc->tabRegistre[_nDI]
+#define _DIL proc->tabRegistre[_nDIL]
 
-#define _RSI proc->rsi
-#define _ESI proc->esi
-#define _SI  proc->si
-#define _SIL proc->sil
+#define _RSI proc->tabRegistre[_nRSI]
+#define _ESI proc->tabRegistre[_nESI]
+#define _SI  proc->tabRegistre[_nSI]
+#define _SIL proc->tabRegistre[_nSIL]
 
-#define _RBP proc->rbp
-#define _EBP proc->ebp
-#define _BP  proc->bp
-#define _BPL proc->bpl
+#define _RBP proc->tabRegistre[_nRBP]
+#define _EBP proc->tabRegistre[_nEBP]
+#define _BP  proc->tabRegistre[_nBP]
+#define _BPL proc->tabRegistre[_nBPL]
 
-#define _RSP proc->rsp
-#define _ESP proc->esp
-#define _SP  proc->sp
-#define _SPL proc->spl
+#define _RSP proc->tabRegistre[_nRSP]
+#define _ESP proc->tabRegistre[_nESP]
+#define _SP  proc->tabRegistre[_nSP]
+#define _SPL proc->tabRegistre[_nSPL]
 
-#define _RIP proc->rip
-#define _EIP proc->eip
-#define _IP  proc->ip
+#define _RIP proc->tabRegistre[_nRIP]
+#define _EIP proc->tabRegistre[_nEIP]
+#define _IP  proc->tabRegistre[_nIP]
 
-#define _RFLAGS proc->rflags
-#define _EFLAGS proc->eflags
-#define _FLAGS  proc->flags
+#define _RFLAGS proc->tabRegistre[_nRFLAGS]
+#define _EFLAGS proc->tabRegistre[_nEFLAGS]
+#define _FLAGS  proc->tabRegistre[_nFLAGS]
 
-#define _R8  proc->r8
-#define _R8D proc->r8d
-#define _R8W proc->r8w
-#define _R8B proc->r8b
+#define _R8  proc->tabRegistre[_nR8]
+#define _R8D proc->tabRegistre[_nR8D]
+#define _R8W proc->tabRegistre[_nR8W]
+#define _R8B proc->tabRegistre[_nR8B]
 
-#define _R9  proc->r9
-#define _R9D proc->r9d
-#define _R9W proc->r9w
-#define _R9B proc->r9b
+#define _R9  proc->tabRegistre[_nR9]
+#define _R9D proc->tabRegistre[_nR9D]
+#define _R9W proc->tabRegistre[_nR9W]
+#define _R9B proc->tabRegistre[_nR9B]
 
-#define _R10  proc->r10
-#define _R10D proc->r10d
-#define _R10W proc->r10w
-#define _R10B proc->r10b
+#define _R10  proc->tabRegistre[_nR10]
+#define _R10D proc->tabRegistre[_nR10D]
+#define _R10W proc->tabRegistre[_nR10W]
+#define _R10B proc->tabRegistre[_nR10B]
 
-#define _R11  proc->r11
-#define _R11D proc->r11d
-#define _R11W proc->r11w
-#define _R11B proc->r11b
+#define _R11  proc->tabRegistre[_nR11]
+#define _R11D proc->tabRegistre[_nR11D]
+#define _R11W proc->tabRegistre[_nR11W]
+#define _R11B proc->tabRegistre[_nR11B]
 
-#define _R12  proc->r12
-#define _R12D proc->r12d
-#define _R12W proc->r12w
-#define _R12B proc->r12b
+#define _R12  proc->tabRegistre[_nR12]
+#define _R12D proc->tabRegistre[_nR12D]
+#define _R12W proc->tabRegistre[_nR12W]
+#define _R12B proc->tabRegistre[_nR12B]
 
-#define _R13  proc->r13
-#define _R13D proc->r13d
-#define _R13W proc->r13w
-#define _R13B proc->r13b
+#define _R13  proc->tabRegistre[_nR13]
+#define _R13D proc->tabRegistre[_nR13D]
+#define _R13W proc->tabRegistre[_nR13W]
+#define _R13B proc->tabRegistre[_nR13B]
 
-#define _R14  proc->r14
-#define _R14D proc->r14d
-#define _R14W proc->r14w
-#define _R14B proc->r14b
+#define _R14  proc->tabRegistre[_nR14]
+#define _R14D proc->tabRegistre[_nR14D]
+#define _R14W proc->tabRegistre[_nR14W]
+#define _R14B proc->tabRegistre[_nR14B]
 
-#define _R15  proc->r15
-#define _R15D proc->r15d
-#define _R15W proc->r15w
-#define _R15B proc->r15b
+#define _R15  proc->tabRegistre[_nR15]
+#define _R15D proc->tabRegistre[_nR15D]
+#define _R15W proc->tabRegistre[_nR15W]
+#define _R15B proc->tabRegistre[_nR15B]
 
-#define _CS  proc->cs
-#define _DS  proc->ds
-#define _SS  proc->ss
-#define _ES  proc->es
-#define _FS  proc->fs
-#define _GS  proc->gs
+#define _CS  proc->tabRegistre[_nCS]
+#define _DS  proc->tabRegistre[_nDS]
+#define _SS  proc->tabRegistre[_nSS]
+#define _ES  proc->tabRegistre[_nES]
+#define _FS  proc->tabRegistre[_nFS]
+#define _GS  proc->tabRegistre[_nGS]
 
-#define _CF proc->_cf
-#define _PF proc->_pf
-#define _AF proc->_af
-#define _ZF proc->_zf
-#define _SF proc->_sf
-#define _TF proc->_tf
-#define _IF proc->_if
-#define _DF proc->_df
-#define _OF proc->_of
+
+#define _CF proc->tabFlags[_nCF]
+#define _PF proc->tabFlags[_nPF]
+#define _AF proc->tabFlags[_nAF]
+#define _ZF proc->tabFlags[_nZF]
+#define _SF proc->tabFlags[_nSF]
+#define _TF proc->tabFlags[_nTF]
+#define _IF proc->tabFlags[_nIF]
+#define _DF proc->tabFlags[_nDF]
+#define _OF proc->tabFlags[_nOF]
 
 #define _STACK proc->stack
 

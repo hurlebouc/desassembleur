@@ -1,40 +1,41 @@
 #include "LoaderMach.h"
+#include "_macro_Build.h"
 
 static void initialiserFlags(Processeur* proc,uint64_t rflags){
-    proc->_cf = rflags % 2;
-    proc->_pf = rflags % 8;
-    proc->_af = rflags % 32;
-    proc->_zf = rflags % 128;
-    proc->_sf = rflags % 256;
-    proc->_tf = rflags % 512;
-    proc->_if = rflags % 1024;
-    proc->_df = rflags % 2048;
-    proc->_of = rflags % 4096;
+    _CF = rflags % (CF_POWER*2);
+    _PF = rflags % (PF_POWER*2);
+    _AF = rflags % (AF_POWER*2);
+    _ZF = rflags % (ZF_POWER*2);
+    _SF = rflags % (SF_POWER*2);
+    _TF = rflags % (TF_POWER*2);
+    _IF = rflags % (IF_POWER*2);
+    _DF = rflags % (DF_POWER*2);
+    _OF = rflags % (OF_POWER*2);
 }
 
 static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
-    setValeur(proc->cs, state.uts.ts64.__cs);
-    setValeur(proc->fs, state.uts.ts64.__fs);
-    setValeur(proc->gs, state.uts.ts64.__gs);
-    setValeur(proc->r10, state.uts.ts64.__r10);
-    setValeur(proc->r11, state.uts.ts64.__r11);
-    setValeur(proc->r12, state.uts.ts64.__r12);
-    setValeur(proc->r13, state.uts.ts64.__r13);
-    setValeur(proc->r14, state.uts.ts64.__r14);
-    setValeur(proc->r15, state.uts.ts64.__r15);
-    setValeur(proc->r8, state.uts.ts64.__r8);
-    setValeur(proc->r9, state.uts.ts64.__r9);
-    setValeur(proc->rax, state.uts.ts64.__rax);
-    setValeur(proc->rbp, state.uts.ts64.__rbp);
-    setValeur(proc->rbx, state.uts.ts64.__rbx);
-    setValeur(proc->rcx, state.uts.ts64.__rcx);
-    setValeur(proc->rdi, state.uts.ts64.__rdi);
-    setValeur(proc->rdx, state.uts.ts64.__rdx);
-    setValeur(proc->rflags, state.uts.ts64.__rflags);
-    setValeur(proc->rip, state.uts.ts64.__rip);
-    setValeur(proc->rsi, state.uts.ts64.__rsi);
-    setValeur(proc->rsp, state.uts.ts64.__rsp);
-    initialiserFlags(proc, getValeur(proc->rflags));
+    setValeur(_CS, state.uts.ts64.__cs);
+    setValeur(_FS, state.uts.ts64.__fs);
+    setValeur(_GS, state.uts.ts64.__gs);
+    setValeur(_R10, state.uts.ts64.__r10);
+    setValeur(_R11, state.uts.ts64.__r11);
+    setValeur(_R12, state.uts.ts64.__r12);
+    setValeur(_R13, state.uts.ts64.__r13);
+    setValeur(_R14, state.uts.ts64.__r14);
+    setValeur(_R15, state.uts.ts64.__r15);
+    setValeur(_R8, state.uts.ts64.__r8);
+    setValeur(_R9, state.uts.ts64.__r9);
+    setValeur(_RAX, state.uts.ts64.__rax);
+    setValeur(_RBP, state.uts.ts64.__rbp);
+    setValeur(_RBX, state.uts.ts64.__rbx);
+    setValeur(_RCX, state.uts.ts64.__rcx);
+    setValeur(_RDI, state.uts.ts64.__rdi);
+    setValeur(_RDX, state.uts.ts64.__rdx);
+    setValeur(_RFLAGS, state.uts.ts64.__rflags);
+    setValeur(_RIP, state.uts.ts64.__rip);
+    setValeur(_RSI, state.uts.ts64.__rsi);
+    setValeur(_RSP, state.uts.ts64.__rsp);
+    initialiserFlags(proc, getValeur(_RFLAGS));
 }
 
 void loaderMach(Desasembleur* desas, Fichier* fichier) {

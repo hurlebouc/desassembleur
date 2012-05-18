@@ -19,8 +19,8 @@ extern "C" {
 #endif
     
     enum DefinitionValeur {
-        VALEUR_NON_DEFINIE = 0,
-        VALEUR_DEFINIE,
+        REGISTRE_NON_DEFINI = 0,
+        REGISTRE_DEFINI,
     };
     
     typedef struct _registre{ // 32 bytes

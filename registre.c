@@ -14,7 +14,7 @@ Registre* newRegistreFeuille(int t, uint64_t v){
     reg->valeur = v;
     reg->filsh = NULL;
     reg->filsl = NULL;
-    reg->classe = VALEUR_DEFINIE; 
+    reg->classe = REGISTRE_DEFINI; 
     return reg;
 }
 
@@ -24,7 +24,7 @@ Registre* newRegistreFilsUnique(Registre* fils){
     reg->valeur = -1;
     reg->filsl = fils;
     reg->filsh = newRegistreFeuille(fils->taille, 0);
-    reg->classe = VALEUR_DEFINIE; 
+    reg->classe = REGISTRE_DEFINI; 
     return reg;
 }
 
@@ -34,7 +34,7 @@ Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
     reg->filsl = filsl;
     reg->taille = filsh->taille + filsl->taille;
     reg->valeur = -1;
-    reg->classe = VALEUR_DEFINIE; 
+    reg->classe = REGISTRE_DEFINI; 
     return reg;
 }
 
@@ -77,7 +77,7 @@ uint64_t setValeur(Registre* reg, uint64_t n){
 
 int getClasse(Registre* reg){
     if (reg == NULL) {
-        return VALEUR_DEFINIE;
+        return REGISTRE_DEFINI;
     }
     int n = getClasse(reg->filsh)*getClasse(reg->filsl)*reg->classe;
     if (n == 0) {
