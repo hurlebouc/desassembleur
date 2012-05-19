@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <expat.h>
 
 #include "macro.h"
 #include "Fichier.h"
@@ -21,7 +22,7 @@ static int f(int a){
 }
 
 int main(int argc, char* argv []) {
-    
+        
     struct truc machin;
     machin.f = f;
     printf("%d\n", machin.f(20));

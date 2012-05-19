@@ -145,7 +145,6 @@
 		B427932414DEAFC0007D0319 = {
 			isa = PBXGroup;
 			children = (
-				AD55533A156550EF007EB02A /* libcunit.a */,
 				B427935614DEB5EB007D0319 /* librairies */,
 				B427934B14DEB0EC007D0319 /* desasembleur.1 */,
 				B4334F12151A33BB006E2986 /* macros */,
@@ -219,6 +218,7 @@
 		B427935614DEB5EB007D0319 /* librairies */ = {
 			isa = PBXGroup;
 			children = (
+				AD55533A156550EF007EB02A /* libcunit.a */,
 				B427933014DEB046007D0319 /* BeaEngine.h */,
 				B427933B14DEB09B007D0319 /* beaengine */,
 				B427935414DEB157007D0319 /* libBeaEngine_s_d.a */,

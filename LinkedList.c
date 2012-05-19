@@ -20,7 +20,8 @@ LinkedList* newLinkedListCopy(LinkedList* l){
     }
     LinkedList* res = newLinkedList();
     LinkedList* tete = l;
-    while (tete != NULL) {
+    unsigned long taille = sizeLL(l);
+    for (unsigned long i = 0; i<taille; i++) {
         addLastLL(res, tete->valeur);
         tete = tete->suiv;
     }

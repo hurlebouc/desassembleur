@@ -503,15 +503,21 @@ static void setPool(Graphe* g, Processeur* newPool) {
  */
 
 void optimizePool(Graphe* g, const Processeur* initialPool){
+    printf("optimise 0x%lx\n", g->VirtualAddr);
     Processeur* copyPool = newProcesseurCopy(initialPool);
     setPool(g, copyPool);
-    if (incluDans(g->pool, copyPool)){
+    int inc = incluDans(g->pool, copyPool);
+    if (inc !=NON_INCLUS){
         terminateProcesseur(copyPool);
         return;
     }
     inter(g->pool, copyPool); // l'intercection est dans g->pool
     terminateProcesseur(copyPool);
+    if (g->listeFils == NULL) {
+        return;
+    }
     int l = sizeLL(g->listeFils);
+    printf("il y a %d fils\n", l);
     for (int i = 0; i<l; i++) {
         optimizePool(getFirstLL(g->listeFils), g->pool);
     }
