@@ -50,14 +50,23 @@ static int zf_aux(Registre* a, Registre* b){
         return 0;
     }
 }
-
+/**
+ * @deprecated
+ */
 static int app_aux(int aux(const Registre*, const Registre*, const Registre*), const Registre*a, const Registre*b, const Registre*c){
     return aux(a,b,c);
 }
-
+/**
+ * @deprecated
+ */
 static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*, int), Registre*a, Registre*b, Registre*c, Processeur* proc, int lenInstr){
     return f(a,b,c,proc,lenInstr);
 }
+
+/**
+ * Cette fonction sert à formaliser l'utilisation les méthodes d'une 
+ * instruction afin d'obliger leur utilisation dans un ordre pré-établi.
+ */
 
 Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
 //    incr(_RIP, lenInstr);
@@ -66,17 +75,21 @@ Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, in
         _ZF = zf_aux(a, b);
     }
     
-    if (app_aux(instr->af_aux, a, b,c) != -1) {
+//    if (app_aux(instr->af_aux, a, b,c) != -1) {
+    if (instr->af_aux(a, b,c) != -1) {
         _AF = app_aux(instr->af_aux, a, b, c);
     }
-    if (app_aux(instr->cf_aux, a, b,c) != -1) {
+//    if (app_aux(instr->cf_aux, a, b,c) != -1) {
+    if (instr->cf_aux(a, b,c) != -1) {
         _CF = app_aux(instr->cf_aux, a, b, c);
     }
-    if (app_aux(instr->of_aux, a, b,c) != -1) {
+//    if (app_aux(instr->of_aux, a, b,c) != -1) {
+    if (instr->of_aux(a, b,c) != -1) {
         _OF = app_aux(instr->of_aux, a, b, c);
     }
     
-    Registre* _res = app_f(instr->f, a, b, c, proc, lenInstr); // modification de l'état du processeur (sauf flags)
+//    Registre* _res = app_f(instr->f, a, b, c, proc, lenInstr); // modification de l'état du processeur (sauf flags)
+    Registre* _res = instr->f(a, b, c, proc, lenInstr);
     
     if (instr->sf_aux) {
         _SF = sf_aux(_res);
@@ -86,6 +99,13 @@ Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, in
     }
     return _res;
 }
+
+/**
+ * Il vaut mieux ne pas utiliser directement cette fonction dans le cadre de 
+ * l'utilisation pour le désassemblage. En effet, il vaut mieux utiliser des
+ * fonctions d'initialisation déjà préparée qui simplifie la création d'une 
+ * instruction
+ */
 
 Instruction* newInstruction(
                             int of(const Registre*, 
@@ -127,11 +147,11 @@ static int app_test(int f(int), int a){
 }
 
 int do_test(test* t, int n){
-    return app_test(t->f, n);
+    return t->f(n);
 }
 
 
-test* newTest(void* f){
+test* newTest(int f(int)){
     test* res = malloc(sizeof(test));
     res->f = f;
     return res;

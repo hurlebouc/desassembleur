@@ -11,8 +11,6 @@
 
 #include "instruction.h"
 
-test* init_t(void);
-
 Instruction*  init_add(void);
 Instruction*  init_and(void);
 Instruction*  init_mov(void);
@@ -612,5 +610,7 @@ Instruction*  init_aeskeygen(void);
 /* ====================================== opcodes_CLMUL */
 Instruction*  init_pclmulqdq_(void);
 
+/*-------------------------------------------------------*/
+test* init_test(void);
 
 #endif

@@ -13,19 +13,12 @@ char* ROOT;
 
 int SYS = DESASSEMBLEUR_MAC;
 
-struct truc {
-    int (* f)(int);
-};
-
-static int f(int a){
-    return a*a;
-}
-
 int main(int argc, char* argv []) {
+    
+    test* t = init_test();
         
-    struct truc machin;
-    machin.f = f;
-    printf("%d\n", machin.f(20));
+    printf("%d\n", do_test(t, 23));
+    printf("%d\n", t->f(23));
         
     ROOT = argv[0];
     char* test = argv[1];

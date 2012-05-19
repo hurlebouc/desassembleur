@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //  
 //  Cette classe a pour but de faire de la POO en C..
-//  Pour cela, je vais tenter d'utiliser un paradigme de 
-//  programmation fonctionnelle.
 //
 
 #ifndef desassembleur_instruction_h
@@ -17,13 +15,17 @@
 #include "processeur.h"
 
 typedef struct _instruction{
-    void* of_aux;
-    void* cf_aux;
-    void* af_aux;
+    int(* of_aux)(const Registre*, const Registre*, const Registre*);
+    int(* cf_aux)(const Registre*, const Registre*, const Registre*);
+    int(* af_aux)(const Registre*, const Registre*, const Registre*);
+    //void* of_aux;
+//    void* cf_aux;
+//    void* af_aux;
     int zf_aux;
     int pf_aux;
     int sf_aux;
-    void* f;        // f renvoie un pointeur sur le registre qu'il a modifié 
+    Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int);
+//    void* f;      // f renvoie un pointeur sur le registre qu'il a modifié 
                     // ne modifie par le registre de flags
                     // par contre il doit modifier le registre IP.
 }Instruction;
@@ -52,11 +54,11 @@ void terminateInstruction(Instruction*);
 /*-------------------------------------------------------------------*/
 
 typedef struct _test{
-    void* f;
+    int (*f)(int);
 }test;
 
 int do_test(test*, int);
-test* newTest(void*);
+test* newTest(int f(int));
 
 #endif
 

@@ -9,15 +9,6 @@
 #include "liste_instr.h"
 #include "_macro_Build.h"
 
-static int f(int n){
-    return n*n;
-}
-
-test* init_t(){
-    test* t = newTest(f);
-    return t;
-}
-
 /*--------------------------------------------------------------------------*/
 
 static int nbrup(uint8_t n){
@@ -147,6 +138,14 @@ Instruction* init_mov(){
 
 
 
+/*----------------------------------------------------------------*/
 
+static int f(int n){
+    return n*n;
+}
 
+test* init_test(){
+    test* t = newTest(f);
+    return t;
+}
 
