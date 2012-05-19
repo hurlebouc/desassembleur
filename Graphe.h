@@ -15,6 +15,7 @@ extern "C" {
 
 #include "LinkedList.h"
 #include "desassembleur.h"
+#include "macro.h"
 
 #define EST_RECOUVERT 1
     
@@ -57,6 +58,8 @@ extern "C" {
 #define SAUT_COND_INDEFINI          -9
 #define SAUT_COND_OUT_OF_BLOCK      -10
 #define SAUT_COND_TERMINAL          -11
+    
+    extern char* ROOT;
     
     typedef struct _Graphe{             //45 bytes
         unsigned long VirtualAddr;      //adresse de l'instruction lue

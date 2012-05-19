@@ -12,6 +12,7 @@
 #define CHEMIN_LOG_FERMETURE "fermeture.log"
 #define CHEMIN_LOG_ASSEMBLAGE "assemblage.log"
 #define CHEMIN_LOG_VIDE "vide.log"
+#define CHEMIN_LOG_OPTIMISATION "optimisation.log"
 #define DESASSEMBLEUR_LINUX 0
 #define DESASSEMBLEUR_MAC 1
 //#define DEBUG_MODE
