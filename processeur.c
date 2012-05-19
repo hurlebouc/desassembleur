@@ -202,7 +202,7 @@ int incluDans(Processeur* p1, Processeur* p2){
  * Peut être optimisée en faisant la différence entre les types de registres
  */
 
-void inter(Processeur* p1, Processeur* p2){
+void inter(Processeur* p1, const Processeur* p2){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];

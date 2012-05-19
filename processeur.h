@@ -175,7 +175,7 @@ extern "C" {
      * Le l'intercection des deux pools se trouve dans le premier pool p1.
      * L'autre n'est pas modifié.
      */
-    void inter(Processeur*p1, Processeur*p2);
+    void inter(Processeur*p1, const Processeur*p2);
     
 #ifdef __cplusplus
 }

@@ -83,6 +83,7 @@ extern "C" {
     void addLink(Graphe* pere, Graphe* fils);
     
     void optimizePool(Graphe*, const Processeur* initialPool);
+    void optimizePool2(Graphe*, const Processeur* initialPool);
 
 #ifdef __cplusplus
 }

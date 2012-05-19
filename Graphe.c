@@ -444,6 +444,8 @@ static void setPool(Graphe* g, Processeur* newPool) {
         disasm->Argument3
     };
     
+    uint8_t aSuppr[]={0,0,0};
+    
     /* initialisation des des arguments*/
     for (int i = 0; i<3; i++) {
         uint32_t hiword = argument[i].ArgType & 0xffff0000;
@@ -486,6 +488,8 @@ static void setPool(Graphe* g, Processeur* newPool) {
                 break;
             case CONSTANT_TYPE + ABSOLUTE_:
                 reg[i] = newRegistreFeuille(64, disasm->Instruction.Immediat);
+                // c'est un nouveau registre qu'il faut supprimer.
+                aSuppr[i] = 1;
                 break;
                 
             default:
@@ -493,8 +497,48 @@ static void setPool(Graphe* g, Processeur* newPool) {
         }
     }
     if (instruction != NULL) {
-         do_instr(instruction, reg[0], reg[1], reg[2], len, newPool);
+        do_instr(instruction, reg[0], reg[1], reg[2], len, newPool);
+        terminateInstruction(instruction);
     }
+    for (int i = 0; i<3; i++) {
+        if (aSuppr[i]) {
+            terminateRegistre(reg[i]);
+        }
+    }
+    
+    free(disasm);
+}
+
+static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
+    
+    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
+    Processeur* copyPool = newProcesseurCopy(initialPool);
+    setPool(g, copyPool);
+    int inc = incluDans(g->pool, copyPool);
+    if (inc !=NON_INCLUS){
+        terminateProcesseur(copyPool);
+        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    inter(g->pool, copyPool); // l'intercection est dans g->pool
+    terminateProcesseur(copyPool);
+    if (g->listeFils == NULL) {
+        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    int l = sizeLL(g->listeFils);
+//    sprintf(temp,"il y a %d fils\n", l);
+    pushlog(fichierlog, temp);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        optimizePool_aux(tete->valeur, g->pool, fichierlog, temp);
+        tete = tete->suiv;
+    }
+    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
 }
 
 /*
@@ -537,6 +581,18 @@ void optimizePool(Graphe* g, const Processeur* initialPool){
     }
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
+    closeFichier(fichierlog);
+}
+
+void optimizePool2(Graphe* g, const Processeur* initialPool){
+    char chemin_log[FILENAME_MAX];
+    strcpy(chemin_log, ROOT);
+    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
+    Fichier* fichierlog = newFichier(chemin_log);    
+    char temp[MAX_BUFFER];
+    
+    optimizePool_aux(g, initialPool, fichierlog, temp);
+    
     closeFichier(fichierlog);
 }
 

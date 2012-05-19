@@ -33,11 +33,14 @@ int main(int argc, char* argv []) {
     
     Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
-    
+    printf("construction\n");
     Graphe* g = ControleFlow_entier(desas);
     g->etat = EST_ASSEMBLE;
-    optimizePool(g, desas->proc);
+    printf("optimisation\n");
+    optimizePool2(g, desas->proc);
+    printf("Enregistrement\n");
     enregistreGraphe(g, res);
+    printf("destruction\n");
     terminateGraphe(g);
     
     closeFichier(res);
