@@ -74,12 +74,13 @@ extern "C" {
         LinkedList* listePeres;
     }Graphe;
     
-    Graphe* newGraphe();
+    Graphe* newGraphe(void);
         
     void terminateGraphe(Graphe* g);
-    void terminateGrapheSimple(Graphe* g);
+    void terminateNoeud(Graphe* g);
     
     void removeLink(Graphe* pere, Graphe* fils);
+    void removeLinkRec(Graphe* pere, Graphe* fils);
     void addLink(Graphe* pere, Graphe* fils);
     
     void optimizePool(Graphe*, const Processeur* initialPool);

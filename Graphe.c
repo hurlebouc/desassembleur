@@ -9,7 +9,7 @@
 #include "Graphe.h"
 #include "_macro_Build.h"
 
-Graphe* newGraphe(){
+Graphe* newGraphe(void){
     Graphe* g = malloc(sizeof(Graphe));
     g->VirtualAddr = 0;
     g->aif = 0;
@@ -24,7 +24,22 @@ Graphe* newGraphe(){
     return g;
 }
 
-void terminateGrapheSimple(Graphe* g){
+void terminateNoeud(Graphe* g){
+    
+    if (g->listePeres != NULL) {
+        while (sizeLL(g->listePeres) != 0) {
+            Graphe* pere = getFirstLL(g->listePeres);
+            removeLink(pere, g);
+        }
+    }
+    
+    if (g->listeFils != NULL) {
+        while (sizeLL(g->listeFils) != 0) {
+            Graphe* fils = getFirstLL(g->listeFils);
+            removeLink(g, fils);
+        }
+    }
+    
     if (g->listeFils != NULL) {
         terminateLinkedList(g->listeFils);
     }
@@ -75,6 +90,16 @@ void terminateGraphe(Graphe* g){
 void removeLink(Graphe* pere, Graphe* fils){
     removeElementLL(pere->listeFils, fils);
     removeElementLL(fils->listePeres, pere);
+}
+
+void removeLinkRec(Graphe* pere, Graphe* fils){
+    removeLink(pere, fils);
+    if (sizeLL(fils->listePeres) == 0) {
+        while (sizeLL(fils->listeFils) != 0) {
+            removeLinkRec(fils, getFirstLL(fils->listeFils));
+        }
+        terminateNoeud(fils);
+    }
 }
 
 void addLink(Graphe* pere, Graphe* fils){

@@ -38,7 +38,7 @@ extern "C" {
     }Desasembleur;
     
     
-    PDISASM newDisasm();
+    PDISASM newDisasm(void);
     Desasembleur* newDesassembleur(Desasembleur*);
     void terminateDesassembleur(Desasembleur*);
     

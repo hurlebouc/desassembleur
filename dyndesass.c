@@ -495,12 +495,12 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
             exit(EXIT_FAILURE);
         }
         
-        nouvFils = fils->listeFils->valeur;
+        nouvFils = getFirstLL(fils->listeFils);
         
-        removeLink(g, fils);
-        removeLink(fils, nouvFils);
+//        removeLink(g, fils);
+//        removeLink(fils, nouvFils);
+        terminateNoeud(fils);
         addLink(g, nouvFils);
-        terminateGrapheSimple(fils);
         
 //        filsUnique->valeur = nouvFils;
         

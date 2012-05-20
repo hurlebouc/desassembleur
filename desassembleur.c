@@ -10,7 +10,7 @@
 #include "desassembleur.h"
 #include "_macro_Build.h"
 
-PDISASM newDisasm(){
+PDISASM newDisasm(void){
     PDISASM disas = malloc(sizeof(DISASM));
     (void) memset(disas, 0, sizeof (DISASM));
     return disas;

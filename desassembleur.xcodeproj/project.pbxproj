@@ -10,6 +10,7 @@
 		AD55533315650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
 		AD55533415650314007EB02A /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = AD55533215650314007EB02A /* pool.c */; };
 		AD55533B156550F0007EB02A /* libcunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD55533A156550EF007EB02A /* libcunit.a */; };
+		ADF5D0F7156815E900D07044 /* testOtpimizePool.c in Sources */ = {isa = PBXBuildFile; fileRef = ADF5D0F6156815E900D07044 /* testOtpimizePool.c */; };
 		B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
 		B40F68DA150F3B67006ED6E1 /* registre.c in Sources */ = {isa = PBXBuildFile; fileRef = B40F68D9150F3B67006ED6E1 /* registre.c */; };
@@ -73,6 +74,8 @@
 		AD55533215650314007EB02A /* pool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
 		AD5553361565032B007EB02A /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
 		AD55533A156550EF007EB02A /* libcunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcunit.a; path = lib/Darwin..Debug/libcunit.a; sourceTree = "<group>"; };
+		ADF5D0F6156815E900D07044 /* testOtpimizePool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testOtpimizePool.c; path = test/testOtpimizePool.c; sourceTree = "<group>"; };
+		ADF5D0F91568160900D07044 /* testOtpimizePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testOtpimizePool.h; path = test/testOtpimizePool.h; sourceTree = "<group>"; };
 		B40779251503D0670082F3D8 /* Modele.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Modele.c; path = test/Modele.c; sourceTree = "<group>"; };
 		B407792A150401BF0082F3D8 /* testVide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testVide.h; path = test/testVide.h; sourceTree = "<group>"; };
 		B40A6AEC151DD18500A19FC9 /* liste_instr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = liste_instr.c; sourceTree = "<group>"; };
@@ -287,6 +290,7 @@
 			children = (
 				B407792A150401BF0082F3D8 /* testVide.h */,
 				B4FF37A91503CBC200D78BD0 /* testDyndesass.h */,
+				ADF5D0F91568160900D07044 /* testOtpimizePool.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -296,6 +300,7 @@
 			children = (
 				B4E455A71507852800D0A41A /* testVide.c */,
 				B4FF379215038CF400D78BD0 /* testDyndesass.c */,
+				ADF5D0F6156815E900D07044 /* testOtpimizePool.c */,
 			);
 			name = sources;
 			sourceTree = "<group>";
@@ -419,6 +424,7 @@
 				B43A2EE2151D0921007EB249 /* instruction.c in Sources */,
 				B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */,
 				AD55533415650314007EB02A /* pool.c in Sources */,
+				ADF5D0F7156815E900D07044 /* testOtpimizePool.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
