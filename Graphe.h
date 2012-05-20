@@ -25,6 +25,8 @@ extern "C" {
 #define EST_ASSEMBLE 2
 #define EST_AFFICHE 3
 #define EST_LIBERE 4
+#define PASSAGE_GET_NODE_WITH_VIRTUALADDR 5
+#define PASSAGE_GET_NODE_WITH_VIRTUALADDR_U 6
 
 /*======== Valeurs possibles de type de liaison =======*/
 
@@ -82,6 +84,19 @@ extern "C" {
     void removeLink(Graphe* pere, Graphe* fils);
     void removeLinkRec(Graphe* pere, Graphe* fils);
     void addLink(Graphe* pere, Graphe* fils);
+    
+    
+    /**
+     * Cette fonction trouve un noeud du graphe. 
+     * Son temps de travail est (peut-être) en n^n
+     */
+    Graphe* getNodeWithVirtualAddr(Graphe*, uintptr_t);
+    
+    /**
+     * Cette fonction trouve un noeud du graphe mais ne peut être utilisée 
+     * qu'une seule fois sur ce graphe. Par contre elle est en temps linéaire.
+     */
+    Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va);
     
     void optimizePool(Graphe*, const Processeur* initialPool);
     void optimizePool2(Graphe*, const Processeur* initialPool);

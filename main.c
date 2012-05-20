@@ -38,7 +38,13 @@ int main(int argc, char* argv []) {
     g->etat = EST_ASSEMBLE;
     printf("optimisation\n");
     optimizePool2(g, desas->proc);
-    printf("Enregistrement\n");
+    printf("recherche");
+    Graphe* n = getNodeWithVirtualAddr(g, 0x100000e82);
+    printf(" : noeud 0x%lx trouvé\n", n->VirtualAddr);
+    printf("recherche");
+    Graphe* nf = getNodeWithVirtualAddr(g, 0x100000e8d);
+    printf(" : noeud 0x%lx trouvé\n", nf->VirtualAddr);
+    printf("enregistrement\n");
     enregistreGraphe(g, res);
     printf("destruction\n");
     terminateGraphe(g);

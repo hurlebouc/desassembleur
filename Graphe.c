@@ -86,6 +86,11 @@ void terminateGraphe(Graphe* g){
     terminateProcesseur(g->pool);
     free(g);
 }
+/**
+ * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
+ * ne maintient pas la propriete d'accessibilite de tous les noeuds du graphe.
+ * Il vaut mieux lui référer removeLinkRec()
+ */
 
 void removeLink(Graphe* pere, Graphe* fils){
     removeElementLL(pere->listeFils, fils);
@@ -111,6 +116,61 @@ void addLink(Graphe* pere, Graphe* fils){
     }
     addFirstLL(pere->listeFils, fils);
     addFirstLL(fils->listePeres, pere);
+}
+
+/*
+ * Un noeud inaccessible ne sera pas trouvé
+ */
+
+Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
+    if (g->etat == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
+        return NULL;
+    }
+    uint8_t etatinit = g->etat;
+    g->etat = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
+    if(g->VirtualAddr == va){
+        g->etat = etatinit;
+        return g;
+    }
+    if (g->listeFils == NULL) {
+        g->etat = etatinit;
+        return NULL;
+    }
+    int l = sizeLL(g->listeFils);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
+        if (res != NULL) {
+            g->etat = etatinit;
+            return res;
+        }
+        tete=tete->suiv;
+    }
+    g->etat = etatinit;
+    return NULL;
+}
+
+Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
+    if (g->etat == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
+        return NULL;
+    }
+    g->etat = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
+    if(g->VirtualAddr == va){
+        return g;
+    }
+    if (g->listeFils == NULL) {
+        return NULL;
+    }
+    int l = sizeLL(g->listeFils);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
+        if (res != NULL) {
+            return res;
+        }
+        tete=tete->suiv;
+    }
+    return NULL;
 }
 
 /*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
