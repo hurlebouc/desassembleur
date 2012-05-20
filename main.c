@@ -44,6 +44,8 @@ int main(int argc, char* argv []) {
     printf("recherche");
     Graphe* nf = getNodeWithVirtualAddr(g, 0x100000e8d);
     printf(" : noeud 0x%lx trouvé\n", nf->VirtualAddr);
+    printf("suppression d'un lien\n");
+    removeLinkRec(n, nf);
     printf("enregistrement\n");
     enregistreGraphe(g, res);
     printf("destruction\n");

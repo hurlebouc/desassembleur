@@ -15,6 +15,6 @@
 #define CHEMIN_LOG_OPTIMISATION "optimisation.log"
 #define DESASSEMBLEUR_LINUX 0
 #define DESASSEMBLEUR_MAC 1
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 #endif

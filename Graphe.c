@@ -681,3 +681,20 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     closeFichier(fichierlog);
 }
 
+void debranchage(Graphe* g){
+    DISASM* disasm = newDisasm();
+    disasm->EIP = g->aif;
+    disasm->VirtualAddr = g->VirtualAddr;
+    Disasm(disasm);
+    
+    int branch = disasm->Instruction.BranchType;
+    
+    switch (branch) {
+        case JO:
+            ;
+            break;
+            
+        default:
+            break;
+    }
+}

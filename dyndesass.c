@@ -322,10 +322,10 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
 #ifdef DEBUG_MODE
     Disasm(prog);
-    sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddrLue, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
+    sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddr, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
     pushlog(fichierlog, temp);
     
-    if (g->VirtualAddrLue != prog->VirtualAddr) {
+    if (g->VirtualAddr != prog->VirtualAddr) {
         sprintf(temp, "le graphe et le programme en mémoire sont différents");
         pushlog(fichierlog, temp);
         exit(EXIT_FAILURE);
@@ -440,7 +440,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
             Graphe* etatCible = tete->valeur;
             
 #ifdef DEBUG_MODE
-            unsigned long addrCible = etatCible->VirtualAddrLue; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
+            unsigned long addrCible = etatCible->VirtualAddr; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             long ecart = addrCible - VirtualAddrIni; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->EIP = EIPini + ecart; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
             prog->VirtualAddr = addrCible; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
@@ -484,7 +484,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         pushlog(fichierlog, "simplification d'un fils\n");
         
 #ifdef DEBUG_MODE
-        tete->lu=EST_ASSEMBLE; // normlament on pourrait se contenter des la dernière tete
+//        tete->etat=EST_ASSEMBLE; // normlament on pourrait se contenter des la dernière tete
         prog->EIP += len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         prog->VirtualAddr +=len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
         prog->SecurityBlock = prog->SecurityBlock - len; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER

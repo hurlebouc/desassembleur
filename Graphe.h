@@ -88,7 +88,7 @@ extern "C" {
     
     /**
      * Cette fonction trouve un noeud du graphe. 
-     * Son temps de travail est (peut-être) en n^n
+     * Son temps de travail est en linéaire (aussi)
      */
     Graphe* getNodeWithVirtualAddr(Graphe*, uintptr_t);
     
@@ -100,6 +100,8 @@ extern "C" {
     
     void optimizePool(Graphe*, const Processeur* initialPool);
     void optimizePool2(Graphe*, const Processeur* initialPool);
+    
+    void debranchage(Graphe* g);
 
 #ifdef __cplusplus
 }
