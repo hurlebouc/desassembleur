@@ -38,28 +38,52 @@ extern "C" {
 #define FIN         5
 
 /*============ Valeurs possibles d'interet ===========*/
+    
+    enum ValeurEtat{
+        SANS_INTERET,
+        GO_AND_LEAVE,
+        DEBUT_FONCTION,
+        
+        OPCODE_INCONNU,
+        DEPASSEMENT_BLOC,
+        
+        SAUT_INCOND_OUT_OF_BLOCK,
+        SAUT_INCOND_INDEFINI,
+        
+        FIN_BLOC_SANS_POINT_ARRET,
+        
+        CALL_TERMINAL,
+        CALL_FIN_BLOC,
+        CALL_INDEFINI,
+        CALL_OUT_OF_BLOCK,
+        
+        SAUT_COND_FIN_BLOC,
+        SAUT_COND_INDEFINI,
+        SAUT_COND_OUT_OF_BLOCK,
+        SAUT_COND_TERMINAL,
+    };
 
-#define SANS_INTERET                 0
-#define GO_AND_LEAVE                 1
-#define DEBUT_FONCTION               2
-
-#define OPCODE_INCONNU              -1
-#define DEPASSEMENT_BLOC            -2
-
-#define SAUT_INCOND_OUT_OF_BLOCK    -4
-#define SAUT_INCOND_INDEFINI        -6
-
-#define FIN_BLOC_SANS_POINT_ARRET   -7
-
-#define CALL_TERMINAL               -3
-#define CALL_FIN_BLOC               -5
-#define CALL_INDEFINI               -12
-#define CALL_OUT_OF_BLOCK           -13
-
-#define SAUT_COND_FIN_BLOC          -8
-#define SAUT_COND_INDEFINI          -9
-#define SAUT_COND_OUT_OF_BLOCK      -10
-#define SAUT_COND_TERMINAL          -11
+//#define SANS_INTERET                 0
+//#define GO_AND_LEAVE                 1
+//#define DEBUT_FONCTION               2
+//
+//#define OPCODE_INCONNU              -1
+//#define DEPASSEMENT_BLOC            -2
+//
+//#define SAUT_INCOND_OUT_OF_BLOCK    -4
+//#define SAUT_INCOND_INDEFINI        -6
+//
+//#define FIN_BLOC_SANS_POINT_ARRET   -7
+//
+//#define CALL_TERMINAL               -3
+//#define CALL_FIN_BLOC               -5
+//#define CALL_INDEFINI               -12
+//#define CALL_OUT_OF_BLOCK           -13
+//
+//#define SAUT_COND_FIN_BLOC          -8
+//#define SAUT_COND_INDEFINI          -9
+//#define SAUT_COND_OUT_OF_BLOCK      -10
+//#define SAUT_COND_TERMINAL          -11
     
     extern char* ROOT;
     

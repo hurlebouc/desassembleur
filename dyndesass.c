@@ -45,9 +45,7 @@ static int depilage(DISASM* prog, LinkedList* pileAppel, Fichier* fichier){
     unsigned long iniAdress = prog->VirtualAddr;
     if (pileAppel->longueur == 0) {
         pushlog(fichier, "\nArret du désassembleur par dépilage d'une pile vide\n\n");
-//        fprintf(graveur, "\nArret du désassembleur par dépilage d'une pile vide\n\n");
         return 1;
-        //exit(EXIT_SUCCESS);
     }
     unsigned long retourAddr = (unsigned long) removeFirstLL(pileAppel);
     prog->VirtualAddr = retourAddr;
@@ -88,7 +86,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
     
     while (!stop) {
         
-        //int len = Disasm(prog);
         int len = desassemble(desas);
         int brancheType = prog->Instruction.BranchType;
         unsigned long iniAdress = prog->VirtualAddr;
@@ -110,7 +107,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                 prog->Instruction.Flags.RF_);
         pushlog(fichierlog, temp);
         Graphe* i = initGraph(pi, iniAdress - debut);
-//        Graphe* i = &pi[iniAdress - debut];
         i->VirtualAddr = iniAdress;
         i->tailleInstruction = len;
         i->aif = prog->EIP;
@@ -121,7 +117,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                 } else {
                     pi[iniAdress + k  - debut]->recouvert = EST_RECOUVERT;
                 }
-//                pi[iniAdress + k  - debut].recouvert = EST_RECOUVERT;
             }
         }
                 
@@ -153,18 +148,12 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
-//                        Graphe* t = &pi[cibleAdress - debut];
-//                        t->VirtualAddrPointee = cibleAdress;
-//                        t->interet = GO_AND_LEAVE;
                         t->interet = DEBUT_FONCTION;
-//                        t->debutFonction = 1;
                         addLink(i, t);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = initGraph(pi, iniAdress + len - debut);
-//                            Graphe* s = &pi[iniAdress + len - debut];
-//                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
                             addLink(i, s);
                             addFirstLL(pileAppel, (void *) IP); // on empile
@@ -173,20 +162,20 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                             pushlog(fichierlog,  "il est la dernière instruction du bloc\n");
                             i->interet = CALL_FIN_BLOC;
                         }
-                    } else if(iniAdress + len < fin){ // cas où le call appel une fonction
-                                                      // hors du bloc ou lorsque le saut est indéfini
+                    } else if(iniAdress + len < fin){ 
+                        // cas où le call appel une fonction
+                        // hors du bloc ou lorsque le saut est indéfini
                         if (cibleAdress != 0) {
                             pushlog(fichierlog, "WARNING : un call fait appel à une fonction hors du bloc\n");
                             i->interet = CALL_OUT_OF_BLOCK;
                         }
                         Graphe* s = initGraph(pi, iniAdress + len - debut);
-//                        Graphe* s = &pi[iniAdress + len - debut];
-//                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
                         addLink(i, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
-                    } else {     // cas où un call est en fin de bloc et donc l'appel est indéfini
+                    } else {     
+                        // cas où un call est en fin de bloc et donc l'appel est indéfini
                         pushlog(fichierlog, "WARNING : un call n'a aucun fils\n");
                         i->interet = CALL_TERMINAL;
                         stop = depilage(prog, pileAppel, fichierlog);
@@ -589,11 +578,22 @@ static void afficheGraphe_aux(Graphe* g){
         if (g->typeLiaison == RET) {
             printf("[style=filled fillcolor=grey]");
         }
-        if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
-            printf("[style=filled fillcolor=red]");
-        }
-        if (g->interet < -2) {
-            printf("[style=filled fillcolor=orange]");
+        switch (g->interet) {
+            case OPCODE_INCONNU:
+                printf("[style=filled fillcolor=red]");
+                break;
+            case DEPASSEMENT_BLOC:
+                printf("[style=filled fillcolor=red]");
+                break;
+            case SANS_INTERET:
+                break;
+            case GO_AND_LEAVE:
+                break;
+            case DEBUT_FONCTION:
+                break;
+            default:
+                printf("[style=filled fillcolor=orange]");
+                break;
         }
         printf(";\n");
         return;
@@ -637,11 +637,22 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         if (g->typeLiaison == RET) {
             fprintf(graveur, "[style=filled fillcolor=grey]");
         }
-        if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
-            fprintf(graveur, "[style=filled fillcolor=red]");
-        }
-        if (g->interet < DEPASSEMENT_BLOC) {
-            fprintf(graveur, "[style=filled fillcolor=orange]");
+        switch (g->interet) {
+            case OPCODE_INCONNU:
+                fprintf(graveur, "[style=filled fillcolor=red]");
+                break;
+            case DEPASSEMENT_BLOC:
+                fprintf(graveur, "[style=filled fillcolor=red]");
+                break;
+            case SANS_INTERET:
+                break;
+            case GO_AND_LEAVE:
+                break;
+            case DEBUT_FONCTION:
+                break;
+            default:
+                fprintf(graveur, "[style=filled fillcolor=orange]");
+                break;
         }
         fprintf(graveur, ";\n");
         return;
