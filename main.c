@@ -35,7 +35,7 @@ int main(int argc, char* argv []) {
     load(desas, binaire);
     printf("construction\n");
     Graphe* g = ControleFlow_entier(desas);
-    g->etat = EST_ASSEMBLE;
+    g->_etat_recc = EST_ASSEMBLE;
     printf("optimisation\n");
     optimizePool2(g, desas->proc);
     printf("recherche");

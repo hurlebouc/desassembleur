@@ -13,9 +13,9 @@ Graphe* newGraphe(void){
     Graphe* g = malloc(sizeof(Graphe));
     g->VirtualAddr = 0;
     g->aif = 0;
-    g->interet = 0;
+    g->interet = SANS_INTERET;
     g->typeLiaison = 0;
-    g->etat = 0;
+    g->_etat_recc = 0;
     g->tailleInstruction = 0;
     g->recouvert = 0;
     g->listeFils = NULL;
@@ -53,10 +53,10 @@ void terminateNoeud(Graphe* g){
 void terminateGraphe(Graphe* g){
     // Il faut eviter que se faire supprimer comme étant
     // un (arriere petit) fils de ses fils.
-    if (g->etat == EST_LIBERE) {
+    if (g->_etat_recc == EST_LIBERE) {
         return;
     }
-    g->etat = EST_LIBERE;
+    g->_etat_recc = EST_LIBERE;
     
     // suppression de la liste des fils de chaque pere
     if (g->listePeres != NULL) {
@@ -123,17 +123,17 @@ void addLink(Graphe* pere, Graphe* fils){
  */
 
 Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
-    if (g->etat == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
+    if (g->_etat_recc == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
         return NULL;
     }
-    uint8_t etatinit = g->etat;
-    g->etat = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
+    uint8_t etatinit = g->_etat_recc;
+    g->_etat_recc = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
     if(g->VirtualAddr == va){
-        g->etat = etatinit;
+        g->_etat_recc = etatinit;
         return g;
     }
     if (g->listeFils == NULL) {
-        g->etat = etatinit;
+        g->_etat_recc = etatinit;
         return NULL;
     }
     int l = sizeLL(g->listeFils);
@@ -141,20 +141,20 @@ Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
     for (int i = 0; i<l; i++) {
         Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
         if (res != NULL) {
-            g->etat = etatinit;
+            g->_etat_recc = etatinit;
             return res;
         }
         tete=tete->suiv;
     }
-    g->etat = etatinit;
+    g->_etat_recc = etatinit;
     return NULL;
 }
 
 Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
-    if (g->etat == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
+    if (g->_etat_recc == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
         return NULL;
     }
-    g->etat = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
+    g->_etat_recc = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
     if(g->VirtualAddr == va){
         return g;
     }

@@ -123,20 +123,20 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
         if (len == UNKNOWN_OPCODE) {
             pushlog(fichierlog, "WARNING : le desassembleur a rencontré un opcode inconnu\n");
             i->interet = OPCODE_INCONNU;
-            i->etat = EST_LU;
+            i->_etat_recc = EST_LU;
             stop = depilage(prog, pileAppel, fichierlog);
             
         } else if (len == OUT_OF_BLOCK) {
             pushlog(fichierlog, "WARNING : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
             i->interet = DEPASSEMENT_BLOC;
-            i->etat = EST_LU;
+            i->_etat_recc = EST_LU;
             stop = depilage(prog, pileAppel, fichierlog);
             
-        } else if (i->etat == EST_LU){ // si on est deja passé par là
+        } else if (i->_etat_recc == EST_LU){ // si on est deja passé par là
             stop = depilage(prog, pileAppel, fichierlog); 
                         
         } else {
-            i->etat = EST_LU;
+            i->_etat_recc = EST_LU;
             switch (brancheType) {
                     
                 case CallType:
@@ -250,8 +250,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = initGraph(pi, iniAdress + len - debut);
-//                            Graphe* s = &pi[iniAdress + len - debut];
-//                            s->VirtualAddrPointee = iniAdress + len;
                             s->interet = GO_AND_LEAVE;
                             addLink(i, s);
                             addFirstLL(pileAppel, (void *) IP); // on empile
@@ -265,8 +263,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                             i->interet = SAUT_COND_OUT_OF_BLOCK;
                         }
                         Graphe* s = initGraph(pi, iniAdress + len - debut);
-//                        Graphe* s = &pi[iniAdress + len - debut];
-//                        s->VirtualAddrPointee = iniAdress + len;
                         s->interet = GO_AND_LEAVE;
                         addLink(i, s);
                         prog->VirtualAddr += len;
@@ -346,7 +342,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     }
     
     /*==================================== CAS D'ARRET ==================================*/
-    if (g->etat == EST_ASSEMBLE) {
+    if (g->_etat_recc == EST_ASSEMBLE) {
         pushlog(fichierlog, "deja assemble\n");
         return;
     }
@@ -354,7 +350,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     /* les autres cas traitent des instructions terminales */
     
     if (g->typeLiaison == FIN) {
-        g->etat = EST_ASSEMBLE;
+        g->_etat_recc = EST_ASSEMBLE;
         pushlog(fichierlog, "un hlt\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "ERREUR : une instruction terminale a des fils\n");
@@ -365,7 +361,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         return;
     }
     if (g->typeLiaison == RET) {
-        g->etat = EST_ASSEMBLE;
+        g->_etat_recc = EST_ASSEMBLE;
         pushlog(fichierlog, "un ret\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "ERREUR : une instruction terminale a des fils\n");
@@ -376,7 +372,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         return;
     }
     if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
-        g->etat = EST_ASSEMBLE;
+        g->_etat_recc = EST_ASSEMBLE;
         pushlog(fichierlog, "WARNING : une instruction erronée\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "une instruction terminale a des fils\n");
@@ -387,7 +383,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         return;
     }
     if (g->listeFils == NULL) { // normalement seul les ret et les hlt n'ont pas de fils
-        g->etat = EST_ASSEMBLE;
+        g->_etat_recc = EST_ASSEMBLE;
         if (g->typeLiaison == CALL) {
             pushlog(fichierlog, "WARNING : call sans fils\n");
         }
@@ -406,7 +402,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
     /*===================================================================================*/
     
-     g->etat = EST_ASSEMBLE;
+     g->_etat_recc = EST_ASSEMBLE;
      
     /*================================ APPELS RECCURSIFS ===============================*/
     
@@ -477,7 +473,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 #endif
     
-    while (fils->interet == 0) {
+    while (fils->interet == SANS_INTERET) {
         pushlog(fichierlog, "simplification d'un fils\n");
         
 #ifdef DEBUG_MODE
@@ -527,7 +523,7 @@ Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;
     simplifieGraphe_aux(prog, g, fichierlog);
-    g->etat=EST_ASSEMBLE;
+    g->_etat_recc=EST_ASSEMBLE;
     pushlog(fichierlog, "fin de l'assemblage");
     closeFichier(fichierlog);
     return g;
@@ -572,13 +568,13 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
  */
 
 static void afficheGraphe_aux(Graphe* g){
-    if (g->etat == EST_AFFICHE) {
+    if (g->_etat_recc == EST_AFFICHE) {
         printf("\"%lx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
         printf("\"%lx\"", g->VirtualAddr);
-        g->etat = EST_AFFICHE;
+        g->_etat_recc = EST_AFFICHE;
         if (g->typeLiaison == RET) {
             printf("[style=filled fillcolor=grey]");
         }
@@ -600,7 +596,7 @@ static void afficheGraphe_aux(Graphe* g){
         printf(";\n");
         return;
     }
-    g->etat = EST_AFFICHE;
+    g->_etat_recc = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
@@ -633,13 +629,13 @@ static void afficheGraphe_aux(Graphe* g){
 }
 
 static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
-    if (g->etat == EST_AFFICHE) {
+    if (g->_etat_recc == EST_AFFICHE) {
         fprintf(graveur, "\"%lx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
         fprintf(graveur, "\"%lx\"", g->VirtualAddr);
-        g->etat = EST_AFFICHE;
+        g->_etat_recc = EST_AFFICHE;
         if (g->typeLiaison == RET) {
             fprintf(graveur, "[style=filled fillcolor=grey]");
         }
@@ -661,7 +657,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         fprintf(graveur, ";\n");
         return;
     }
-    g->etat = EST_AFFICHE;
+    g->_etat_recc = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.

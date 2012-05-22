@@ -39,7 +39,7 @@ extern "C" {
 
 /*============ Valeurs possibles d'interet ===========*/
     
-    enum ValeurEtat{
+    enum ValeurInteret{
         SANS_INTERET,
         GO_AND_LEAVE,
         
@@ -92,7 +92,7 @@ extern "C" {
         uintptr_t aif;                  // address in file
         int8_t interet;                 // voir les macros
         int8_t typeLiaison;             // voir les macros
-        int8_t etat;                    // voir les macros
+        int8_t _etat_recc;              // voir les macros
         int8_t tailleInstruction;
         int8_t recouvert;               // 1 si PAS premier byte d'une instr
         Processeur* pool;               // propation de constantes
