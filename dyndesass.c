@@ -175,9 +175,16 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {     
-                        // cas où un call est en fin de bloc et donc l'appel est indéfini
-                        pushlog(fichierlog, "WARNING : un call n'a aucun fils\n");
-                        i->interet = CALL_TERMINAL;
+                        // cas où un call est en fin de bloc
+                        if (cibleAdress != 0) {
+                            pushlog(fichierlog,
+                                    "WARNING : un call n'a aucun fils (OOB)\n");
+                            i->interet = CALL_TERMINAL_OOB;
+                        } else {
+                            pushlog(fichierlog,
+                                    "WARNING : un call n'a aucun fils (indef)\n");
+                            i->interet = CALL_TERMINAL_INDEFINI;
+                        }
                         stop = depilage(prog, pileAppel, fichierlog);
                     }
                     break;
@@ -191,8 +198,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                         stop = depilage(prog, pileAppel, fichierlog);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
-//                        Graphe* t = &pi[cibleAdress - debut];
-//                        t->VirtualAddrPointee = cibleAdress;
                         t->interet = GO_AND_LEAVE;
                         addLink(i, t);
                         prog->VirtualAddr = cibleAdress;

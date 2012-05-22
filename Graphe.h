@@ -52,7 +52,8 @@ extern "C" {
         
         FIN_BLOC_SANS_POINT_ARRET,
         
-        CALL_TERMINAL,
+        CALL_TERMINAL_OOB,
+        CALL_TERMINAL_INDEFINI,
         CALL_FIN_BLOC,
         CALL_INDEFINI,
         CALL_OUT_OF_BLOCK,
