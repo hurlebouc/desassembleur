@@ -59,7 +59,7 @@ static Graphe* initGraph(Graphe* pi[], unsigned long index){
     if (pi[index] == NULL) {
         pi[index] = newGraphe();
     }
-    if (pi[index]->recouvert == EST_RECOUVERT) {
+    if (pi[index] == GRAPHE_RECCOUVERT) {
         pi[index] = newGraphe();
         pi[index]->recouvert = EST_RECOUVERT;
     }
@@ -116,7 +116,11 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
         i->aif = prog->EIP;
         for (int k = 1; k<len; k++) {
             if (iniAdress + k < fin) {
-                pi[iniAdress + k  - debut] = GRAPHE_RECCOUVERT;
+                if (pi[iniAdress + k  - debut] == NULL) {
+                    pi[iniAdress + k  - debut] = GRAPHE_RECCOUVERT;
+                } else {
+                    pi[iniAdress + k  - debut]->recouvert = EST_RECOUVERT;
+                }
 //                pi[iniAdress + k  - debut].recouvert = EST_RECOUVERT;
             }
         }

@@ -24,8 +24,6 @@ extern "C" {
 
 extern char* ROOT;
 
-//#include <mach-o/loader.h>
-
 void desassemblage_inconditionnel(DISASM* prog);
 
 Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]);
