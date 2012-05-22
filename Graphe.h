@@ -42,7 +42,6 @@ extern "C" {
     enum ValeurEtat{
         SANS_INTERET,
         GO_AND_LEAVE,
-        DEBUT_FONCTION,
         
         OPCODE_INCONNU,
         DEPASSEMENT_BLOC,

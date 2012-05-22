@@ -148,7 +148,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
-                        t->interet = DEBUT_FONCTION;
                         addLink(i, t);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
@@ -594,8 +593,6 @@ static void afficheGraphe_aux(Graphe* g){
                 break;
             case GO_AND_LEAVE:
                 break;
-            case DEBUT_FONCTION:
-                break;
             default:
                 printf("[style=filled fillcolor=orange]");
                 break;
@@ -610,7 +607,7 @@ static void afficheGraphe_aux(Graphe* g){
         Graphe* etatCible = tete->valeur;
         printf("\"%lx\"->\"%lx\"", g->VirtualAddr, etatCible->VirtualAddr);
         if (g->typeLiaison == CALL) {
-            if (etatCible->interet == DEBUT_FONCTION) {
+            if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 printf(" [color=red];\n");
             } else {
                 printf(";\n");
@@ -622,7 +619,11 @@ static void afficheGraphe_aux(Graphe* g){
             printf("\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddr);
         }
         if (g->typeLiaison == JUMP_COND) {
-            printf(" [color=green];\n");
+            if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
+                printf(" [color=green];\n");
+            } else {
+                printf(";\n");
+            }
             printf("\"%lx\" [style=filled fillcolor=green]", g->VirtualAddr);
         }
         printf(";\n");
@@ -652,8 +653,6 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
             case SANS_INTERET:
                 break;
             case GO_AND_LEAVE:
-                break;
-            case DEBUT_FONCTION:
                 break;
             default:
                 fprintf(graveur, "[style=filled fillcolor=orange]");
@@ -686,7 +685,6 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
             } else {
                 fprintf(graveur, ";\n");
             }
-//            fprintf(graveur, " [color=green];\n");
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=green]", g->VirtualAddr);
         }
         fprintf(graveur, ";\n");
