@@ -33,21 +33,63 @@ extern "C" {
         struct _registre*   filsh;/*!<registre correspondant aux 16 premiers bytes*/
     }Registre;
     
-    
+    /**
+     * Créer un registre virtuel qui n'a pas de sous registres
+     * @param[in] taille Taille du registre à creer
+     * @param[in] valeur A VOIR AVEC HUBERT
+     * @return Renvoie le registre sans fils crée
+     */
     Registre* newRegistreFeuille(int taille, uint64_t valeur);
+    /**
+     * Crée un registre avec une seule sous partie (dernier bytes)
+     * @param[in] filsl registre qui est la sous partie
+     * @return Le registre crée associé à sa sous partie
+     */
     Registre* newRegistreFilsUnique(Registre* filsl);
+    
+    /**
+     * Créer un registre avec deux sous-registres
+     * @param[in] filsh Registre qui est la sous partie représentée par les derniers bytes
+     * @param[in] filsl Registre qui est la sous partie représentée par les premiers bytes
+     * @return Le registre associé de ses deux sous parties
+     */
     Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl);
     
+    /**
+     * Efface un registre virtuel de la mémoire
+     * @param[in] reg Registre à éffacer
+     */
     void terminateRegistre(Registre* reg);
-    
+    /**
+     * Calcul la valeur stocké dans un registre
+     * @param[in] reg Le registre dont on veut calculer la valeur
+     * @return La valeur stocké dans le registre
+     */
     uint64_t getValeur(const Registre* reg);
     
     /**
      * Le paramètre n est trop petit : il faut utiliser un type plus grand
      */
     
-    uint64_t setValeur(Registre* reg, uint64_t n); // retourne ce qu'il reste à attribuer
+    /**
+     * Stock une valeur dans un registre si cela est possible
+     * @param[in/out] reg Registre dans lequel on veut stocker la valeur
+     * @param[in] n Valeur à stocker
+     * @return Un nombre différent de 0 si le registre est trop petit pour contenir la valeur
+     */
+    uint64_t setValeur(Registre* reg, uint64_t n); 
+    /**
+     * Recopie la valeur d'un registre dans un autre
+     * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
+     * @param[in] src Registre dont on extrait la valeur à copier
+     */
     void copieVal(Registre* dest, Registre* src);
+    
+    /**
+     * Ajout à la valeur d'un registre
+     * @param[in/out] reg Registre auquel on veut ajouter la valeur
+     * @param[in] len Valeur à ajouter
+     */
     void incr(Registre* reg, int len);
     
     /* ----------------------------- PROPAGATION --------------------------- */
