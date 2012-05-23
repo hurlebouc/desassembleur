@@ -21,27 +21,46 @@ extern "C" {
     
 /*== Valeurs possibles de lecture (appels reccursifs)==*/
     
-#define EST_LU 1
-#define EST_ASSEMBLE 2
-#define EST_AFFICHE 3
-#define EST_LIBERE 4
-#define PASSAGE_GET_NODE_WITH_VIRTUALADDR 5
-#define PASSAGE_GET_NODE_WITH_VIRTUALADDR_U 6
+    enum ValeurImmediat{
+        NEANT,
+        EST_LU,
+        EST_ASSEMBLE,
+        EST_AFFICHE,
+        EST_LIBERE,
+        PASSAGE_GET_NODE_WITH_VIRTUALADDR,
+        PASSAGE_GET_NODE_WITH_VIRTUALADDR_U,
+    };
+    
+//#define EST_LU                              1
+//#define EST_ASSEMBLE                        2
+//#define EST_AFFICHE                         3
+//#define EST_LIBERE                          4
+//#define PASSAGE_GET_NODE_WITH_VIRTUALADDR   5
+//#define PASSAGE_GET_NODE_WITH_VIRTUALADDR_U 6
 
 /*======== Valeurs possibles de type de liaison =======*/
+    
+    enum ValeurLiaison{
+        NOEUD_TERMINAISON,
+        NOEUD_JUMP_COND,
+        NOEUD_JUMP_INCOND,
+        NOEUD_CALL,
+        NOEUD_RET,
+        NOEUD_EXIT,
+    };
 
-#define TERMINAISON 0
-#define JUMP_COND   1 
-#define JUMP_INCOND 2
-#define CALL        3
-#define RET         4
-#define FIN         5
+//#define TERMINAISON 0
+//#define JUMP_COND   1 
+//#define JUMP_INCOND 2
+//#define CALL        3
+//#define RET         4
+//#define FIN         5
 
 /*============ Valeurs possibles d'interet ===========*/
     
     enum ValeurInteret{
         SANS_INTERET,
-        GO_AND_LEAVE,
+        NOEUD_BRANCH,
         
         OPCODE_INCONNU,
         DEPASSEMENT_BLOC,
@@ -90,9 +109,9 @@ extern "C" {
     typedef struct _Graphe{             //45 bytes
         unsigned long VirtualAddr;      //adresse de l'instruction lue
         uintptr_t aif;                  // address in file
-        int8_t interet;                 // voir les macros
+        int8_t etat;                    // voir les macros
         int8_t typeLiaison;             // voir les macros
-        int8_t _etat_recc;              // voir les macros
+        int8_t _immediat;               // voir les macros
         int8_t tailleInstruction;
         int8_t recouvert;               // 1 si PAS premier byte d'une instr
         Processeur* pool;               // propation de constantes

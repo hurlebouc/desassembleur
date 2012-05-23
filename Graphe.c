@@ -13,9 +13,9 @@ Graphe* newGraphe(void){
     Graphe* g = malloc(sizeof(Graphe));
     g->VirtualAddr = 0;
     g->aif = 0;
-    g->interet = SANS_INTERET;
-    g->typeLiaison = 0;
-    g->_etat_recc = 0;
+    g->etat = SANS_INTERET;
+    g->typeLiaison = NOEUD_TERMINAISON;
+    g->_immediat = NEANT;
     g->tailleInstruction = 0;
     g->recouvert = 0;
     g->listeFils = NULL;
@@ -39,7 +39,6 @@ void terminateNoeud(Graphe* g){
             removeLink(g, fils);
         }
     }
-    
     if (g->listeFils != NULL) {
         terminateLinkedList(g->listeFils);
     }
@@ -53,10 +52,10 @@ void terminateNoeud(Graphe* g){
 void terminateGraphe(Graphe* g){
     // Il faut eviter que se faire supprimer comme étant
     // un (arriere petit) fils de ses fils.
-    if (g->_etat_recc == EST_LIBERE) {
+    if (g->_immediat == EST_LIBERE) {
         return;
     }
-    g->_etat_recc = EST_LIBERE;
+    g->_immediat = EST_LIBERE;
     
     // suppression de la liste des fils de chaque pere
     if (g->listePeres != NULL) {
@@ -123,17 +122,17 @@ void addLink(Graphe* pere, Graphe* fils){
  */
 
 Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
-    if (g->_etat_recc == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
+    if (g->_immediat == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
         return NULL;
     }
-    uint8_t etatinit = g->_etat_recc;
-    g->_etat_recc = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
+    uint8_t etatinit = g->_immediat;
+    g->_immediat = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
     if(g->VirtualAddr == va){
-        g->_etat_recc = etatinit;
+        g->_immediat = etatinit;
         return g;
     }
     if (g->listeFils == NULL) {
-        g->_etat_recc = etatinit;
+        g->_immediat = etatinit;
         return NULL;
     }
     int l = sizeLL(g->listeFils);
@@ -141,20 +140,20 @@ Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
     for (int i = 0; i<l; i++) {
         Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
         if (res != NULL) {
-            g->_etat_recc = etatinit;
+            g->_immediat = etatinit;
             return res;
         }
         tete=tete->suiv;
     }
-    g->_etat_recc = etatinit;
+    g->_immediat = etatinit;
     return NULL;
 }
 
 Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
-    if (g->_etat_recc == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
+    if (g->_immediat == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
         return NULL;
     }
-    g->_etat_recc = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
+    g->_immediat = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
     if(g->VirtualAddr == va){
         return g;
     }

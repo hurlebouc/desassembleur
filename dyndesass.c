@@ -122,29 +122,29 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                 
         if (len == UNKNOWN_OPCODE) {
             pushlog(fichierlog, "WARNING : le desassembleur a rencontré un opcode inconnu\n");
-            i->interet = OPCODE_INCONNU;
-            i->_etat_recc = EST_LU;
+            i->etat = OPCODE_INCONNU;
+            i->_immediat = EST_LU;
             stop = depilage(prog, pileAppel, fichierlog);
             
         } else if (len == OUT_OF_BLOCK) {
             pushlog(fichierlog, "WARNING : le désassembleur a rencontré un depassement de bloc lors de la lecture d'une instruction\n");
-            i->interet = DEPASSEMENT_BLOC;
-            i->_etat_recc = EST_LU;
+            i->etat = DEPASSEMENT_BLOC;
+            i->_immediat = EST_LU;
             stop = depilage(prog, pileAppel, fichierlog);
             
-        } else if (i->_etat_recc == EST_LU){ // si on est deja passé par là
+        } else if (i->_immediat == EST_LU){ // si on est deja passé par là
             stop = depilage(prog, pileAppel, fichierlog); 
                         
         } else {
-            i->_etat_recc = EST_LU;
+            i->_immediat = EST_LU;
             switch (brancheType) {
                     
                 case CallType:
-                    i->interet = GO_AND_LEAVE;
-                    i->typeLiaison = CALL;
+                    i->etat = NOEUD_BRANCH;
+                    i->typeLiaison = NOEUD_CALL;
                     if (cibleAdress == 0) {
                         pushlog(fichierlog, "WARNING : call indéfini\n");
-                        i->interet = CALL_INDEFINI;
+                        i->etat = CALL_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
@@ -153,23 +153,23 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = initGraph(pi, iniAdress + len - debut);
-                            s->interet = GO_AND_LEAVE;
+                            s->etat = NOEUD_BRANCH;
                             addLink(i, s);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
                             pushlog(fichierlog, "WARNING : il est impossible de revenir à ce call car");
                             pushlog(fichierlog,  "il est la dernière instruction du bloc\n");
-                            i->interet = CALL_FIN_BLOC;
+                            i->etat = CALL_FIN_BLOC;
                         }
                     } else if(iniAdress + len < fin){ 
                         // cas où le call appel une fonction
                         // hors du bloc ou lorsque le saut est indéfini
                         if (cibleAdress != 0) {
                             pushlog(fichierlog, "WARNING : un call fait appel à une fonction hors du bloc\n");
-                            i->interet = CALL_OUT_OF_BLOCK;
+                            i->etat = CALL_OUT_OF_BLOCK;
                         }
                         Graphe* s = initGraph(pi, iniAdress + len - debut);
-                        s->interet = GO_AND_LEAVE;
+                        s->etat = NOEUD_BRANCH;
                         addLink(i, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
@@ -178,98 +178,94 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                         if (cibleAdress != 0) {
                             pushlog(fichierlog,
                                     "WARNING : un call n'a aucun fils (OOB)\n");
-                            i->interet = CALL_TERMINAL_OOB;
+                            i->etat = CALL_TERMINAL_OOB;
                         } else {
                             pushlog(fichierlog,
                                     "WARNING : un call n'a aucun fils (indef)\n");
-                            i->interet = CALL_TERMINAL_INDEFINI;
+                            i->etat = CALL_TERMINAL_INDEFINI;
                         }
                         stop = depilage(prog, pileAppel, fichierlog);
                     }
                     break;
                     
                 case JmpType:
-                    i->interet = GO_AND_LEAVE;
-                    i->typeLiaison = JUMP_INCOND;
+                    i->etat = NOEUD_BRANCH;
+                    i->typeLiaison = NOEUD_JUMP_INCOND;
                     if (cibleAdress == 0) {
                         pushlog(fichierlog, "WARNING : saut inconditionnel indéfini\n");
-                        i->interet = SAUT_INCOND_INDEFINI;
+                        i->etat = SAUT_INCOND_INDEFINI;
                         stop = depilage(prog, pileAppel, fichierlog);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
-                        t->interet = GO_AND_LEAVE;
+                        t->etat = NOEUD_BRANCH;
                         addLink(i, t);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                     } else {
                         pushlog(fichierlog, "WARNING : un jump essai de sortir du bloc\n");
-                        i->interet = SAUT_INCOND_OUT_OF_BLOCK;
+                        i->etat = SAUT_INCOND_OUT_OF_BLOCK;
                         stop = depilage(prog, pileAppel, fichierlog);
                     }
                     break;
                     
                 case RetType:
-                    i->interet = GO_AND_LEAVE;
-                    i->typeLiaison = RET;
+                    i->etat = NOEUD_BRANCH;
+                    i->typeLiaison = NOEUD_RET;
                     stop = depilage(prog, pileAppel, fichierlog);
                     break;
                     
                 case 0: // cas ou il n y a pas de saut
                     if (strcmp(prog->Instruction.Mnemonic, "hlt ")==0) {
-                        i->interet = GO_AND_LEAVE;
-                        i->typeLiaison = FIN;
+                        i->etat = NOEUD_BRANCH;
+                        i->typeLiaison = NOEUD_EXIT;
                         stop = depilage(prog, pileAppel, fichierlog);
                     }else if (iniAdress + len < fin) {
                         Graphe* s = initGraph(pi, iniAdress + len - debut);
-//                        Graphe* s = &pi[iniAdress + len - debut];
-//                        s->VirtualAddrPointee = iniAdress + len;
                         addLink(i, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
                         pushlog(fichierlog, "WARNING : la fin du bloc est atteinte sans rencontrer de point d arret");
-                        i->interet = FIN_BLOC_SANS_POINT_ARRET;
+                        i->etat = FIN_BLOC_SANS_POINT_ARRET;
                         stop = depilage(prog, pileAppel, fichierlog);
                     }
                     break;
                     
                 default: // cas des jumps conditionnels
-                    i->interet = GO_AND_LEAVE;
-                    i->typeLiaison = JUMP_COND;
+                    i->etat = NOEUD_BRANCH;
+                    i->typeLiaison = NOEUD_JUMP_COND;
                     if (cibleAdress == 0) {
                         pushlog(fichierlog, "WARNING : saut conditionnel indéfini\n");
-                        i->interet = SAUT_COND_INDEFINI;
+                        i->etat = SAUT_COND_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
-//                        Graphe* t = &pi[cibleAdress - debut];
-//                        t->VirtualAddrPointee = cibleAdress;
-                        t->interet = GO_AND_LEAVE;
+                        t->etat = NOEUD_BRANCH;
                         addLink(i, t);
                         prog->VirtualAddr = cibleAdress;
                         prog->EIP += cibleAdress - (long) iniAdress;
                         if (iniAdress + len < fin) {
                             Graphe* s = initGraph(pi, iniAdress + len - debut);
-                            s->interet = GO_AND_LEAVE;
+                            s->etat = NOEUD_BRANCH;
                             addLink(i, s);
                             addFirstLL(pileAppel, (void *) IP); // on empile
                         } else {
                             pushlog(fichierlog, "WARNING : un saut conditionnel est dernière instruction du bloc\n");
-                            i->interet = SAUT_COND_FIN_BLOC;
+                            i->etat = SAUT_COND_FIN_BLOC;
                         }
                     } else if(iniAdress + len < fin){
                         if (cibleAdress != 0) {
                             pushlog(fichierlog, "WARNING : un saut conditionnel essai de sortir du bloc\n");
-                            i->interet = SAUT_COND_OUT_OF_BLOCK;
+                            i->etat = SAUT_COND_OUT_OF_BLOCK;
                         }
                         Graphe* s = initGraph(pi, iniAdress + len - debut);
-                        s->interet = GO_AND_LEAVE;
+                        s->etat = NOEUD_BRANCH;
                         addLink(i, s);
                         prog->VirtualAddr += len;
                         prog->EIP += len;
                     } else {
                         pushlog(fichierlog, "WARNING : un saut conditionnel n'a pas de fils\n");
-                        i->interet = SAUT_COND_TERMINAL;
+                        i->etat = SAUT_COND_TERMINAL;
                         stop = depilage(prog, pileAppel, fichierlog);
                     }
                     break;
@@ -282,7 +278,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
     closeFichier(fichierlog);
     terminateLinkedList(pileAppel);
     Graphe* g = initGraph(pi, virtualAddr_init - debut);
-//    Graphe* g = &pi[virtualAddr_init - debut];
     return g;
 }
 
@@ -315,7 +310,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
 #ifdef DEBUG_MODE
     Disasm(prog);
-    sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddr, prog->VirtualAddr, prog->Instruction.Mnemonic, g->interet);
+    sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddr, prog->VirtualAddr, prog->Instruction.Mnemonic, g->etat);
     pushlog(fichierlog, temp);
     
     if (g->VirtualAddr != prog->VirtualAddr) {
@@ -342,15 +337,15 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     }
     
     /*==================================== CAS D'ARRET ==================================*/
-    if (g->_etat_recc == EST_ASSEMBLE) {
+    if (g->_immediat == EST_ASSEMBLE) {
         pushlog(fichierlog, "deja assemble\n");
         return;
     }
     
     /* les autres cas traitent des instructions terminales */
     
-    if (g->typeLiaison == FIN) {
-        g->_etat_recc = EST_ASSEMBLE;
+    if (g->typeLiaison == NOEUD_EXIT) {
+        g->_immediat = EST_ASSEMBLE;
         pushlog(fichierlog, "un hlt\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "ERREUR : une instruction terminale a des fils\n");
@@ -360,8 +355,8 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         }
         return;
     }
-    if (g->typeLiaison == RET) {
-        g->_etat_recc = EST_ASSEMBLE;
+    if (g->typeLiaison == NOEUD_RET) {
+        g->_immediat = EST_ASSEMBLE;
         pushlog(fichierlog, "un ret\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "ERREUR : une instruction terminale a des fils\n");
@@ -371,8 +366,8 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         }
         return;
     }
-    if (g->interet == OPCODE_INCONNU || g->interet == DEPASSEMENT_BLOC) {
-        g->_etat_recc = EST_ASSEMBLE;
+    if (g->etat == OPCODE_INCONNU || g->etat == DEPASSEMENT_BLOC) {
+        g->_immediat = EST_ASSEMBLE;
         pushlog(fichierlog, "WARNING : une instruction erronée\n");
         if (g->listeFils != NULL) {
             pushlog(fichierlog, "une instruction terminale a des fils\n");
@@ -383,18 +378,18 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         return;
     }
     if (g->listeFils == NULL) { // normalement seul les ret et les hlt n'ont pas de fils
-        g->_etat_recc = EST_ASSEMBLE;
-        if (g->typeLiaison == CALL) {
+        g->_immediat = EST_ASSEMBLE;
+        if (g->typeLiaison == NOEUD_CALL) {
             pushlog(fichierlog, "WARNING : call sans fils\n");
         }
-        if (g->typeLiaison == JUMP_INCOND) {
+        if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             
             pushlog(fichierlog, "WARNING : jmp sans fils\n");
         }
-        if (g->typeLiaison == JUMP_COND) {
+        if (g->typeLiaison == NOEUD_JUMP_COND) {
             pushlog(fichierlog, "WARNING : jne sans fils\n");
         }
-        if (g->typeLiaison == TERMINAISON) {
+        if (g->typeLiaison == NOEUD_TERMINAISON) {
             pushlog(fichierlog, "WARNING : l'instruction suivante sort du bloc\n");
         }
         return;
@@ -402,18 +397,18 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
     /*===================================================================================*/
     
-     g->_etat_recc = EST_ASSEMBLE;
+     g->_immediat = EST_ASSEMBLE;
      
     /*================================ APPELS RECCURSIFS ===============================*/
     
-    if (g->typeLiaison != TERMINAISON) {
-        if (g->typeLiaison == CALL) {
+    if (g->typeLiaison != NOEUD_TERMINAISON) {
+        if (g->typeLiaison == NOEUD_CALL) {
             pushlog(fichierlog, "un call\n");
         }
-        if (g->typeLiaison == JUMP_COND) {
+        if (g->typeLiaison == NOEUD_JUMP_COND) {
             pushlog(fichierlog, "un jump\n");
         }
-        if (g->typeLiaison == JUMP_INCOND) {
+        if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             pushlog(fichierlog, "un jne\n");
         }
         if (g->listeFils->longueur == 0) {
@@ -473,7 +468,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     len = Disasm(prog); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A SUPPRIMER
 #endif
     
-    while (fils->interet == SANS_INTERET) {
+    while (fils->etat == SANS_INTERET) {
         pushlog(fichierlog, "simplification d'un fils\n");
         
 #ifdef DEBUG_MODE
@@ -523,7 +518,7 @@ Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;
     simplifieGraphe_aux(prog, g, fichierlog);
-    g->_etat_recc=EST_ASSEMBLE;
+    g->_immediat=EST_ASSEMBLE;
     pushlog(fichierlog, "fin de l'assemblage");
     closeFichier(fichierlog);
     return g;
@@ -568,17 +563,17 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
  */
 
 static void afficheGraphe_aux(Graphe* g){
-    if (g->_etat_recc == EST_AFFICHE) {
+    if (g->_immediat == EST_AFFICHE) {
         printf("\"%lx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
         printf("\"%lx\"", g->VirtualAddr);
-        g->_etat_recc = EST_AFFICHE;
-        if (g->typeLiaison == RET) {
+        g->_immediat = EST_AFFICHE;
+        if (g->typeLiaison == NOEUD_RET) {
             printf("[style=filled fillcolor=grey]");
         }
-        switch (g->interet) {
+        switch (g->etat) {
             case OPCODE_INCONNU:
                 printf("[style=filled fillcolor=red]");
                 break;
@@ -587,7 +582,7 @@ static void afficheGraphe_aux(Graphe* g){
                 break;
             case SANS_INTERET:
                 break;
-            case GO_AND_LEAVE:
+            case NOEUD_BRANCH:
                 break;
             default:
                 printf("[style=filled fillcolor=orange]");
@@ -596,13 +591,13 @@ static void afficheGraphe_aux(Graphe* g){
         printf(";\n");
         return;
     }
-    g->_etat_recc = EST_AFFICHE;
+    g->_immediat = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
         printf("\"%lx\"->\"%lx\"", g->VirtualAddr, etatCible->VirtualAddr);
-        if (g->typeLiaison == CALL) {
+        if (g->typeLiaison == NOEUD_CALL) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 printf(" [color=red];\n");
             } else {
@@ -610,11 +605,11 @@ static void afficheGraphe_aux(Graphe* g){
             }
             printf("\"%lx\" [style=filled fillcolor=red]", g->VirtualAddr);
         }
-        if (g->typeLiaison == JUMP_INCOND) {
+        if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             printf(" [color=blue];\n");
             printf("\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddr);
         }
-        if (g->typeLiaison == JUMP_COND) {
+        if (g->typeLiaison == NOEUD_JUMP_COND) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 printf(" [color=green];\n");
             } else {
@@ -629,17 +624,20 @@ static void afficheGraphe_aux(Graphe* g){
 }
 
 static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
-    if (g->_etat_recc == EST_AFFICHE) {
+    if (g->_immediat == EST_AFFICHE) {
         fprintf(graveur, "\"%lx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
         fprintf(graveur, "\"%lx\"", g->VirtualAddr);
-        g->_etat_recc = EST_AFFICHE;
-        if (g->typeLiaison == RET) {
+        g->_immediat = EST_AFFICHE;
+        if (g->typeLiaison == NOEUD_RET) {
             fprintf(graveur, "[style=filled fillcolor=grey]");
         }
-        switch (g->interet) {
+//        if (g->typeLiaison == NOEUD_EXIT) {
+//            fprintf(graveur, "[style=filled fillcolor=yellow]");
+//        }
+        switch (g->etat) {
             case OPCODE_INCONNU:
                 fprintf(graveur, "[style=filled fillcolor=red]");
                 break;
@@ -648,7 +646,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
                 break;
             case SANS_INTERET:
                 break;
-            case GO_AND_LEAVE:
+            case NOEUD_BRANCH:
                 break;
             default:
                 fprintf(graveur, "[style=filled fillcolor=orange]");
@@ -657,13 +655,13 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
         fprintf(graveur, ";\n");
         return;
     }
-    g->_etat_recc = EST_AFFICHE;
+    g->_immediat = EST_AFFICHE;
     LinkedList* tete = g->listeFils;
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
         fprintf(graveur, "\"%lx\"->\"%lx\"", g->VirtualAddr, etatCible->VirtualAddr);
-        if (g->typeLiaison == CALL) {
+        if (g->typeLiaison == NOEUD_CALL) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 fprintf(graveur, " [color=red];\n");
             } else {
@@ -671,11 +669,11 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
             }
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=red]", g->VirtualAddr);
         }
-        if (g->typeLiaison == JUMP_INCOND) {
+        if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             fprintf(graveur, " [color=blue];\n");
             fprintf(graveur, "\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddr);
         }
-        if (g->typeLiaison == JUMP_COND) {
+        if (g->typeLiaison == NOEUD_JUMP_COND) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 fprintf(graveur, " [color=green];\n");
             } else {
@@ -727,7 +725,7 @@ static void afficheListePere(Graphe* g){
 
 void afficherPI(Graphe* pi, unsigned long taille){
     for (int i = 0; i<taille; i++) {
-        printf("0x%lx\tinteret : %d",pi[i].VirtualAddr, pi[i].interet);
+        printf("0x%lx\tinteret : %d",pi[i].VirtualAddr, pi[i].etat);
         if (pi[i].listeFils != NULL) {
             printf("\tfils : ");
             afficheListeFils(&pi[i]);
