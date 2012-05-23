@@ -20,6 +20,7 @@
       <itemPath>loader.h</itemPath>
       <itemPath>macro.h</itemPath>
       <itemPath>beaengine/macros.h</itemPath>
+      <itemPath>pool.h</itemPath>
       <itemPath>processeur.h</itemPath>
       <itemPath>registre.h</itemPath>
     </logicalFolder>
@@ -42,6 +43,7 @@
       <itemPath>loader.c</itemPath>
       <itemPath>loaderElf.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>pool.c</itemPath>
       <itemPath>processeur.c</itemPath>
       <itemPath>registre.c</itemPath>
       <itemPath>test7.c</itemPath>

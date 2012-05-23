@@ -30,11 +30,12 @@ extern "C" {
 #include "liste_instr.h"
     
     
-    
+    /**
+     Structure qui va être utilisé à chaque étape du désassemblage. */
     typedef struct _desassembleur{
-        DISASM* disasm;
-        unsigned long debutVirtuel;    // debut virtuel du bloc
-        Processeur* proc;
+        DISASM* disasm;/*!< Structure nécéssaire à Beaengine pour désassembler */
+        unsigned long debutVirtuel; /*!<Début virtuel du bloc */
+        Processeur* proc; /*!<Processeur virtuel dans l'état avant instruction */
     }Desasembleur;
     
     

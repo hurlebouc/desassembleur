@@ -22,13 +22,15 @@ extern "C" {
         REGISTRE_NON_DEFINI = 0,
         REGISTRE_DEFINI,
     };
-    
+    /**
+     * Registre virtuel
+     */
     typedef struct _registre{ // 32 bytes
-        int                 taille;
+        int                 taille;/*!<Taille du registre*/
         uint64_t            valeur; // (seulement en cas de feuille)
-        int                 classe; // propagation des constantes
-        struct _registre*   filsl; 
-        struct _registre*   filsh;
+        int                 classe;/*!<Classe d'appartenance de la méthode de propagation des constantes*/
+        struct _registre*   filsl; /*!<registre correspondant aux 16 dernier bytes*/
+        struct _registre*   filsh;/*!<registre correspondant aux 16 premiers bytes*/
     }Registre;
     
     

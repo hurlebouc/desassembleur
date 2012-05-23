@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug_Mac configuration
 CND_PLATFORM_Debug_Mac=GNU-MacOSX
 CND_ARTIFACT_DIR_Debug_Mac=dist/Debug_Mac/GNU-MacOSX
-CND_ARTIFACT_NAME_Debug_Mac=trunk
-CND_ARTIFACT_PATH_Debug_Mac=dist/Debug_Mac/GNU-MacOSX/trunk
+CND_ARTIFACT_NAME_Debug_Mac=desassembleur-code
+CND_ARTIFACT_PATH_Debug_Mac=dist/Debug_Mac/GNU-MacOSX/desassembleur-code
 CND_PACKAGE_DIR_Debug_Mac=dist/Debug_Mac/GNU-MacOSX/package
-CND_PACKAGE_NAME_Debug_Mac=trunk.tar
-CND_PACKAGE_PATH_Debug_Mac=dist/Debug_Mac/GNU-MacOSX/package/trunk.tar
+CND_PACKAGE_NAME_Debug_Mac=desassembleur-code.tar
+CND_PACKAGE_PATH_Debug_Mac=dist/Debug_Mac/GNU-MacOSX/package/desassembleur-code.tar
 # Release_Mac configuration
 CND_PLATFORM_Release_Mac=GNU-MacOSX
 CND_ARTIFACT_DIR_Release_Mac=dist/Release_Mac/GNU-MacOSX
-CND_ARTIFACT_NAME_Release_Mac=trunk
-CND_ARTIFACT_PATH_Release_Mac=dist/Release_Mac/GNU-MacOSX/trunk
+CND_ARTIFACT_NAME_Release_Mac=desassembleur-code
+CND_ARTIFACT_PATH_Release_Mac=dist/Release_Mac/GNU-MacOSX/desassembleur-code
 CND_PACKAGE_DIR_Release_Mac=dist/Release_Mac/GNU-MacOSX/package
-CND_PACKAGE_NAME_Release_Mac=trunk.tar
-CND_PACKAGE_PATH_Release_Mac=dist/Release_Mac/GNU-MacOSX/package/trunk.tar
+CND_PACKAGE_NAME_Release_Mac=desassembleur-code.tar
+CND_PACKAGE_PATH_Release_Mac=dist/Release_Mac/GNU-MacOSX/package/desassembleur-code.tar
 # Debug_Linux configuration
 CND_PLATFORM_Debug_Linux=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug_Linux=dist/Debug_Linux/GNU-Linux-x86

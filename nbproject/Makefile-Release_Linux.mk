@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/loader.o \
 	${OBJECTDIR}/loaderElf.o \
+	${OBJECTDIR}/pool.o \
 	${OBJECTDIR}/processeur.o \
 	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/desassembleur.o \
@@ -96,6 +97,11 @@ ${OBJECTDIR}/loaderElf.o: loaderElf.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/loaderElf.o loaderElf.c
+
+${OBJECTDIR}/pool.o: pool.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/pool.o pool.c
 
 ${OBJECTDIR}/processeur.o: processeur.c 
 	${MKDIR} -p ${OBJECTDIR}

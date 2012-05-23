@@ -153,17 +153,30 @@ extern "C" {
         EGAL,
         NON_INCLUS = -1,
     };
-    
+    /**
+     * Modélisation du procésseur
+     */
     typedef struct _Processeur{ // 664 bytes
-        LinkedList* stack;
-        Registre*   tabRegistre[NOMBRE_REGISTRES];
-        uint8_t     tabFlags[NOMBRE_FLAGS];
+        LinkedList* stack;/*!<Simule le comportement de la pile d'appel */
+        Registre*   tabRegistre[NOMBRE_REGISTRES];/*!<Tableau qui contient les registres */
+        uint8_t     tabFlags[NOMBRE_FLAGS];/*!<Registre de flags */
         
     }Processeur;
-    
+    /**
+     * Crée et renvoi un nouveau procésseur virtuel
+     * @return Processeur renvoi un procésseur non initialiser
+     */
     Processeur* newProcesseur(void);
+    /**
+     * Crée une copie d'un processeur virtuel
+     * @param[in] Processeur processeur à copier
+     * @return le processeur copié
+     */
     Processeur* newProcesseurCopy(const Processeur*);
-    
+    /**
+     * Efface un processeur virtuel de la mémoire
+     * @param[in] proc
+     */
     void terminateProcesseur(Processeur* proc);
     
     
