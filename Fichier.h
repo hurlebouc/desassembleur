@@ -25,9 +25,11 @@ extern "C" {
 #include <stdio.h>
 #define MAX_BUFFER 1024
 
-
+/**
+ * Fichier manipulé
+ */
 typedef struct fichier {
-    char* chemin;
+    char* chemin;/*!<Chemin vers l'emplacement du fichier*/
 } Fichier;
 
 /**
