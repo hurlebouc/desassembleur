@@ -494,7 +494,7 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
  * Ici g ne sert qu'à donner l'instruction (on utilise pas son pool)
  */
 
-static void setPool(Graphe* g, Processeur* newPool) {
+static void setPool(const Graphe* g, Processeur* newPool) {
     DISASM* disasm = newDisasm();
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
@@ -634,12 +634,13 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
  * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
  */
 
-static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
+static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog, char temp[MAX_BUFFER]){
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
     
+    const Processeur* initialPool = pere->pool;
     Processeur* copyPool = newProcesseurCopy(initialPool);
-    setPool(g, copyPool);
+    setPool(pere, copyPool);
     int inc = incluDans(g->pool, copyPool);
     if (inc !=NON_INCLUS){
         terminateProcesseur(copyPool);
@@ -658,7 +659,7 @@ static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier*
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
-        optimizePool_aux2(tete->valeur, g->pool, fichierlog, temp);
+        optimizePool_aux2(tete->valeur, g, fichierlog, temp);
         tete = tete->suiv;
     }
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
@@ -742,7 +743,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
-        optimizePool_aux2(tete->valeur, g->pool, fichierlog, temp);
+        optimizePool_aux2(tete->valeur, g, fichierlog, temp);
         tete = tete->suiv;
     }
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
