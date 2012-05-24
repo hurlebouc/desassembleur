@@ -142,6 +142,7 @@ extern "C" {
     Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va);
     
     void optimizePool(Graphe*, const Processeur* initialPool);
+    void optimizePool2(Graphe*, const Processeur* initialPool);
     
     void debranchage(Graphe* g);
 

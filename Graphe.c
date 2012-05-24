@@ -599,9 +599,9 @@ static void setPool(Graphe* g, Processeur* newPool) {
  */
 
 static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
-    
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
+    
     Processeur* copyPool = newProcesseurCopy(initialPool);
     setPool(g, copyPool);
     int inc = incluDans(g->pool, copyPool);
@@ -630,13 +630,50 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
 }
 
 /**
- * Cette version de propagation des constante respecte l'agorithme de Kildall
+ * Cette version de l'algorithme de propagation des constantes est une 
+ * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
  */
 
 static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
-    
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
+    
+    Processeur* copyPool = newProcesseurCopy(initialPool);
+    setPool(g, copyPool);
+    int inc = incluDans(g->pool, copyPool);
+    if (inc !=NON_INCLUS){
+        terminateProcesseur(copyPool);
+        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    inter(g->pool, copyPool); // l'intercection est dans g->pool
+    terminateProcesseur(copyPool);
+    if (g->listeFils == NULL) {
+        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    int l = sizeLL(g->listeFils);
+    pushlog(fichierlog, temp);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        optimizePool_aux2(tete->valeur, g->pool, fichierlog, temp);
+        tete = tete->suiv;
+    }
+    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
+}
+
+/**
+ * Cette version de propagation des constante respecte l'agorithme de Kildall
+ * (a utiliser dans optimizePool (version 1)
+ */
+
+static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
+    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
+    
     int inc = incluDans(g->pool, initialPool);
     if (inc !=NON_INCLUS){
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
@@ -655,7 +692,7 @@ static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier*
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
-        optimizePool_aux2(tete->valeur, newPool, fichierlog, temp);
+        optimizePool_aux_kildall(tete->valeur, newPool, fichierlog, temp);
         tete = tete->suiv;
     }
     terminateProcesseur(newPool);
@@ -676,6 +713,40 @@ void optimizePool(Graphe* g, const Processeur* initialPool){
     char temp[MAX_BUFFER];
     
     optimizePool_aux(g, initialPool, fichierlog, temp);
+    
+    closeFichier(fichierlog);
+}
+
+void optimizePool2(Graphe* g, const Processeur* initialPool){
+    char chemin_log[FILENAME_MAX];
+    strcpy(chemin_log, ROOT);
+    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
+    Fichier* fichierlog = newFichier(chemin_log);    
+    char temp[MAX_BUFFER];
+    
+    int inc = incluDans(g->pool, initialPool);
+    if (inc !=NON_INCLUS){
+        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    
+    inter(g->pool, initialPool); // l'intercection est dans g->pool
+    
+    if (g->listeFils == NULL) {
+        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        pushlog(fichierlog, temp);
+        return;
+    }
+    int l = sizeLL(g->listeFils);
+    pushlog(fichierlog, temp);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        optimizePool_aux2(tete->valeur, g->pool, fichierlog, temp);
+        tete = tete->suiv;
+    }
+    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
     
     closeFichier(fichierlog);
 }
