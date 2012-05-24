@@ -14,23 +14,47 @@
 #include "registre.h"
 #include "processeur.h"
 
+/*
+ * Description des effets d'une instruction sur un processeur virtuel.
+ */
 typedef struct _instruction{
-    int(* of_aux)(const Registre*, const Registre*, const Registre*);
-    int(* cf_aux)(const Registre*, const Registre*, const Registre*);
-    int(* af_aux)(const Registre*, const Registre*, const Registre*);
+    int(* of_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction d'altération du flag d'overflow*/
+    int(* cf_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag de retenue*/
+    int(* af_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag d'ajustement*/
     //void* of_aux;
 //    void* cf_aux;
 //    void* af_aux;
-    int zf_aux;
-    int pf_aux;
-    int sf_aux;
-    Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int);
+    int zf_aux;         /*!<1 si l'instruction modifie le flag de zéro*/
+    int pf_aux;         /*!<1 si l'instruction modifie le flag de parité*/
+    int sf_aux;         /*!<1 si l'instruction modifie le flag de signe*/
+    Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int); /*!<Fonction qui effectue si possible l'instruction virtuellement*/
 //    void* f;      // f renvoie un pointeur sur le registre qu'il a modifié 
                     // ne modifie par le registre de flags
                     // par contre il doit modifier le registre IP.
 }Instruction;
 
+        /**
+         * Execute l'instruction virtuelement si possible et ses conséquentes sur les
+         * divers flags. Enregistre le changement d'état
+         * dans un processeur virtuel
+         * @param Instruction à executer
+         * @param Registe concerné
+         * @param Registre concerné
+         * @param Registre concerné
+         * @param Taille de l'instruction en octet
+         * @param Processeur virtuel
+         */
 Registre* do_instr(Instruction*, Registre*, Registre*,Registre*,int, Processeur*);
+
+/**
+ * Crée une instruction
+ * @param of Fonction qui agit sur le flag d'overflow
+ * @param cf Fonction qui agit sur le flag de retenue
+ * @param af Fonction qui agit sur le flag d'ajustement
+ * @param zf 1 si le flag de zéro peut être modifié, 0 sinon
+ * @param pf 1 si le flag de parité peut être modifié, 0 sinon
+ * @param sf 1 si le flag de signe peut être modifié, 0 sinon
+ */
 Instruction* newInstruction(
                             int of(const Registre*, 
                                    const Registre*,
@@ -49,6 +73,11 @@ Instruction* newInstruction(
                                         Registre*,
                                         Processeur*, int)
                             );
+
+/**
+ * Efface de la mémoire une Instruction.
+ * @param Instruction à effacer
+ */
 void terminateInstruction(Instruction*);
 
 /*-------------------------------------------------------------------*/
