@@ -630,57 +630,57 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
  * pool du père
  */
 
-void optimizePool(Graphe* g, const Processeur* initialPool){
-    char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, ROOT);
-    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
-    Fichier* fichierlog = newFichier(chemin_log);    
-    char temp[MAX_BUFFER];
-    
-    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
-    pushlog(fichierlog, temp);
-    Processeur* copyPool = newProcesseurCopy(initialPool);
-    setPool(g, copyPool);
-    int inc = incluDans(g->pool, copyPool);
-    if (inc !=NON_INCLUS){
-        terminateProcesseur(copyPool);
-        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
-        pushlog(fichierlog, temp);
-        return;
-    }
-    inter(g->pool, copyPool); // l'intercection est dans g->pool
-    terminateProcesseur(copyPool);
-    if (g->listeFils == NULL) {
-        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
-        pushlog(fichierlog, temp);
-        return;
-    }
-    int l = sizeLL(g->listeFils);
-    sprintf(temp,"il y a %d fils\n", l);
-    pushlog(fichierlog, temp);
-    LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
-        /*
-         * Il y a une subtilité ici par rapport au Kildall
-         *
-         * Ici l'appel recursif ne conserve pas la valeur de g->pool. Les appels
-         * précédent peuvent le modifier.
-         * Cependant, on peut prouver que cette version est equivalant au
-         * Kildall en remarquant que cette appel "faussé" sera tout de même 
-         * présent dans l'algo original et sera redondant avec l'appel "vrai". 
-         * De plus, g->pool décroit. Donc cette appel "faussé" est inclus dans 
-         * l'appel "vrai". En exécutant l'appel faux (on peut choisir dans 
-         * l'ordre souhaité) avant l'appel vrai, 
-         */
-        optimizePool(tete->valeur, g->pool);
-        tete = tete->suiv;
-    }
-    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
-    pushlog(fichierlog, temp);
-    closeFichier(fichierlog);
-}
+//void optimizePool(Graphe* g, const Processeur* initialPool){
+//    char chemin_log[FILENAME_MAX];
+//    strcpy(chemin_log, ROOT);
+//    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
+//    Fichier* fichierlog = newFichier(chemin_log);    
+//    char temp[MAX_BUFFER];
+//    
+//    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+//    pushlog(fichierlog, temp);
+//    Processeur* copyPool = newProcesseurCopy(initialPool);
+//    setPool(g, copyPool);
+//    int inc = incluDans(g->pool, copyPool);
+//    if (inc !=NON_INCLUS){
+//        terminateProcesseur(copyPool);
+//        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+//        pushlog(fichierlog, temp);
+//        return;
+//    }
+//    inter(g->pool, copyPool); // l'intercection est dans g->pool
+//    terminateProcesseur(copyPool);
+//    if (g->listeFils == NULL) {
+//        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+//        pushlog(fichierlog, temp);
+//        return;
+//    }
+//    int l = sizeLL(g->listeFils);
+//    sprintf(temp,"il y a %d fils\n", l);
+//    pushlog(fichierlog, temp);
+//    LinkedList* tete = g->listeFils;
+//    for (int i = 0; i<l; i++) {
+//        /*
+//         * Il y a une subtilité ici par rapport au Kildall
+//         *
+//         * Ici l'appel recursif ne conserve pas la valeur de g->pool. Les appels
+//         * précédent peuvent le modifier.
+//         * Cependant, on peut prouver que cette version est equivalant au
+//         * Kildall en remarquant que cette appel "faussé" sera tout de même 
+//         * présent dans l'algo original et sera redondant avec l'appel "vrai". 
+//         * De plus, g->pool décroit. Donc cette appel "faussé" est inclus dans 
+//         * l'appel "vrai". En exécutant l'appel faux (on peut choisir dans 
+//         * l'ordre souhaité) avant l'appel vrai, 
+//         */
+//        optimizePool(tete->valeur, g->pool);
+//        tete = tete->suiv;
+//    }
+//    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+//    pushlog(fichierlog, temp);
+//    closeFichier(fichierlog);
+//}
 
-void optimizePool2(Graphe* g, const Processeur* initialPool){
+void optimizePool(Graphe* g, const Processeur* initialPool){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
     strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
