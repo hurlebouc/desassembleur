@@ -660,6 +660,18 @@ void optimizePool(Graphe* g, const Processeur* initialPool){
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
+        /*
+         * Il y a une subtilité ici par rapport au Kildall
+         *
+         * Ici l'appel recursif ne conserve pas la valeur de g->pool. Les appels
+         * précédent peuvent le modifier.
+         * Cependant, on peut prouver que cette version est equivalant au
+         * Kildall en remarquant que cette appel "faussé" sera tout de même 
+         * présent dans l'algo original et sera redondant avec l'appel "vrai". 
+         * De plus, g->pool décroit. Donc cette appel "faussé" est inclus dans 
+         * l'appel "vrai". En exécutant l'appel faux (on peut choisir dans 
+         * l'ordre souhaité) avant l'appel vrai, 
+         */
         optimizePool(tete->valeur, g->pool);
         tete = tete->suiv;
     }
