@@ -168,7 +168,7 @@ void terminateProcesseur(Processeur* proc){
     free(proc);
 }
 
-int incluDans(Processeur* p1, Processeur* p2){
+int incluDans(const Processeur* p1, const Processeur* p2){
     
     int res = EGAL;
     

@@ -182,7 +182,7 @@ extern "C" {
     
     /* ----------------------------- PROPAGATION --------------------------- */
     
-    int incluDans(Processeur* p1, Processeur* p2);
+    int incluDans(const Processeur* p1, const Processeur* p2);
     
     /**
      * Le l'intercection des deux pools se trouve dans le premier pool p1.

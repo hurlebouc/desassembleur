@@ -614,7 +614,6 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
         return;
     }
     int l = sizeLL(g->listeFils);
-//    sprintf(temp,"il y a %d fils\n", l);
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
@@ -629,30 +628,28 @@ static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier*
     
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    Processeur* copyPool = newProcesseurCopy(initialPool);
-    setPool(g, copyPool);
-    int inc = incluDans(g->pool, copyPool);
+    int inc = incluDans(g->pool, initialPool);
     if (inc !=NON_INCLUS){
-        terminateProcesseur(copyPool);
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
-    inter(g->pool, copyPool); // l'intercection est dans g->pool
-    terminateProcesseur(copyPool);
+    inter(g->pool, initialPool); // l'intercection est dans g->pool
     if (g->listeFils == NULL) {
         sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
+    Processeur* newPool = newProcesseurCopy(g->pool);
+    setPool(g, newPool); // ici newPool est modifie par g
     int l = sizeLL(g->listeFils);
-    //    sprintf(temp,"il y a %d fils\n", l);
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
-        optimizePool_aux(tete->valeur, g->pool, fichierlog, temp);
+        optimizePool_aux2(tete->valeur, newPool, fichierlog, temp);
         tete = tete->suiv;
     }
+    terminateProcesseur(newPool);
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
