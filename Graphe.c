@@ -596,6 +596,9 @@ static void setPool(const Graphe* g, Processeur* newPool) {
 /**
  * Cette version de l'algorithme de propagation des constantes est une 
  * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
+ * 
+ * initialPool n'est pas vraiment constant car on peut eventuellement y acceder 
+ * à partir de g qui lui n'est pas constant.
  */
 
 static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
@@ -619,7 +622,6 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
         return;
     }
     int l = sizeLL(g->listeFils);
-    pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
         optimizePool_aux(tete->valeur, g->pool, fichierlog, temp);
@@ -632,14 +634,16 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
 /**
  * Cette version de l'algorithme de propagation des constantes est une 
  * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
+ *
+ * initialPool n'est pas vraiment constant car on peut eventuellement y acceder 
+ * à partir de g qui lui n'est pas constant.
  */
 
 static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog, char temp[MAX_BUFFER]){
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
     
-    const Processeur* initialPool = pere->pool;
-    Processeur* copyPool = newProcesseurCopy(initialPool);
+    Processeur* copyPool = newProcesseurCopy(pere->pool);
     setPool(pere, copyPool);
     int inc = incluDans(g->pool, copyPool);
     if (inc !=NON_INCLUS){
@@ -656,7 +660,6 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
         return;
     }
     int l = sizeLL(g->listeFils);
-    pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
         optimizePool_aux2(tete->valeur, g, fichierlog, temp);
@@ -725,6 +728,9 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     Fichier* fichierlog = newFichier(chemin_log);    
     char temp[MAX_BUFFER];
     
+    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    pushlog(fichierlog, temp);
+    
     int inc = incluDans(g->pool, initialPool);
     if (inc !=NON_INCLUS){
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
@@ -740,10 +746,10 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
         return;
     }
     int l = sizeLL(g->listeFils);
-    pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<l; i++) {
-        optimizePool_aux2(tete->valeur, g, fichierlog, temp);
+        Graphe* fils = tete->valeur;
+        optimizePool_aux2(fils, g, fichierlog, temp);
         tete = tete->suiv;
     }
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);

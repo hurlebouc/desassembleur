@@ -40,7 +40,7 @@ int main(int argc, char* argv []) {
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     printf("optimisation\n");
-    optimizePool(g, desas->proc);
+    optimizePool2(g, desas->proc);
     printf("recherche");
     Graphe* n = getNodeWithVirtualAddr(g, 0x100000e82);
     printf(" : noeud 0x%lx trouvé\n", n->VirtualAddr);
