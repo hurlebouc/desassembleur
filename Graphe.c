@@ -593,6 +593,11 @@ static void setPool(Graphe* g, Processeur* newPool) {
     free(disasm);
 }
 
+/**
+ * Cette version de l'algorithme de propagation des constantes est une 
+ * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
+ */
+
 static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
     
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
@@ -623,6 +628,10 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
+
+/**
+ * Cette version de propagation des constante respecte l'agorithme de Kildall
+ */
 
 static void optimizePool_aux2(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
     
