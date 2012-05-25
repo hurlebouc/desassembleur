@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/**
+ * file liste_instr.h
+ *  
+ */
+
 #ifndef desassembleur_liste_instr_h
 #define desassembleur_liste_instr_h
 

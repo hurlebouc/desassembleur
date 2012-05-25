@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/**
+ * file registre.h
+ */
+
 #ifndef desassembleur_registre_h
 #define desassembleur_registre_h
 

@@ -1,3 +1,8 @@
+/** file LinkedList.h
+ * 
+ */
+
+
 #ifndef desassembleur_LinkedList_h
 #define desassembleur_LinkedList_h
 

@@ -5,6 +5,8 @@
 //  Created by Hubert Godfroy on 05/02/12.
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
+/** file Graphe.h
+ */
 
 #ifndef desassembleur_Graphe_h
 #define desassembleur_Graphe_h

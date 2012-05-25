@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/**
+ * file loader.h
+ */
+
 #ifndef desassembleur_loader_h
 #define desassembleur_loader_h
 

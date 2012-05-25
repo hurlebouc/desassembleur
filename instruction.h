@@ -8,6 +8,10 @@
 //  Cette classe a pour but de faire de la POO en C..
 //
 
+/**
+ * file instruction.h
+ */
+
 #ifndef desassembleur_instruction_h
 #define desassembleur_instruction_h
 
