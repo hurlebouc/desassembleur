@@ -185,6 +185,11 @@ extern "C" {
     void debranchage(Graphe* g);
     
     DISASM* newDisasmFromGraph(Graphe*);
+    
+    Registre* getGeneralRegistre(ARGTYPE arg, Processeur *proc);
+    
+    Registre * getRegistre(ARGTYPE arg, Processeur *newPool);
+    Registre * getConstant(ARGTYPE arg, DISASM *disasm);
 
 #ifdef __cplusplus
 }

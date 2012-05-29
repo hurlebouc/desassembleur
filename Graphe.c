@@ -173,29 +173,27 @@ Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
     return NULL;
 }
 
-/*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
-
-
-static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
-    uint16_t loword = argument[i].ArgType;
-    int size = argument[i].ArgSize;
+Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
+    uint16_t loword = arg.ArgType;
+    int size = arg.ArgSize;
+    Registre* res = NULL;
     switch (loword) {
         case REG0:
             switch (size) {
                 case 64:
-                    reg[i] = _RAX;
+                    res = _RAX;
                     break;
                 case 32:
-                    reg[i] = _EAX;
+                    res = _EAX;
                     break;
                 case 16:
-                    reg[i] = _AX;
+                    res = _AX;
                     break;
                 case 8:
-                    if (argument[i].ArgPosition == HighPosition) {
-                        reg[i] = _AH;
+                    if (arg.ArgPosition == HighPosition) {
+                        res = _AH;
                     } else {
-                        reg[i] = _AL;
+                        res = _AL;
                     }
                     break;
                 default:
@@ -205,19 +203,19 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG1:
             switch (size) {
                 case 64:
-                    reg[i] = _RCX;
+                    res = _RCX;
                     break;
                 case 32:
-                    reg[i] = _ECX;
+                    res = _ECX;
                     break;
                 case 16:
-                    reg[i] = _CX;
+                    res = _CX;
                     break;
                 case 8:
-                    if (argument[i].ArgPosition == HighPosition) {
-                        reg[i] = _CH;
+                    if (arg.ArgPosition == HighPosition) {
+                        res = _CH;
                     } else {
-                        reg[i] = _CL;
+                        res = _CL;
                     }
                     break;
                 default:
@@ -227,19 +225,19 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG2:
             switch (size) {
                 case 64:
-                    reg[i] = _RDX;
+                    res = _RDX;
                     break;
                 case 32:
-                    reg[i] = _EDX;
+                    res = _EDX;
                     break;
                 case 16:
-                    reg[i] = _DX;
+                    res = _DX;
                     break;
                 case 8:
-                    if (argument[i].ArgPosition == HighPosition) {
-                        reg[i] = _DH;
+                    if (arg.ArgPosition == HighPosition) {
+                        res = _DH;
                     } else {
-                        reg[i] = _DL;
+                        res = _DL;
                     }
                     break;
                 default:
@@ -249,19 +247,19 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG3:
             switch (size) {
                 case 64:
-                    reg[i] = _RBX;
+                    res = _RBX;
                     break;
                 case 32:
-                    reg[i] = _EBX;
+                    res = _EBX;
                     break;
                 case 16:
-                    reg[i] = _BX;
+                    res = _BX;
                     break;
                 case 8:
-                    if (argument[i].ArgPosition == HighPosition) {
-                        reg[i] = _BH;
+                    if (arg.ArgPosition == HighPosition) {
+                        res = _BH;
                     } else {
-                        reg[i] = _BL;
+                        res = _BL;
                     }
                     break;
                 default:
@@ -271,16 +269,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG4:
             switch (size) {
                 case 64:
-                    reg[i] = _RSP;
+                    res = _RSP;
                     break;
                 case 32:
-                    reg[i] = _ESP;
+                    res = _ESP;
                     break;
                 case 16:
-                    reg[i] = _SP;
+                    res = _SP;
                     break;
                 case 8:
-                    reg[i] = _SPL;
+                    res = _SPL;
                     break;
                 default:
                     break;
@@ -289,16 +287,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG5:
             switch (size) {
                 case 64:
-                    reg[i] = _RBP;
+                    res = _RBP;
                     break;
                 case 32:
-                    reg[i] = _EBP;
+                    res = _EBP;
                     break;
                 case 16:
-                    reg[i] = _BP;
+                    res = _BP;
                     break;
                 case 8:
-                    reg[i] = _BPL;
+                    res = _BPL;
                     break;
                 default:
                     break;
@@ -307,16 +305,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG6:
             switch (size) {
                 case 64:
-                    reg[i] = _RSI;
+                    res = _RSI;
                     break;
                 case 32:
-                    reg[i] = _ESI;
+                    res = _ESI;
                     break;
                 case 16:
-                    reg[i] = _SI;
+                    res = _SI;
                     break;
                 case 8:
-                    reg[i] = _SIL;
+                    res = _SIL;
                     break;
                 default:
                     break;
@@ -325,16 +323,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG7:
             switch (size) {
                 case 64:
-                    reg[i] = _RDI;
+                    res = _RDI;
                     break;
                 case 32:
-                    reg[i] = _EDI;
+                    res = _EDI;
                     break;
                 case 16:
-                    reg[i] = _DI;
+                    res = _DI;
                     break;
                 case 8:
-                    reg[i] = _DIL;
+                    res = _DIL;
                     break;
                 default:
                     break;
@@ -343,16 +341,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG8:
             switch (size) {
                 case 64:
-                    reg[i] = _R8;
+                    res = _R8;
                     break;
                 case 32:
-                    reg[i] = _R8D;
+                    res = _R8D;
                     break;
                 case 16:
-                    reg[i] = _R8W;
+                    res = _R8W;
                     break;
                 case 8:
-                    reg[i] = _R8B;
+                    res = _R8B;
                     break;
                 default:
                     break;
@@ -361,16 +359,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG9:
             switch (size) {
                 case 64:
-                    reg[i] = _R9;
+                    res = _R9;
                     break;
                 case 32:
-                    reg[i] = _R9D;
+                    res = _R9D;
                     break;
                 case 16:
-                    reg[i] = _R9W;
+                    res = _R9W;
                     break;
                 case 8:
-                    reg[i] = _R9B;
+                    res = _R9B;
                     break;
                 default:
                     break;
@@ -379,16 +377,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG10:
             switch (size) {
                 case 64:
-                    reg[i] = _R10;
+                    res = _R10;
                     break;
                 case 32:
-                    reg[i] = _R10D;
+                    res = _R10D;
                     break;
                 case 16:
-                    reg[i] = _R10W;
+                    res = _R10W;
                     break;
                 case 8:
-                    reg[i] = _R10B;
+                    res = _R10B;
                     break;
                 default:
                     break;
@@ -397,16 +395,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG11:
             switch (size) {
                 case 64:
-                    reg[i] = _R11;
+                    res = _R11;
                     break;
                 case 32:
-                    reg[i] = _R11D;
+                    res = _R11D;
                     break;
                 case 16:
-                    reg[i] = _R11W;
+                    res = _R11W;
                     break;
                 case 8:
-                    reg[i] = _R11B;
+                    res = _R11B;
                     break;
                 default:
                     break;
@@ -415,16 +413,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG12:
             switch (size) {
                 case 64:
-                    reg[i] = _R12;
+                    res = _R12;
                     break;
                 case 32:
-                    reg[i] = _R12D;
+                    res = _R12D;
                     break;
                 case 16:
-                    reg[i] = _R12W;
+                    res = _R12W;
                     break;
                 case 8:
-                    reg[i] = _R12B;
+                    res = _R12B;
                     break;
                 default:
                     break;
@@ -433,16 +431,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG13:
             switch (size) {
                 case 64:
-                    reg[i] = _R13;
+                    res = _R13;
                     break;
                 case 32:
-                    reg[i] = _R13D;
+                    res = _R13D;
                     break;
                 case 16:
-                    reg[i] = _R13W;
+                    res = _R13W;
                     break;
                 case 8:
-                    reg[i] = _R13B;
+                    res = _R13B;
                     break;
                 default:
                     break;
@@ -451,16 +449,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG14:
             switch (size) {
                 case 64:
-                    reg[i] = _R14;
+                    res = _R14;
                     break;
                 case 32:
-                    reg[i] = _R14D;
+                    res = _R14D;
                     break;
                 case 16:
-                    reg[i] = _R14W;
+                    res = _R14W;
                     break;
                 case 8:
-                    reg[i] = _R14B;
+                    res = _R14B;
                     break;
                 default:
                     break;
@@ -469,16 +467,16 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         case REG15:
             switch (size) {
                 case 64:
-                    reg[i] = _R15;
+                    res = _R15;
                     break;
                 case 32:
-                    reg[i] = _R15D;
+                    res = _R15D;
                     break;
                 case 16:
-                    reg[i] = _R15W;
+                    res = _R15W;
                     break;
                 case 8:
-                    reg[i] = _R15B;
+                    res = _R15B;
                     break;
                 default:
                     break;
@@ -487,6 +485,73 @@ static void setRegistre(int i,ARGTYPE*argument,Processeur*proc,Registre**reg) {
         default:
             break;
     }
+    return res;
+}
+
+/*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
+
+/**
+ * @deprecated
+ */
+static void setGeneralRegistre(int i,ARGTYPE argument[],Processeur*proc,Registre**reg) {
+    reg[i] = getGeneralRegistre(argument[i], proc);
+}
+
+Registre * getRegistre(ARGTYPE arg, Processeur *newPool) {
+    Registre *res;
+    uint32_t hi = arg.ArgType & 0xffff0000;
+    switch (hi) {
+        case REGISTER_TYPE + MMX_REG:
+            ;
+            break;
+        case REGISTER_TYPE + GENERAL_REG:
+            res = getGeneralRegistre(arg, newPool);
+            break;
+        case REGISTER_TYPE + FPU_REG:
+            ;
+            break;
+        case REGISTER_TYPE + SSE_REG:
+            ;
+            break;
+        case REGISTER_TYPE + CR_REG:
+            ;
+            break;
+        case REGISTER_TYPE + DR_REG:
+            ;
+            break;
+        case REGISTER_TYPE + SPECIAL_REG:
+            ;
+            break;
+        case REGISTER_TYPE + MEMORY_MANAGEMENT_REG:
+            ;
+            break;
+        case REGISTER_TYPE + SEGMENT_REG:
+            ;
+            break;
+        default:
+            printf("l'argument n'est pas un registre\n");
+            exit(EXIT_FAILURE);
+            break;
+    }
+    return res;
+}
+
+Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
+    uint32_t hi = arg.ArgType & 0xffff0000;
+    Registre* r = NULL;
+    switch (hi) {
+        case CONSTANT_TYPE + RELATIVE_: //faux
+            r = newRegistreFeuille(64, disasm->Instruction.Immediat);
+            break;
+        case CONSTANT_TYPE + ABSOLUTE_:
+            r = newRegistreFeuille(64, disasm->Instruction.Immediat);
+            break;
+        default:
+            printf("l'argument n'est pas une constante\n");
+            exit(EXIT_FAILURE);
+            break;
+    }
+    return r;
 }
 
 /**
@@ -533,53 +598,78 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     
     /* initialisation des arguments*/
     for (int i = 0; i<3; i++) {
-        uint32_t hiword = argument[i].ArgType & 0xffff0000;
-        switch (hiword) {
+        ARGTYPE arg = argument[i];
+        
+        uint32_t hiword = arg.ArgType & 0xffff0000;
+        Registre* res = NULL;
+        
+        switch (hiword & 0xf0000000) {
             case NO_ARGUMENT:
                 ;
                 break;
-            case REGISTER_TYPE + MMX_REG:
-                ;
+            case REGISTER_TYPE:
+                res = getRegistre(arg, newPool);
                 break;
-            case REGISTER_TYPE + GENERAL_REG:
-                setRegistre(i, argument, newPool, reg);
+                
+            case CONSTANT_TYPE:
+                res = getConstant(arg, disasm);
+                aSuppr[i] = 1;
                 break;
-            case REGISTER_TYPE + FPU_REG:
-                ;
-                break;
-            case REGISTER_TYPE + SSE_REG:
-                ;
-                break;
-            case REGISTER_TYPE + CR_REG:
-                ;
-                break;
-            case REGISTER_TYPE + DR_REG:
-                ;
-                break;
-            case REGISTER_TYPE + SPECIAL_REG:
-                ;
-                break;
-            case REGISTER_TYPE + MEMORY_MANAGEMENT_REG:
-                ;
-                break;
-            case REGISTER_TYPE + SEGMENT_REG:
-                ;
-                break;
+                
             case MEMORY_TYPE:
                 ;
-                break;
-            case CONSTANT_TYPE + RELATIVE_:
-                ;
-                break;
-            case CONSTANT_TYPE + ABSOLUTE_:
-                reg[i] = newRegistreFeuille(64, disasm->Instruction.Immediat);
-                // c'est un nouveau registre qu'il faut supprimer.
-                aSuppr[i] = 1;
                 break;
                 
             default:
                 break;
         }
+        
+//        switch (hiword) {
+//            case NO_ARGUMENT:
+//                ;
+//                break;
+//            case REGISTER_TYPE + MMX_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + GENERAL_REG:
+//                res = getGeneralRegistre(arg, newPool);
+//                break;
+//            case REGISTER_TYPE + FPU_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + SSE_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + CR_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + DR_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + SPECIAL_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + MEMORY_MANAGEMENT_REG:
+//                ;
+//                break;
+//            case REGISTER_TYPE + SEGMENT_REG:
+//                ;
+//                break;
+//            case MEMORY_TYPE:
+//                ;
+//                break;
+//            case CONSTANT_TYPE + RELATIVE_:
+//                ;
+//                break;
+//            case CONSTANT_TYPE + ABSOLUTE_:
+//                res = newRegistreFeuille(64, disasm->Instruction.Immediat);
+//                aSuppr[i] = 1;
+//                break;
+//            default:
+//                break;
+//        }
+        
+        reg[i] = res;
     }
     if (instruction != NULL) {
         do_instr(instruction, reg[0], reg[1], reg[2], len, newPool);

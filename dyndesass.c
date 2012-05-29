@@ -68,6 +68,8 @@ static unsigned long determinise(Graphe* i){
     DISASM* disasm = newDisasmFromGraph(i);
     Processeur* proc = i->pool;
     
+    /* TODO continuer ici */
+    
     free(disasm);
     return 0;
 }
