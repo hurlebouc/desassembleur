@@ -167,9 +167,6 @@ extern "C" {
      */
     void addLink(Graphe* pere, Graphe* fils);
     
-    
-    
-    
     /**
      * Trouve un noeud du graphe en compléxité linaire
      * @param Graphe à parcourir
@@ -177,7 +174,6 @@ extern "C" {
      * @return Pointeur vers le noeud recherché si trouvé, NULL sinon.
      */
     Graphe* getNodeWithVirtualAddr(Graphe*, uintptr_t);
-    
 
     /**
      * Trouve un noeud du graphe en compléxité linaire. Cependant cette fonction
@@ -188,9 +184,29 @@ extern "C" {
      */    
     Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va);
     
+    /**
+     * Cette fonction propage les constantes dans un graph à partir du pool 
+     * initial. Chaque noeud contient les constantes APRÈS application de 
+     * l'instruction
+     * @param Graphe que l'on souhaite étudier
+     * @param initialPool
+     */
     void optimizePool(Graphe*, const Processeur* initialPool);
+    
+    /**
+     * Cette fonction propage les constantes dans un graph à partir du pool 
+     * initial. Chaque noeud contient les constantes AVANT application de 
+     * l'instruction
+     * @param Graphe que l'on souhaite étudier
+     * @param initialPool
+     */
     void optimizePool2(Graphe*, const Processeur* initialPool);
     
+    /**
+     * Cette fonction supprime les branches qui ne sont pas accessibles après
+     * propagation des constantes
+     * @param g
+     */
     void debranchage(Graphe* g);
 
 #ifdef __cplusplus
