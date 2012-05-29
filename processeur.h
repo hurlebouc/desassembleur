@@ -157,14 +157,25 @@ extern "C" {
         EGAL,
         NON_INCLUS = -1,
     };
+    
+    enum delta{
+        DELTA_LEVE,
+        DELTA_BAISSE,
+    };
     /**
-     * Modélisation du procésseur
+     * Modélisation du processeur
      */
-    typedef struct _Processeur{ // 664 bytes
-        LinkedList* stack;/*!<Simule le comportement de la pile d'appel */
-        Registre*   tabRegistre[NOMBRE_REGISTRES];/*!<Tableau qui contient les registres */
-        uint8_t     tabFlags[NOMBRE_FLAGS];/*!<Registre de flags */
+    typedef struct _Processeur{
+        LinkedList* stack;
+        Registre*   tabRegistre[NOMBRE_REGISTRES];
+        uint8_t     tabFlags[NOMBRE_FLAGS];
         
+        int8_t delta; /**
+                       * Ce terme permet de donner à un pool la propriété de ne 
+                       * pas appartenir à l'ensemble des pools possibles
+                       * (permet à tous les pools du graphe d'être visités au 
+                       * moins une fois)
+                       */
     }Processeur;
     /**
      * Crée et renvoi un nouveau procésseur virtuel

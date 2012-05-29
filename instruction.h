@@ -25,14 +25,11 @@ typedef struct _instruction{
     int(* of_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction d'altération du flag d'overflow*/
     int(* cf_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag de retenue*/
     int(* af_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag d'ajustement*/
-    //void* of_aux;
-//    void* cf_aux;
-//    void* af_aux;
     int zf_aux;         /*!<1 si l'instruction modifie le flag de zéro*/
     int pf_aux;         /*!<1 si l'instruction modifie le flag de parité*/
     int sf_aux;         /*!<1 si l'instruction modifie le flag de signe*/
     Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int); /*!<Fonction qui effectue si possible l'instruction virtuellement*/
-//    void* f;      // f renvoie un pointeur sur le registre qu'il a modifié 
+                    // f renvoie un pointeur sur le registre qu'il a modifié 
                     // ne modifie par le registre de flags
                     // par contre il doit modifier le registre IP.
 }Instruction;
@@ -52,6 +49,10 @@ Registre* do_instr(Instruction*, Registre*, Registre*,Registre*,int, Processeur*
 
 /**
  * Crée une instruction
+ * Il vaut mieux ne pas utiliser directement cette fonction dans le cadre de 
+ * l'utilisation pour le désassemblage. En effet, il vaut mieux utiliser des
+ * fonctions d'initialisation déjà préparée qui simplifie la création d'une 
+ * instruction
  * @param of Fonction qui agit sur le flag d'overflow
  * @param cf Fonction qui agit sur le flag de retenue
  * @param af Fonction qui agit sur le flag d'ajustement

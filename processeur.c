@@ -123,11 +123,14 @@ Processeur* newProcesseur(void){
     
     _STACK  =   newLinkedList();
     
+    proc->delta = DELTA_BAISSE;
+    
     return proc;
 }
 
 Processeur* newProcesseurCopy(const Processeur* p){
     Processeur* res = newProcesseur();
+    res->delta = p->delta;
     res->stack = newLinkedListCopy(p->stack);
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         res->tabRegistre[i]->classe = p->tabRegistre[i]->classe;

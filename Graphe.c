@@ -21,6 +21,7 @@ Graphe* newGraphe(void){
     g->listeFils = NULL;
     g->listePeres = NULL;
     g->pool = newProcesseur();
+    g->pool->delta = DELTA_LEVE;
     return g;
 }
 
