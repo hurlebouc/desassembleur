@@ -183,6 +183,8 @@ extern "C" {
      * @param g
      */
     void debranchage(Graphe* g);
+    
+    DISASM* newDisasmFromGraph(Graphe*);
 
 #ifdef __cplusplus
 }

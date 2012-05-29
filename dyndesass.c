@@ -64,6 +64,14 @@ static Graphe* initGraph(Graphe* pi[], unsigned long index){
     return pi[index];
 }
 
+static unsigned long determinise(Graphe* i){
+    DISASM* disasm = newDisasmFromGraph(i);
+    Processeur* proc = i->pool;
+    
+    free(disasm);
+    return 0;
+}
+
 Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
@@ -71,8 +79,10 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
     Fichier* fichierlog = newFichier(chemin_log);    
     char temp[MAX_BUFFER];
     
-    GRAPHE_RECCOUVERT = newGraphe();
-    GRAPHE_RECCOUVERT->recouvert = EST_RECOUVERT;
+    if (GRAPHE_RECCOUVERT == NULL) {
+        GRAPHE_RECCOUVERT = newGraphe();
+        GRAPHE_RECCOUVERT->recouvert = EST_RECOUVERT;
+    }
     
     DISASM* prog = desas->disasm;
     LinkedList* pileAppel = newLinkedList();
@@ -143,8 +153,15 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_CALL;
                     if (cibleAdress == 0) {
-                        pushlog(fichierlog, "WARNING : call indéfini\n");
-                        i->etat = CALL_INDEFINI;
+                        if (i->pool->delta == DELTA_BAISSE) {
+                            cibleAdress = determinise(i);
+                        }
+                        if (cibleAdress == 0) {
+                            pushlog(fichierlog, "WARNING : call indéfini\n");
+                            i->etat = CALL_INDEFINI;
+                        }
+//                        pushlog(fichierlog, "WARNING : call indéfini\n");
+//                        i->etat = CALL_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
@@ -192,9 +209,17 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_JUMP_INCOND;
                     if (cibleAdress == 0) {
-                        pushlog(fichierlog, "WARNING : saut inconditionnel indéfini\n");
-                        i->etat = SAUT_INCOND_INDEFINI;
-                        stop = depilage(prog, pileAppel, fichierlog);
+                        if (i->pool->delta == DELTA_BAISSE) {
+                            cibleAdress = determinise(i);
+                        }
+                        if (cibleAdress == 0) {
+                            pushlog(fichierlog, "WARNING : saut inconditionnel indéfini\n");
+                            i->etat = SAUT_INCOND_INDEFINI;
+                            stop = depilage(prog, pileAppel, fichierlog);
+                        }
+//                        pushlog(fichierlog, "WARNING : saut inconditionnel indéfini\n");
+//                        i->etat = SAUT_INCOND_INDEFINI;
+//                        stop = depilage(prog, pileAppel, fichierlog);
                     } else if (cibleAdress < fin && cibleAdress >= debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);
                         t->etat = NOEUD_BRANCH;
@@ -235,8 +260,15 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_JUMP_COND;
                     if (cibleAdress == 0) {
-                        pushlog(fichierlog, "WARNING : saut conditionnel indéfini\n");
-                        i->etat = SAUT_COND_INDEFINI;
+                        if (i->pool->delta == DELTA_BAISSE) {
+                            cibleAdress = determinise(i);
+                        }
+                        if (cibleAdress == 0) {
+                            pushlog(fichierlog, "WARNING : saut conditionnel indéfini\n");
+                            i->etat = SAUT_COND_INDEFINI;
+                        }
+//                        pushlog(fichierlog, "WARNING : saut conditionnel indéfini\n");
+//                        i->etat = SAUT_COND_INDEFINI;
                     }
                     if (cibleAdress < fin && cibleAdress>=debut) {
                         Graphe* t = initGraph(pi, cibleAdress - debut);

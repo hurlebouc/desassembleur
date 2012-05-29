@@ -531,7 +531,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     
     uint8_t aSuppr[]={0,0,0};
     
-    /* initialisation des des arguments*/
+    /* initialisation des arguments*/
     for (int i = 0; i<3; i++) {
         uint32_t hiword = argument[i].ArgType & 0xffff0000;
         switch (hiword) {
@@ -759,11 +759,16 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     closeFichier(fichierlog);
 }
 
-void debranchage(Graphe* g){
+DISASM* newDisasmFromGraph(Graphe* g){
     DISASM* disasm = newDisasm();
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
     Disasm(disasm);
+    return disasm;
+}
+
+void debranchage(Graphe* g){
+    DISASM* disasm = newDisasmFromGraph(g);
     
     int branch = disasm->Instruction.BranchType;
     
@@ -775,4 +780,5 @@ void debranchage(Graphe* g){
         default:
             break;
     }
+    free(disasm);
 }
