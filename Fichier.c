@@ -20,7 +20,7 @@ Fichier* newFichier(char* chemin){
     return res;
 }
 
-void closeFichier(Fichier* f){
+void terminateFichier(Fichier* f){
     free(f);
 }
 
@@ -89,6 +89,10 @@ void cleanFile(Fichier* f){
     FILE* graveur = ouvrirEcriture(f);
     fclose(graveur);
     return;
+}
+
+void renameFile(Fichier* f, char* newPath){
+    rename(f->chemin, newPath);
 }
 
 //-------------------------------------------------------------------------

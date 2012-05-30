@@ -36,9 +36,9 @@ void cfg_recc(void){
     if (diff == -1) {
         removeFichier(temp);
     }
-    closeFichier(temp);
-    closeFichier(modele);
-    closeFichier(binaire);
+    terminateFichier(temp);
+    terminateFichier(modele);
+    terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -68,9 +68,9 @@ void cfg_entropie(void){
         removeFichier(temp);
     }
 //    terminateDesassembleur(desas);
-    closeFichier(temp);
-    closeFichier(modele);
-    closeFichier(binaire);
+    terminateFichier(temp);
+    terminateFichier(modele);
+    terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -100,9 +100,9 @@ void cfg_disas(void){
         removeFichier(temp);
     }
 //    terminateDesassembleur(desas);
-    closeFichier(temp);
-    closeFichier(modele);
-    closeFichier(binaire);
+    terminateFichier(temp);
+    terminateFichier(modele);
+    terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
@@ -132,9 +132,9 @@ void cfg_handbrake(void){
         removeFichier(temp);
     }
 //    terminateDesassembleur(desas);
-    closeFichier(temp);
-    closeFichier(modele);
-    closeFichier(binaire);
+    terminateFichier(temp);
+    terminateFichier(modele);
+    terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 

@@ -71,7 +71,7 @@ LinkedList* newLLFromclassificationVides(Graphe* pi[], unsigned long taille){
         }
     }
     pushlog(fichierlog, "fin de la recherche\n\n");
-    closeFichier(fichierlog);
+    terminateFichier(fichierlog);
     return lVides;
 }
 

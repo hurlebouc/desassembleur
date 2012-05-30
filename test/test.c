@@ -16,6 +16,7 @@
 
 #include "testDyndesass.h"
 #include "testVide.h"
+#include "testOtpimizePool.h"
 #include "CUnit/CUCurses.h"
 
 char* ROOT;
@@ -75,6 +76,23 @@ int main(int argc, char* argv [])
         (NULL == CU_add_test(pSuite, "vide entropie", vide_entropie))||
         (NULL == CU_add_test(pSuite, "vide disas", vide_disas))||
         (NULL == CU_add_test(pSuite, "vide handbrake", vide_handbrake)))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+    
+    /* add a suite to the registry */
+    pSuite = CU_add_suite("comparaison log optimisation", init_suite_success, clean_suite_success);
+    if (NULL == pSuite) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+    
+    /* add the tests to the suite */
+    if ((NULL == CU_add_test(pSuite, "pool recc", optpool_recc))||
+        (NULL == CU_add_test(pSuite, "pool entropie", optpool_entropie))||
+        (NULL == CU_add_test(pSuite, "pool disas", optpool_disas))||
+        (NULL == CU_add_test(pSuite, "pool handbrake", optpool_handbrake)))
     {
         CU_cleanup_registry();
         return CU_get_error();

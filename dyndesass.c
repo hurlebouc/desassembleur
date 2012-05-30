@@ -309,7 +309,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
         prog->SecurityBlock = (unsigned int) (fin - prog->VirtualAddr);
     }
     pushlog(fichierlog, "fin de la lecture\n");
-    closeFichier(fichierlog);
+    terminateFichier(fichierlog);
     terminateLinkedList(pileAppel);
     Graphe* g = initGraph(pi, virtualAddr_init - debut);
     return g;
@@ -554,7 +554,7 @@ Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
     simplifieGraphe_aux(prog, g, fichierlog);
     g->_immediat=EST_ASSEMBLE;
     pushlog(fichierlog, "fin de l'assemblage");
-    closeFichier(fichierlog);
+    terminateFichier(fichierlog);
     return g;
 }
 

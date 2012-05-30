@@ -54,8 +54,8 @@ int main(int argc, char* argv []) {
     printf("destruction\n");
     terminateGraphe(g);
     
-    closeFichier(res);
-    closeFichier(binaire);
+    terminateFichier(res);
+    terminateFichier(binaire);
     terminateDesassembleur(desas);
     
 //    test* t = init_t();

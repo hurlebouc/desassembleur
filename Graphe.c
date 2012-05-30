@@ -809,14 +809,14 @@ void optimizePool(Graphe* g, const Processeur* initialPool){
     
     optimizePool_aux(g, initialPool, fichierlog, temp);
     
-    closeFichier(fichierlog);
+    terminateFichier(fichierlog);
 }
 
 void optimizePool2(Graphe* g, const Processeur* initialPool){
-    char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, ROOT);
-    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
-    Fichier* fichierlog = newFichier(chemin_log);    
+//    char chemin_log[FILENAME_MAX];
+//    strcpy(chemin_log, ROOT);
+//    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
+    Fichier* fichierlog = newFichier(CHEMIN_LOG_OPTIMISATION);    
     char temp[MAX_BUFFER];
     
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
@@ -846,7 +846,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
     
-    closeFichier(fichierlog);
+    terminateFichier(fichierlog);
 }
 
 DISASM* newDisasmFromGraph(Graphe* g){

@@ -59,7 +59,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/mac/handbrake"
+            argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/mac/recc"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
