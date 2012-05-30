@@ -64,13 +64,17 @@ static Graphe* initGraph(Graphe* pi[], unsigned long index){
     return pi[index];
 }
 
-static unsigned long determinise(Graphe* i){
+static unsigned long tryDeterminise(Graphe* i){
+    if (i->pool->delta == DELTA_LEVE) {
+        return 0;
+    }
     DISASM* disasm = newDisasmFromGraph(i);
     Processeur* proc = i->pool;
-    
-    /* TODO continuer ici */
-    
+    Registre* reg = getRegistre(disasm->Argument1, proc);
     free(disasm);
+    if (reg->classe != REGISTRE_NON_DEFINI) {
+        return getValeur(reg);
+    }
     return 0;
 }
 
@@ -155,9 +159,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_CALL;
                     if (cibleAdress == 0) {
-                        if (i->pool->delta == DELTA_BAISSE) {
-                            cibleAdress = determinise(i);
-                        }
+                        cibleAdress = tryDeterminise(i);
                         if (cibleAdress == 0) {
                             pushlog(fichierlog, "WARNING : call indéfini\n");
                             i->etat = CALL_INDEFINI;
@@ -211,9 +213,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_JUMP_INCOND;
                     if (cibleAdress == 0) {
-                        if (i->pool->delta == DELTA_BAISSE) {
-                            cibleAdress = determinise(i);
-                        }
+                        cibleAdress = tryDeterminise(i);
                         if (cibleAdress == 0) {
                             pushlog(fichierlog, "WARNING : saut inconditionnel indéfini\n");
                             i->etat = SAUT_INCOND_INDEFINI;
@@ -262,9 +262,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                     i->etat = NOEUD_BRANCH;
                     i->typeLiaison = NOEUD_JUMP_COND;
                     if (cibleAdress == 0) {
-                        if (i->pool->delta == DELTA_BAISSE) {
-                            cibleAdress = determinise(i);
-                        }
+                        cibleAdress = tryDeterminise(i);
                         if (cibleAdress == 0) {
                             pushlog(fichierlog, "WARNING : saut conditionnel indéfini\n");
                             i->etat = SAUT_COND_INDEFINI;

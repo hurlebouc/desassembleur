@@ -22,7 +22,7 @@
 extern "C" {
 #endif
     
-    enum DefinitionValeur {
+    enum Classe {
         REGISTRE_NON_DEFINI = 0,
         REGISTRE_DEFINI,
     };
