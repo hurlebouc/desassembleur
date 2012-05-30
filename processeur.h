@@ -159,8 +159,9 @@ extern "C" {
     };
     
     enum delta{
+        DELTA_BAISSE = 0,
         DELTA_LEVE,
-        DELTA_BAISSE,
+        
     };
     /**
      * Modélisation du processeur
@@ -175,6 +176,7 @@ extern "C" {
                        * pas appartenir à l'ensemble des pools possibles
                        * (permet à tous les pools du graphe d'être visités au 
                        * moins une fois)
+                       * Par defaut il est baissé.
                        */
     }Processeur;
     /**

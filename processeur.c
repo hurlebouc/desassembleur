@@ -175,6 +175,10 @@ int incluDans(const Processeur* p1, const Processeur* p2){
     
     int res = EGAL;
     
+    if (p1->delta == DELTA_LEVE && p2->delta == DELTA_BAISSE) {
+        return NON_INCLUS;
+    }
+    
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
@@ -206,6 +210,11 @@ int incluDans(const Processeur* p1, const Processeur* p2){
  */
 
 void inter(Processeur* p1, const Processeur* p2){
+    
+    if (p1->delta == DELTA_LEVE) {
+        p1->delta = p2->delta;
+    }
+    
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
@@ -230,5 +239,4 @@ void inter(Processeur* p1, const Processeur* p2){
             terminateLinkedList(p1->stack);
             p1->stack = PILE_NON_DEFINIE;
         }
-    
 }
