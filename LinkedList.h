@@ -1,4 +1,5 @@
-/** file LinkedList.h
+/** 
+ * @file LinkedList.h
  * 
  */
 

@@ -7,7 +7,7 @@
 //
 
 /**
- * file registre.h
+ * @file registre.h
  */
 
 #ifndef desassembleur_registre_h

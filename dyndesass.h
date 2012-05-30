@@ -1,5 +1,5 @@
-/** File dyndesass.h
- * 
+/** 
+ * @file dyndesass.h
  */
 
 #ifndef desassembleur_dyndesass_h

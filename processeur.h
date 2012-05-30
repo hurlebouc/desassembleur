@@ -7,7 +7,7 @@
 //
 
 /**
- * file processeur.h
+ * @file processeur.h
  */
 
 #ifndef desassembleur_processeur_h

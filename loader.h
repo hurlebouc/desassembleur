@@ -7,7 +7,7 @@
 //
 
 /**
- * file loader.h
+ * @file loader.h
  */
 
 #ifndef desassembleur_loader_h

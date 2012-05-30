@@ -9,7 +9,7 @@
 //
 
 /**
- * file instruction.h
+ * @file instruction.h
  */
 
 #ifndef desassembleur_instruction_h

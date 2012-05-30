@@ -5,7 +5,8 @@
 //  Created by Hubert Godfroy on 05/02/12.
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
-/** file Graphe.h
+/** 
+ * @file Graphe.h
  */
 
 #ifndef desassembleur_Graphe_h
@@ -184,8 +185,16 @@ extern "C" {
      */
     void debranchage(Graphe* g);
     
-    DISASM* newDisasmFromGraph(Graphe*);
+    /**
+     * Cette fonction désassemble l'instruction présente dans le noeud n. Elle
+     * nécéssite la présence en mémoire du programme désassemblé.
+     * @param n noeud contenant l'instruction
+     */
+    DISASM* newDisasmFromGraph(Graphe* n);
     
+    /**
+     * 
+     */
     Registre* getGeneralRegistre(ARGTYPE arg, Processeur *proc);
     
     Registre * getRegistre(ARGTYPE arg, Processeur *newPool);
