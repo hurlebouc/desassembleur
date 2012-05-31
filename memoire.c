@@ -44,9 +44,23 @@ void terminateMemoire(Memoire* mem){
     free(mem->tabCorrespondance);
     free(mem);
 }
+/**
+ * Cette fonction cherche l'index de virtuAddr dans le tableau des 
+ * correspondances (qui doit être trié par ordre croissant des virtualAddr).
+ */
+static uint64_t getMemIndex(Memoire* mem, uint64_t virtualAddr){
+    
+}
 
 uint64_t getVal(Memoire* mem, uint64_t virtualAddr, int taille){
-    
+    uint64_t i = getMemIndex(mem, virtualAddr);
+    uint64_t res = 0;
+    uint64_t p = 1;
+    for (int j = 0; j<taille; j++) {
+        res += mem->tabCorrespondance[i+j]->val * p;
+        p = p*2;
+    }
+    return res;
 }
 
 

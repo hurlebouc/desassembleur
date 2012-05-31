@@ -27,7 +27,9 @@ Memoire* newMemoire(uint64_t tailleMax);
 void terminateMemoire(Memoire* mem);
 
 /**
- * Ne peut marcher que si la classe est définie
+ * Ne peut marcher que si la classe est définie.
+ * Lecture en little-endian (le premier byte donne les 8 bits de poids les plus 
+ * faibles et byte++ donne les suivants).
  */
 
 uint64_t getVal(Memoire* mem, uint64_t virtualAddr, int taille);
