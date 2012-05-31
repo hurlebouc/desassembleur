@@ -23,12 +23,6 @@ enum Permission {
     UNLOCKED,
     };
 
-//enum ValeurModif {
-//    MODIF_UP = 1,
-//    MODIF_DOWN = 0,
-//    MODIF_UNMODIFIED = -1,
-//    };
-
 /**
  * Cette structure donne toutes les informations permettant de réaliser une 
  * instruction assembleur. Chacune des méthodes doivent également tenir compte du 

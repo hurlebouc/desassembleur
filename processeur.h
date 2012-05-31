@@ -135,15 +135,15 @@ extern "C" {
     
 #define NOMBRE_FLAGS 9
     
-#define _nCF        0    // carry flag (retenue) ////////////////
+#define _nCF        0    // carry flag (retenue)
 #define _nPF        1    // parity flag
-#define _nAF        2    // auxiliary flag (retenue aux) ////////
+#define _nAF        2    // auxiliary flag (retenue aux)
 #define _nZF        3    // zero flag
 #define _nSF        4    // sign flag
-#define _nTF        5    // trap flag (debugage)
-#define _nIF        6    // interrupt flag
-#define _nDF        7    // direction flag (chaine)
-#define _nOF        8    // overflow flag ///////////////////////
+#define _nTF        5    // trap flag (debugage)            -> non implémenté
+#define _nIF        6    // interrupt flag                  -> non implémenté
+#define _nDF        7    // direction flag (chaine)         -> non implémenté
+#define _nOF        8    // overflow flag
     
 #define PILE_NON_DEFINIE NULL
     
@@ -171,7 +171,7 @@ extern "C" {
     typedef struct _Processeur{
         LinkedList* stack;
         Registre*   tabRegistre[NOMBRE_REGISTRES];
-        int8_t     tabFlags[NOMBRE_FLAGS];
+        int8_t      tabFlags[NOMBRE_FLAGS];
         
         int8_t delta; /**
                        * Ce terme permet de donner à un pool la propriété de ne 

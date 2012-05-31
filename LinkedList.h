@@ -192,12 +192,12 @@ extern "C" {
      */
     unsigned long compare(LinkedList* l1, LinkedList* l2);
     
-    
-    LinkedList* copieLinkedList(LinkedList* liste);
-    /*
-     a utiliser avec beaucoup de précautions car cette foncion
-     ne copie pas les objets pointés par le pointeur valeur
+    /**
+     * @deprecated
+     * a utiliser avec beaucoup de précautions car cette foncion
+     * ne copie pas les objets pointés par le pointeur valeur
      */
+    LinkedList* copieLinkedList(LinkedList* liste);
     
 #ifdef __cplusplus
 }
