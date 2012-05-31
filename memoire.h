@@ -10,23 +10,29 @@
 #define desassembleur_memoire_h
 
 #include <stdint.h>
-#include "LinkedList.h"
 #include "definitions.h"
 
-typedef struct _corr_mem{
+typedef struct _case_mem{
     uint64_t virtualAddr;
     uint8_t val;
     uint8_t classe;
-}corr_mem;
+}case_mem;
 
 typedef  struct _memoire {
     uint64_t taille;
-    corr_mem* tabCorrespondance[];
+    case_mem** tabCorrespondance;
 }Memoire;
 
 Memoire* newMemoire(uint64_t tailleMax);
 void terminateMemoire(Memoire* mem);
 
-uint64_t getVal(uint64_t virtualAddr, int taille);
+/**
+ * Ne peut marcher que si la classe est définie
+ */
+
+uint64_t getVal(Memoire* mem, uint64_t virtualAddr, int taille);
+int getMemClass(Memoire* mem, uint64_t virtualAddr, int taille);
+
+void setVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
 
 #endif

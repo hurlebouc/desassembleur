@@ -24,43 +24,16 @@ int main(int argc, char* argv []) {
     printf("%u\n", jkr);
         
     ROOT = argv[0];
-    char* test = argv[1];
     
-    char chemin_res[FILENAME_MAX];
-    strcpy(chemin_res, ROOT);
-    strcat(chemin_res, "graphe.dot");
-    Fichier* res = newFichier(chemin_res);
-    cleanFile(res);
-    
-    Fichier* binaire = newFichier(test);
-    
-    Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
-    printf("construction\n");
-    Graphe* g = ControleFlow_entier(desas);
-    g->_immediat = EST_ASSEMBLE;
-    printf("optimisation\n");
-    optimizePool2(g, desas->proc);
-//    printf("recherche");
-//    Graphe* n = getNodeWithVirtualAddr(g, 0x100000e82);
-//    printf(" : noeud 0x%lx trouvé\n", n->VirtualAddr);
-//    printf("recherche");
-//    Graphe* nf = getNodeWithVirtualAddr(g, 0x100000e8d);
-//    printf(" : noeud 0x%lx trouvé\n", nf->VirtualAddr);
-//    printf("suppression d'un lien\n");
-//    removeLinkRec(n, nf);
-    printf("enregistrement\n");
-    enregistreGraphe(g, res);
-    printf("destruction\n");
-    terminateGraphe(g);
-    
-    terminateFichier(res);
-    terminateFichier(binaire);
-    terminateDesassembleur(desas);
-    
-//    test* t = init_t();
-//    printf("%d\n", do_test(t, 4));
-    
+    unsigned int n = 0xc00a;
+//    int* p = &n;
+//    printf("p = %lx\n", p);
+//    printf("p + 1 = %lx\n", p+1);
+//    p = p+1;
+//    printf("p + 1 = %lx\n", p);
+    unsigned char i = *( ((char*) &n) + 1 );
+//    unsigned char i = *( (char*) p );
+    printf("i = %d\n", i);
     printf("done.\n");
     return 0;
 }
