@@ -20,6 +20,7 @@ extern "C" {
 #include <stdio.h>
 #include "LinkedList.h"
 #include "registre.h"
+#include "Fichier.h"
     
 #define CF_POWER 1
 #define PF_POWER 4 
@@ -150,6 +151,7 @@ extern "C" {
         FLAG_BAS,
         FLAG_HAUT,
         FLAG_NON_DEFINI = -1,
+        FLAG_UNMODIFIED,
     };
     
     enum inclusion{
@@ -169,7 +171,7 @@ extern "C" {
     typedef struct _Processeur{
         LinkedList* stack;
         Registre*   tabRegistre[NOMBRE_REGISTRES];
-        uint8_t     tabFlags[NOMBRE_FLAGS];
+        int8_t     tabFlags[NOMBRE_FLAGS];
         
         int8_t delta; /**
                        * Ce terme permet de donner à un pool la propriété de ne 
@@ -199,7 +201,7 @@ extern "C" {
     
     /* ----------------------------- PROPAGATION --------------------------- */
     
-    int incluDans(const Processeur* p1, const Processeur* p2);
+    int incluDans(const Processeur* p1, const Processeur* p2,  Fichier* fichierlog);
     
     /**
      * Le l'intercection des deux pools se trouve dans le premier pool p1.

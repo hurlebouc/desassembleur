@@ -8,13 +8,14 @@
 
 #include "registre.h"
 
-Registre* newRegistreFeuille(int t, uint64_t v){
+Registre* newRegistreFeuille(int t/*, uint64_t v*/){
     Registre* reg = malloc(sizeof(Registre));
     reg->taille = t;
-    reg->valeur = v;
+    reg->valeur = 0;
     reg->filsh = NULL;
     reg->filsl = NULL;
-    reg->classe = REGISTRE_DEFINI; 
+//    reg->classe = REGISTRE_DEFINI;
+    reg->classe = REGISTRE_NON_DEFINI; 
     return reg;
 }
 
@@ -23,8 +24,9 @@ Registre* newRegistreFilsUnique(Registre* fils){
     reg->taille = 2*fils->taille;
     reg->valeur = -1;
     reg->filsl = fils;
-    reg->filsh = newRegistreFeuille(fils->taille, 0);
-    reg->classe = REGISTRE_DEFINI; 
+    reg->filsh = newRegistreFeuille(fils->taille/*, 0*/);
+//    reg->classe = REGISTRE_DEFINI;
+    reg->classe = REGISTRE_NON_DEFINI;
     return reg;
 }
 
@@ -34,7 +36,8 @@ Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
     reg->filsl = filsl;
     reg->taille = filsh->taille + filsl->taille;
     reg->valeur = -1;
-    reg->classe = REGISTRE_DEFINI; 
+//    reg->classe = REGISTRE_DEFINI;
+    reg->classe = REGISTRE_NON_DEFINI;
     return reg;
 }
 
@@ -54,6 +57,9 @@ uint64_t getValeur(const Registre* reg){
 }
 
 uint64_t setValeur(Registre* reg, uint64_t n){
+    if (reg->classe == REGISTRE_NON_DEFINI) {
+        reg->classe = REGISTRE_DEFINI;
+    }
     uint64_t p = pow(2, reg->taille);
     
     uint64_t reste;

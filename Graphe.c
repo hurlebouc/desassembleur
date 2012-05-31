@@ -22,6 +22,12 @@ Graphe* newGraphe(void){
     g->listePeres = NULL;
     g->pool = newProcesseur();
     g->pool->delta = DELTA_LEVE;
+    for (int i = 0; i < NOMBRE_FLAGS; i++) {
+        g->pool->tabFlags[i] = FLAG_BAS;
+    }
+    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
+        g->pool->tabRegistre[i]->classe = REGISTRE_DEFINI;
+    }
     return g;
 }
 
@@ -541,10 +547,12 @@ Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
     Registre* r = NULL;
     switch (hi) {
         case CONSTANT_TYPE + RELATIVE_: //faux
-            r = newRegistreFeuille(64, disasm->Instruction.Immediat);
+            r = newRegistreFeuille(64);
+            setValeur(r, disasm->Instruction.Immediat);
             break;
         case CONSTANT_TYPE + ABSOLUTE_:
-            r = newRegistreFeuille(64, disasm->Instruction.Immediat);
+            r = newRegistreFeuille(64);
+            setValeur(r, disasm->Instruction.Immediat);
             break;
         default:
             printf("l'argument n'est pas une constante\n");
@@ -698,7 +706,7 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
     
     Processeur* copyPool = newProcesseurCopy(initialPool);
     setPool(g, copyPool);
-    int inc = incluDans(g->pool, copyPool);
+    int inc = incluDans(g->pool, copyPool, fichierlog);
     if (inc !=NON_INCLUS){
         terminateProcesseur(copyPool);
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
@@ -736,7 +744,7 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
     
     Processeur* copyPool = newProcesseurCopy(pere->pool);
     setPool(pere, copyPool);
-    int inc = incluDans(g->pool, copyPool);
+    int inc = incluDans(g->pool, copyPool, fichierlog);
     if (inc !=NON_INCLUS){
         terminateProcesseur(copyPool);
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
@@ -769,7 +777,7 @@ static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, F
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
     
-    int inc = incluDans(g->pool, initialPool);
+    int inc = incluDans(g->pool, initialPool, fichierlog);
     if (inc !=NON_INCLUS){
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
@@ -822,7 +830,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool){
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
     
-    int inc = incluDans(g->pool, initialPool);
+    int inc = incluDans(g->pool, initialPool, fichierlog);
     if (inc !=NON_INCLUS){
         sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);

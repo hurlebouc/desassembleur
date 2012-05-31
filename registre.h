@@ -43,7 +43,7 @@ extern "C" {
      * @param[in] valeur A VOIR AVEC HUBERT
      * @return Renvoie le registre sans fils crée
      */
-    Registre* newRegistreFeuille(int taille, uint64_t valeur);
+    Registre* newRegistreFeuille(int taille/*, uint64_t valeur*/);
     /**
      * Crée un registre avec une seule sous partie (dernier bytes)
      * @param[in] filsl registre qui est la sous partie

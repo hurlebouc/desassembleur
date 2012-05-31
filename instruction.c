@@ -28,26 +28,51 @@ static int getbits(uint64_t n, int p){
 }
 
 static int sf_aux(Registre* reg){
+    
+    if (reg->classe == REGISTRE_NON_DEFINI) {
+        return FLAG_NON_DEFINI;
+    }
+    
     uint64_t n = getValeur(reg);
     int t = reg->taille;
     if (getbits(n, t) == 1) {
-        return 1;
+//        return 1;
+        return FLAG_HAUT;
     } else {
-        return 0;
+//        return 0;
+        return FLAG_BAS;
     }
 }
 
 static int pf_aux(Registre* reg){
+    
+    if (reg->classe == REGISTRE_NON_DEFINI) {
+        return FLAG_NON_DEFINI;
+    }
+    
     uint8_t weakbits = getValeur(reg);
     int nbr_up = nbrup(weakbits);
-    return 1 - (nbr_up % 2);
+    if (1 - (nbr_up % 2) == 1) {
+        return FLAG_HAUT;
+    } else {
+        return FLAG_BAS;
+    }
+//    return 1 - (nbr_up % 2);
 }
 
 static int zf_aux(Registre* a, Registre* b){
+    
+    if (a->classe == REGISTRE_NON_DEFINI ||
+        b->classe == REGISTRE_NON_DEFINI) {
+        return FLAG_NON_DEFINI;
+    }
+    
     if (getValeur(a) == getValeur(b)) {
-        return 1;
+//        return 1;
+        return FLAG_HAUT;
     } else {
-        return 0;
+//        return 0;
+        return FLAG_BAS;
     }
 }
 /**
@@ -70,28 +95,35 @@ static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*,
 
 Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
     
-    if (instr->zf_aux) {
+    if (instr->zf_aux == UNLOCKED) {
         _ZF = zf_aux(a, b);
     }
     
-    if (instr->af_aux(a, b,c) != -1) {
-        _AF = app_aux(instr->af_aux, a, b, c);
+    int af = instr->af_aux(a, b,c);
+    if (af != FLAG_UNMODIFIED) {
+        _AF = af;
     }
-    if (instr->cf_aux(a, b,c) != -1) {
-        _CF = app_aux(instr->cf_aux, a, b, c);
+    
+    int cf = instr->cf_aux(a, b,c);
+    if (cf != FLAG_UNMODIFIED) {
+        _CF = cf;
     }
-    if (instr->of_aux(a, b,c) != -1) {
-        _OF = app_aux(instr->of_aux, a, b, c);
+    
+    int of = instr->of_aux(a, b,c);
+    if (of != FLAG_UNMODIFIED) {
+        _OF = of;
     }
     
     Registre* _res = instr->f(a, b, c, proc, lenInstr);
     
-    if (instr->sf_aux) {
+    if (instr->sf_aux == UNLOCKED) {
         _SF = sf_aux(_res);
     }
-    if (instr->pf_aux) {
+    
+    if (instr->pf_aux == UNLOCKED) {
         _PF = pf_aux(_res);
     }
+    
     return _res;
 }
 

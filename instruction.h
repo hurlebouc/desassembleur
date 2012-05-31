@@ -18,6 +18,17 @@
 #include "registre.h"
 #include "processeur.h"
 
+enum Permission {
+    LOCKED = 0,
+    UNLOCKED,
+    };
+
+//enum ValeurModif {
+//    MODIF_UP = 1,
+//    MODIF_DOWN = 0,
+//    MODIF_UNMODIFIED = -1,
+//    };
+
 /*
  * Description des effets d'une instruction sur un processeur virtuel.
  */
