@@ -40,7 +40,9 @@ typedef struct _instruction{
     int pf_aux;         /*!<1 si l'instruction modifie le flag de parité*/
     int sf_aux;         /*!<1 si l'instruction modifie le flag de signe*/
     Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int); 
-    /*!<Fonction qui effectue si possible l'instruction virtuellement*/
+    /*!<
+     * Fonction qui effectue si possible l'instruction virtuellement
+     */
                     // f renvoie un pointeur sur le registre qu'il a modifié 
                     // ne modifie par le registre de flags
                     // par contre il doit modifier le registre IP.
