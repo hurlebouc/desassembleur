@@ -16,5 +16,6 @@
 #define DESASSEMBLEUR_LINUX 0
 #define DESASSEMBLEUR_MAC 1
 #define DEBUG_MODE
+#define TAILLE_MEMOIRE 0x1000
 
 #endif

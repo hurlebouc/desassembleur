@@ -29,7 +29,7 @@ static int getbits(uint64_t n, int p){
 
 static int sf_aux(Registre* reg){
     
-    if (reg->classe == REGISTRE_NON_DEFINI) {
+    if (reg->classe == CLASSE_NON_DEFINI) {
         return FLAG_NON_DEFINI;
     }
     
@@ -46,7 +46,7 @@ static int sf_aux(Registre* reg){
 
 static int pf_aux(Registre* reg){
     
-    if (reg->classe == REGISTRE_NON_DEFINI) {
+    if (reg->classe == CLASSE_NON_DEFINI) {
         return FLAG_NON_DEFINI;
     }
     
@@ -62,8 +62,8 @@ static int pf_aux(Registre* reg){
 
 static int zf_aux(Registre* a, Registre* b){
     
-    if (a->classe == REGISTRE_NON_DEFINI ||
-        b->classe == REGISTRE_NON_DEFINI) {
+    if (a->classe == CLASSE_NON_DEFINI ||
+        b->classe == CLASSE_NON_DEFINI) {
         return FLAG_NON_DEFINI;
     }
     

@@ -11,11 +11,12 @@
 
 #include <stdint.h>
 #include "LinkedList.h"
-#define TAILLE_MEMOIRE 0x1000
+#include "definitions.h"
 
 typedef struct _corr_mem{
     uint64_t virtualAddr;
     uint8_t val;
+    uint8_t classe;
 }corr_mem;
 
 typedef  struct _memoire {
@@ -24,7 +25,8 @@ typedef  struct _memoire {
 }Memoire;
 
 Memoire* newMemoire(uint64_t tailleMax);
+void terminateMemoire(Memoire* mem);
 
-
+uint64_t getVal(uint64_t virtualAddr, int taille);
 
 #endif

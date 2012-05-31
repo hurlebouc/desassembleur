@@ -13,19 +13,16 @@
 #ifndef desassembleur_registre_h
 #define desassembleur_registre_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "definitions.h"    
     
-    enum Classe {
-        REGISTRE_NON_DEFINI = 0,
-        REGISTRE_DEFINI,
-    };
     /**
      * Registre virtuel
      */

@@ -15,7 +15,7 @@ Registre* newRegistreFeuille(int t/*, uint64_t v*/){
     reg->filsh = NULL;
     reg->filsl = NULL;
 //    reg->classe = REGISTRE_DEFINI;
-    reg->classe = REGISTRE_NON_DEFINI; 
+    reg->classe = CLASSE_NON_DEFINI; 
     return reg;
 }
 
@@ -26,7 +26,7 @@ Registre* newRegistreFilsUnique(Registre* fils){
     reg->filsl = fils;
     reg->filsh = newRegistreFeuille(fils->taille/*, 0*/);
 //    reg->classe = REGISTRE_DEFINI;
-    reg->classe = REGISTRE_NON_DEFINI;
+    reg->classe = CLASSE_NON_DEFINI;
     return reg;
 }
 
@@ -37,7 +37,7 @@ Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl){
     reg->taille = filsh->taille + filsl->taille;
     reg->valeur = -1;
 //    reg->classe = REGISTRE_DEFINI;
-    reg->classe = REGISTRE_NON_DEFINI;
+    reg->classe = CLASSE_NON_DEFINI;
     return reg;
 }
 
@@ -57,8 +57,8 @@ uint64_t getValeur(const Registre* reg){
 }
 
 uint64_t setValeur(Registre* reg, uint64_t n){
-    if (reg->classe == REGISTRE_NON_DEFINI) {
-        reg->classe = REGISTRE_DEFINI;
+    if (reg->classe == CLASSE_NON_DEFINI) {
+        reg->classe = CLASSE_DEFINI;
     }
     uint64_t p = pow(2, reg->taille);
     
@@ -83,7 +83,7 @@ uint64_t setValeur(Registre* reg, uint64_t n){
 
 int getClasse(Registre* reg){
     if (reg == NULL) {
-        return REGISTRE_DEFINI;
+        return CLASSE_DEFINI;
     }
     int n = getClasse(reg->filsh)*getClasse(reg->filsl)*reg->classe;
     if (n == 0) {
