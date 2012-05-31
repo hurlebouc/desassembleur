@@ -29,20 +29,42 @@ enum Permission {
 //    MODIF_UNMODIFIED = -1,
 //    };
 
-/*
- * Description des effets d'une instruction sur un processeur virtuel.
+/**
+ * Cette structure donne toutes les informations permettant de réaliser une 
+ * instruction assembleur. Chacune des méthodes doivent également tenir compte du 
+ * fait que certain de leurs paamètres peuvent être indéterminés.
  */
 typedef struct _instruction{
-    int(* of_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction d'altération du flag d'overflow*/
-    int(* cf_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag de retenue*/
-    int(* af_aux)(const Registre*, const Registre*, const Registre*);   /*!<Fonction du flag d'ajustement*/
-    int zf_aux;         /*!<1 si l'instruction modifie le flag de zéro*/
-    int pf_aux;         /*!<1 si l'instruction modifie le flag de parité*/
-    int sf_aux;         /*!<1 si l'instruction modifie le flag de signe*/
-    Registre* (*f)(Registre*, Registre*, Registre*, Processeur*, int); 
-    /*!<
-     * Fonction qui effectue si possible l'instruction virtuellement
+    
+    /**
+     * Cette méthode indique comment doit être réglé le drapeau d'overflow
+     * @param a 
+     * @param b
+     * @param c
+     * @return La méthode renvoie un élément de armement_flag
      */
+    int(* of_aux)(const Registre*a, const Registre*b, const Registre*c);
+    
+    /**
+     * Cette méthode indique comment doit être réglé le drapeau CF
+     */
+    int(* cf_aux)(const Registre*a, const Registre*b, const Registre*c);
+    
+    /**
+     * Cette méthode indique comment doit être réglé le drapeau CF
+     */
+    int(* af_aux)(const Registre*a, const Registre*b, const Registre*c);
+    int zf_aux;         /*!<UNLOKED si l'instruction modifie ZF*/
+    int pf_aux;         /*!<UNLOKED si l'instruction modifie PF*/
+    int sf_aux;         /*!<UNLOKED si l'instruction modifie SF*/
+    
+    /**
+     * f renvoie un pointeur sur le registre qu'il
+     * ne modifie par le registre de flags
+     * par contre il doit modifier le registre IP.
+     */
+    Registre* (*f)(Registre*a, Registre*b, Registre*c, Processeur*p, int len); 
+    
                     // f renvoie un pointeur sur le registre qu'il a modifié 
                     // ne modifie par le registre de flags
                     // par contre il doit modifier le registre IP.
