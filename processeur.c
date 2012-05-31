@@ -194,6 +194,10 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
             getValeur(r1) != getValeur(r2))) {
             sprintf(temp, "non inclus par registre\n");
             pushlog(fichierlog, temp);
+            sprintf(temp, "\t r1 = (%d, %lu)\n", getClasse(r1), (long) getValeur(r1));
+            pushlog(fichierlog, temp);
+            sprintf(temp, "\t r2 = (%d, %lu)\n", getClasse(r2), (long) getValeur(r2));
+            pushlog(fichierlog, temp);
             return NON_INCLUS;
         }
     }
@@ -202,7 +206,11 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         int f1 = p1->tabFlags[i];
         int f2 = p2->tabFlags[i];
         if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {            
-            sprintf(temp,"non inclus par drapeau : f1 = %d, f2 = %d\n", f1, f2);
+            sprintf(temp,"non inclus par drapeau\n");
+            pushlog(fichierlog, temp);
+            sprintf(temp, "\t f1 = %d\n", f1);
+            pushlog(fichierlog, temp);
+            sprintf(temp, "\t f2 = %d\n", f2);
             pushlog(fichierlog, temp);
             return NON_INCLUS;
         }

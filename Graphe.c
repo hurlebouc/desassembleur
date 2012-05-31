@@ -632,51 +632,6 @@ static void setPool(const Graphe* g, Processeur* newPool) {
                 break;
         }
         
-//        switch (hiword) {
-//            case NO_ARGUMENT:
-//                ;
-//                break;
-//            case REGISTER_TYPE + MMX_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + GENERAL_REG:
-//                res = getGeneralRegistre(arg, newPool);
-//                break;
-//            case REGISTER_TYPE + FPU_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + SSE_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + CR_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + DR_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + SPECIAL_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + MEMORY_MANAGEMENT_REG:
-//                ;
-//                break;
-//            case REGISTER_TYPE + SEGMENT_REG:
-//                ;
-//                break;
-//            case MEMORY_TYPE:
-//                ;
-//                break;
-//            case CONSTANT_TYPE + RELATIVE_:
-//                ;
-//                break;
-//            case CONSTANT_TYPE + ABSOLUTE_:
-//                res = newRegistreFeuille(64, disasm->Instruction.Immediat);
-//                aSuppr[i] = 1;
-//                break;
-//            default:
-//                break;
-//        }
-        
         reg[i] = res;
     }
     if (instruction != NULL) {
