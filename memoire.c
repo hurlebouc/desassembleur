@@ -69,6 +69,10 @@ static uint64_t getByteIndex(Memoire* mem, uint64_t virtualAddr){
     return -1;
 }
 
+static uint8_t testDrapeau(int typeErreur, int erreur){
+    return (erreur & typeErreur) / typeErreur;
+}
+
 int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
     uint64_t i = getByteIndex(mem, virtualAddr);
     if (i==-1) {
@@ -78,20 +82,19 @@ int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
     int* res = calloc(2, sizeof(int));
     res[0] = CLASSE_DEFINI;
     
-    if (i + taille > mem->sizeAllocatedMemory) {
-        res[0] = CLASSE_NON_DEFINIE;
-        res[1] += SEG_NON_INITIALISE;
-    }
-    for (int j = 0; j < taille; j++) {
-        if (virtualAddr + j != mem->tabCorrespondance[i+j]->virtualAddr) {
-            res[0] = CLASSE_NON_DEFINIE;
-            res[1] += SEG_NON_PRESENT;
-        }
-    }
     for (int j = 0; j < taille; j++) {
         if (mem->tabCorrespondance[i+j]->classe == CLASSE_NON_DEFINIE) {
-            res[0] = CLASSE_NON_DEFINIE,
+            res[0] = CLASSE_NON_DEFINIE;
+            if (!testDrapeau(SEG_INDETERMINEE, res[1])) {
+                res[1] += SEG_INDETERMINEE;
+            }
             res[1] += SEG_INDETERMINEE;
+        }
+        if (virtualAddr + j != mem->tabCorrespondance[i+j]->virtualAddr) {
+            res[0] = CLASSE_NON_DEFINIE;
+            if (!testDrapeau(SEG_NON_PRESENT, res[1])) {
+                res[1] += SEG_NON_PRESENT;
+            }
         }
     }
     return res;
@@ -153,26 +156,17 @@ static uint64_t insertCase(Memoire* mem, uint64_t virtualAddr){
     return inf;
 }
 
+static uint64_t initCase(Memoire* mem, uint64_t virtualAddr){
+    return insertCase(mem, virtualAddr);
+}
+
 static uint64_t initSegment(Memoire* mem, uint64_t virtualAddr, int taille){
-    uint64_t i = getByteIndex(mem, virtualAddr);
-    if (i == -1) {
-        i = insertCase(mem, virtualAddr);
-        for (int j = 0; j<taille; j++) {
-            if (mem->tabCorrespondance[i+j]->virtualAddr != virtualAddr + j) {
-                shiftRight(mem, i+j);
-                mem->tabCorrespondance[i+j]->virtualAddr = virtualAddr + j;
-//                mem->tabCorrespondance[i+j]->val = 0;
-//                mem->tabCorrespondance[i+j]->classe = CLASSE_NON_DEFINIE;
-            }
+    uint64_t i = initCase(mem, virtualAddr);
+    for (int j = 0; j<taille; j++) {
+        if (mem->tabCorrespondance[i+j]->virtualAddr != virtualAddr + j) {
+            shiftRight(mem, i+j);
+            mem->tabCorrespondance[i+j]->virtualAddr = virtualAddr + j;
         }
-        return i;
-    }
-    int* classe = getSegClass(mem, virtualAddr, taille);
-    if (classe[0] == CLASSE_NON_DEFINIE) {
-        
-        /* travail à faire ici */
-        
-        return i;
     }
     return i;
 }
