@@ -31,7 +31,24 @@ Graphe* newGraphe(void){
     return g;
 }
 
-void terminateNoeud(Graphe* g){
+/**
+ * Efface du graphe une liaison de succession.
+ *
+ * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
+ * ne maintient pas la propriete d'accessibilite de tous les noeuds du 
+ * graphe.
+ * Il vaut mieux lui référer @see removeLinkRec()
+ *
+ * @param pere Noeud précédent dont on enlève le noeud fils de ses succésseurs
+ * @param fils Noeud suivant dont on enlève le noeud père de ses prédécésseurs
+ */
+
+static void removeLink(Graphe* pere, Graphe* fils){
+    removeElementLL(pere->listeFils, fils);
+    removeElementLL(fils->listePeres, pere);
+}
+
+static void terminateNoeud(Graphe* g){
     
     if (g->listePeres != NULL) {
         while (sizeLL(g->listePeres) != 0) {
@@ -92,16 +109,7 @@ void terminateGraphe(Graphe* g){
     terminateProcesseur(g->pool);
     free(g);
 }
-/**
- * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
- * ne maintient pas la propriete d'accessibilite de tous les noeuds du graphe.
- * Il vaut mieux lui référer removeLinkRec()
- */
 
-void removeLink(Graphe* pere, Graphe* fils){
-    removeElementLL(pere->listeFils, fils);
-    removeElementLL(fils->listePeres, pere);
-}
 
 void removeLinkRec(Graphe* pere, Graphe* fils){
     removeLink(pere, fils);
@@ -179,7 +187,9 @@ Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
     return NULL;
 }
 
-Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
+/*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
+
+static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
     uint16_t loword = arg.ArgType;
     int size = arg.ArgSize;
     Registre* res = NULL;
@@ -493,8 +503,6 @@ Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
     }
     return res;
 }
-
-/*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
 
 /**
  * @deprecated

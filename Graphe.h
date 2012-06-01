@@ -101,29 +101,10 @@ extern "C" {
     Graphe* newGraphe(void);
     
     /**
-     * 
+     * Fonction de destruction d'un graphe
      * @param g
      */
     void terminateGraphe(Graphe* g);
-    /**
-     * Efface un noeud du graphe en rompant tout les liens avec ses prédécesseurs.
-     * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
-     * ne maintient pas la propriete d'accessibilite de tous les noeuds du graphe.
-     * Il vaut mieux lui référer removeLinkRec()
-     * et ses succésseurs
-     * @param[in] g Noeud à éffacer
-     */
-    void terminateNoeud(Graphe* g);
-    
-    /**
-     * Efface du graphe une liaison de succession. 
-     * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
-     * ne maintient pas la propriete d'accessibilite de tous les noeuds du graphe.
-     * Il vaut mieux lui référer @see removeLinkRec()
-     * @param pere Noeud précédent dont on enlève le noeud fils de ses succésseurs
-     * @param fils Noeud suivant dont on enlève le noeud père de ses prédécésseurs
-     */
-    void removeLink(Graphe* pere, Graphe* fils);
     
     /**
      * Efface la liaison entre deux noeuds. Si cette liaison rends une partie du 
@@ -193,11 +174,21 @@ extern "C" {
     DISASM* newDisasmFromGraph(Graphe* n);
     
     /**
-     * 
+     * Cette fonction renvoie le registre du pool donné en paramètre déterminé
+     * par l'argument de type ARGTYPE
+     * @param arg définition du registre par la syntaxe de Beaengine
+     * @param newPool pool donc doit être extrait le registre
+     * @return registre déterminé par arg dans newPool
      */
-    Registre* getGeneralRegistre(ARGTYPE arg, Processeur *proc);
-    
     Registre * getRegistre(ARGTYPE arg, Processeur *newPool);
+    
+    /**
+     * Cette fonction renvoie la constante déterminé par arg à la position du 
+     * programme déterminé par disasm
+     * @param arg définition de la constante par la syntaxe de Beaengine
+     * @param disasm 
+     * @return registre valeur de la constante sous forme de registre
+     */
     Registre * getConstant(ARGTYPE arg, DISASM *disasm);
 
 #ifdef __cplusplus

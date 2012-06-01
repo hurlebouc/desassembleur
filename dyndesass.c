@@ -519,8 +519,12 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
         
 //        removeLink(g, fils);
 //        removeLink(fils, nouvFils);
-        terminateNoeud(fils);
+        
+//        terminateNoeud(fils);
+//        addLink(g, nouvFils);
+        
         addLink(g, nouvFils);
+        removeLinkRec(g, fils);
         
 //        filsUnique->valeur = nouvFils;
         
