@@ -23,7 +23,8 @@ extern "C" {
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-#define MAX_BUFFER 1024
+#include "macro.h"
+
     
     /**
      * Fichier manipulé
