@@ -189,8 +189,8 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
-        if (getClasse(r1) != CLASSE_NON_DEFINI && (
-            getClasse(r2) == CLASSE_NON_DEFINI ||
+        if (getClasse(r1) != CLASSE_NON_DEFINIE && (
+            getClasse(r2) == CLASSE_NON_DEFINIE ||
             getValeur(r1) != getValeur(r2))) {
             sprintf(temp, "non inclus par registre\n");
             pushlog(fichierlog, temp);
@@ -239,10 +239,10 @@ void inter(Processeur* p1, const Processeur* p2){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
-        if (getClasse(r1) != CLASSE_NON_DEFINI && (
-            getClasse(r2) == CLASSE_NON_DEFINI ||
+        if (getClasse(r1) != CLASSE_NON_DEFINIE && (
+            getClasse(r2) == CLASSE_NON_DEFINIE ||
             getValeur(r1) != getValeur(r2))) {
-            r1->classe = CLASSE_NON_DEFINI;
+            r1->classe = CLASSE_NON_DEFINIE;
         }
     }
     

@@ -48,8 +48,8 @@ static int af_and(const Registre* a, const Registre* b, const Registre* c){
 
 static Registre* f_and(Registre* destination, Registre* masque, Registre* stub,Processeur* proc, int lenInstr){
     
-    if (masque->classe == CLASSE_NON_DEFINI) {
-        destination->classe = CLASSE_NON_DEFINI;
+    if (masque->classe == CLASSE_NON_DEFINIE) {
+        destination->classe = CLASSE_NON_DEFINIE;
         return destination;
     }
     
@@ -70,8 +70,8 @@ Instruction* init_and(){
 
 static int of_add(const Registre* a, const Registre* b, const Registre* stub){
     
-    if (a->classe == CLASSE_NON_DEFINI ||
-        b->classe == CLASSE_NON_DEFINI) {
+    if (a->classe == CLASSE_NON_DEFINIE ||
+        b->classe == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -93,8 +93,8 @@ static int of_add(const Registre* a, const Registre* b, const Registre* stub){
 
 static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
     
-    if (a->classe == CLASSE_NON_DEFINI ||
-        b->classe == CLASSE_NON_DEFINI) {
+    if (a->classe == CLASSE_NON_DEFINIE ||
+        b->classe == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -116,8 +116,8 @@ static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
 
 static int af_add(const Registre* a, const Registre* b, const Registre* stub){
     
-    if (a->classe == CLASSE_NON_DEFINI ||
-        b->classe == CLASSE_NON_DEFINI) {
+    if (a->classe == CLASSE_NON_DEFINIE ||
+        b->classe == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -133,8 +133,8 @@ static int af_add(const Registre* a, const Registre* b, const Registre* stub){
 
 static Registre* f_add(Registre* destination, Registre* masque, Registre* stub , Processeur* proc, int lenInstr){
     
-    if (masque->classe == CLASSE_NON_DEFINI) {
-        destination->classe = CLASSE_NON_DEFINI;
+    if (masque->classe == CLASSE_NON_DEFINIE) {
+        destination->classe = CLASSE_NON_DEFINIE;
         return destination;
     }
     
@@ -168,8 +168,8 @@ static int af_mov(const Registre* a, const Registre* b, const Registre* stub){
 
 static Registre* f_mov(Registre* gauche, Registre* droite, Registre* stub, Processeur* proc, int lenInstr){
     
-    if (gauche->classe == CLASSE_NON_DEFINI) {
-        droite->classe = CLASSE_NON_DEFINI;
+    if (gauche->classe == CLASSE_NON_DEFINIE) {
+        droite->classe = CLASSE_NON_DEFINIE;
         return droite;
     }
     

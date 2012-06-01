@@ -72,7 +72,7 @@ static unsigned long tryDeterminise(Graphe* i){
     Processeur* proc = i->pool;
     Registre* reg = getRegistre(disasm->Argument1, proc);
     free(disasm);
-    if (reg->classe != CLASSE_NON_DEFINI) {
+    if (reg->classe != CLASSE_NON_DEFINIE) {
         return getValeur(reg);
     }
     return 0;

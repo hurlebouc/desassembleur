@@ -14,14 +14,6 @@ char* ROOT;
 int SYS = DESASSEMBLEUR_MAC;
 
 int main(int argc, char* argv []) {
-    
-    enum ValeurImmediat jkr = argc*293;
-    
-    test* t = init_test();
-        
-    printf("%d\n", do_test(t, 23));
-    printf("%d\n", t->f(23));
-    printf("%u\n", jkr);
         
     ROOT = argv[0];
     
@@ -34,6 +26,17 @@ int main(int argc, char* argv []) {
     unsigned char i = *( ((char*) &n) + 1 );
 //    unsigned char i = *( (char*) p );
     printf("i = %d\n", i);
+    
+    int** tab = malloc(sizeof(void*)*10);
+    tab[2] = malloc(sizeof(int));
+    *tab[2] = 4;
+    free(tab[2]);
+    if (tab[2] == NULL) {
+        printf("NULL\n");
+    } else {
+        printf("%d\n", *tab[2]);
+    }
+    
     printf("done.\n");
     return 0;
 }

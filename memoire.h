@@ -12,6 +12,11 @@
 #include <stdint.h>
 #include "definitions.h"
 
+enum casIndeterminisationMemoire {
+    CASE_NON_INITIALISE,
+    CASE_INDETERMINEE,
+    };
+
 typedef struct _case_mem{
     uint64_t virtualAddr;
     uint8_t val;
@@ -20,6 +25,7 @@ typedef struct _case_mem{
 
 typedef  struct _memoire {
     uint64_t size;
+    uint64_t sizeAllocatedMemory;
     case_mem** tabCorrespondance;
 }Memoire;
 
@@ -33,7 +39,19 @@ void terminateMemoire(Memoire* mem);
  */
 
 uint64_t getVal(Memoire* mem, uint64_t virtualAddr, int taille);
-int getMemClass(Memoire* mem, uint64_t virtualAddr, int taille);
+
+/**
+ * Cette fonction donne la classe de la valeur souhaité à partir de l'adresse 
+ * virtualAddr sur une longueur taille. On supposera que l'adresse existe dans 
+ * la mémoire.
+ *
+ * @param mem mémoire sur laquelle on travail
+ * @param virtualAddr adresse souhaité dans le mémoire
+ * @param taille longueur du mot lu
+ * @return un tableau de taille 2 dont le premier élément est la classe, 
+ *          le deuxième est toujours nul en cas de case déterminé
+ */
+int* getMemClass(Memoire* mem, uint64_t virtualAddr, int taille);
 
 void setVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
 

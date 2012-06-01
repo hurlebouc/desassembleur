@@ -10,8 +10,8 @@
 #define desassembleur_definitions_h
 
 enum Classe {
-    CLASSE_NON_DEFINI = 0,
-    CLASSE_DEFINI,
+    CLASSE_NON_DEFINIE = 0,
+    CLASSE_DEFINI = 1,
 };
 
 #endif
