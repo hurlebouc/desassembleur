@@ -128,8 +128,9 @@ static void shiftRight(Memoire* mem, uint64_t index){
         printf("(TODO faire de l'allocation dynamique)\n");
         exit(EXIT_FAILURE);
     }
-    if (mem->sizeAllocatedMemory == 0) {
-        return;
+    if (index > mem->sizeAllocatedMemory) {
+        printf("l'index est hors de la mémoire et n'est pas à sa frontière\n");
+        exit(EXIT_FAILURE);
     }
     for (uint64_t i = mem->sizeAllocatedMemory; i > index; i--) {
         mem->tabCorrespondance[i] = mem->tabCorrespondance[i-1];
@@ -153,6 +154,7 @@ static uint64_t insertCase(Memoire* mem, uint64_t virtualAddr){
         }
     }
     shiftRight(mem, inf); // inf == sup
+    mem->tabCorrespondance[inf]->virtualAddr = virtualAddr;
     return inf;
 }
 
@@ -163,7 +165,8 @@ static uint64_t initCase(Memoire* mem, uint64_t virtualAddr){
 static uint64_t initSegment(Memoire* mem, uint64_t virtualAddr, int taille){
     uint64_t i = initCase(mem, virtualAddr);
     for (int j = 0; j<taille; j++) {
-        if (mem->tabCorrespondance[i+j]->virtualAddr != virtualAddr + j) {
+        case_mem* byte = mem->tabCorrespondance[i+j];
+        if (byte == NULL || byte->virtualAddr != virtualAddr + j) {
             shiftRight(mem, i+j);
             mem->tabCorrespondance[i+j]->virtualAddr = virtualAddr + j;
         }
@@ -181,6 +184,15 @@ uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val)
         p = p * 0xff;
     }
     return val*p;
+}
+
+void afficheMemoire(Memoire* mem){
+    printf("[");
+    for (uint64_t i = 0; i<mem->sizeAllocatedMemory; i++) {
+        printf("[%llu, %d], ", mem->tabCorrespondance[i]->virtualAddr,
+               mem->tabCorrespondance[i]->val);
+    }
+    printf("]\n");
 }
 
 

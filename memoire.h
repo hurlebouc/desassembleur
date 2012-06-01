@@ -66,4 +66,6 @@ int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille);
  */
 uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
 
+void afficheMemoire(Memoire* mem);
+
 #endif

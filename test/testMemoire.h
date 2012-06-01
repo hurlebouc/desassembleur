@@ -10,7 +10,7 @@
 #define desassembleur_testMemoire_h
 
 #include "CUnit/Basic.h"
-#include "../commandes.h"
+#include "../memoire.h"
 
 #define BINAIRE_BUILDTIME "../../tests/recc"
 #define BINAIRE_RUNTIME "../../../../tests/recc"
