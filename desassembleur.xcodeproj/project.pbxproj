@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD0035811579366B0046A5FD /* testMemoire.c in Sources */ = {isa = PBXBuildFile; fileRef = AD00357F1579366B0046A5FD /* testMemoire.c */; };
 		AD55533B156550F0007EB02A /* libcunit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD55533A156550EF007EB02A /* libcunit.a */; };
 		ADF5D0F7156815E900D07044 /* testOtpimizePool.c in Sources */ = {isa = PBXBuildFile; fileRef = ADF5D0F6156815E900D07044 /* testOtpimizePool.c */; };
 		B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */ = {isa = PBXBuildFile; fileRef = B40A6AEC151DD18500A19FC9 /* liste_instr.c */; };
@@ -71,6 +72,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AD00357F1579366B0046A5FD /* testMemoire.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testMemoire.c; path = test/testMemoire.c; sourceTree = "<group>"; };
+		AD0035801579366B0046A5FD /* testMemoire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testMemoire.h; path = test/testMemoire.h; sourceTree = "<group>"; };
 		AD55533A156550EF007EB02A /* libcunit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcunit.a; path = lib/Darwin..Debug/libcunit.a; sourceTree = "<group>"; };
 		ADF5D0F6156815E900D07044 /* testOtpimizePool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testOtpimizePool.c; path = test/testOtpimizePool.c; sourceTree = "<group>"; };
 		ADF5D0F91568160900D07044 /* testOtpimizePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = testOtpimizePool.h; path = test/testOtpimizePool.h; sourceTree = "<group>"; };
@@ -290,9 +293,10 @@
 		B4FF37AA1503CDC400D78BD0 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				B407792A150401BF0082F3D8 /* testVide.h */,
+				AD0035801579366B0046A5FD /* testMemoire.h */,
 				B4FF37A91503CBC200D78BD0 /* testDyndesass.h */,
 				ADF5D0F91568160900D07044 /* testOtpimizePool.h */,
+				B407792A150401BF0082F3D8 /* testVide.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -300,6 +304,7 @@
 		B4FF37AB1503CDD700D78BD0 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				AD00357F1579366B0046A5FD /* testMemoire.c */,
 				B4E455A71507852800D0A41A /* testVide.c */,
 				B4FF379215038CF400D78BD0 /* testDyndesass.c */,
 				ADF5D0F6156815E900D07044 /* testOtpimizePool.c */,
@@ -427,6 +432,7 @@
 				B40A6AEE151DD18500A19FC9 /* liste_instr.c in Sources */,
 				ADF5D0F7156815E900D07044 /* testOtpimizePool.c in Sources */,
 				B44A8BE61577DF95004DEF89 /* memoire.c in Sources */,
+				AD0035811579366B0046A5FD /* testMemoire.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

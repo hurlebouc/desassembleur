@@ -16,7 +16,9 @@
 
 #include "testDyndesass.h"
 #include "testVide.h"
+#include "testMemoire.h"
 #include "testOtpimizePool.h"
+
 #include "CUnit/CUCurses.h"
 
 char* ROOT;
@@ -63,10 +65,10 @@ int main(int argc, char* argv [])
             CU_cleanup_registry();
             return CU_get_error();
         }
-        if ((NULL == CU_add_test(pSuite, "CFG recc", cfg_recc))||
-            (NULL == CU_add_test(pSuite, "CFG entropie", cfg_entropie))||
-            (NULL == CU_add_test(pSuite, "CFG disas", cfg_disas))||
-            (NULL == CU_add_test(pSuite, "CFG handbrake", cfg_handbrake)))
+        if ((NULL == CU_add_test(pSuite, "recc", cfg_recc))||
+            (NULL == CU_add_test(pSuite, "entropie", cfg_entropie))||
+            (NULL == CU_add_test(pSuite, "disas", cfg_disas))||
+            (NULL == CU_add_test(pSuite, "handbrake", cfg_handbrake)))
         {
             CU_cleanup_registry();
             return CU_get_error();
@@ -79,10 +81,10 @@ int main(int argc, char* argv [])
             CU_cleanup_registry();
             return CU_get_error();
         }        
-        if ((NULL == CU_add_test(pSuite, "vide recc", vide_recc))||
-            (NULL == CU_add_test(pSuite, "vide entropie", vide_entropie))||
-            (NULL == CU_add_test(pSuite, "vide disas", vide_disas))||
-            (NULL == CU_add_test(pSuite, "vide handbrake", vide_handbrake)))
+        if ((NULL == CU_add_test(pSuite, "recc", vide_recc))||
+            (NULL == CU_add_test(pSuite, "entropie", vide_entropie))||
+            (NULL == CU_add_test(pSuite, "disas", vide_disas))||
+            (NULL == CU_add_test(pSuite, "handbrake", vide_handbrake)))
         {
             CU_cleanup_registry();
             return CU_get_error();
@@ -95,10 +97,26 @@ int main(int argc, char* argv [])
             CU_cleanup_registry();
             return CU_get_error();
         }
-        if ((NULL == CU_add_test(pSuite, "pool recc", optpool_recc))||
-            (NULL == CU_add_test(pSuite, "pool entropie", optpool_entropie))||
-            (NULL == CU_add_test(pSuite, "pool disas", optpool_disas))||
-            (NULL == CU_add_test(pSuite, "pool handbrake", optpool_handbrake)))
+        if ((NULL == CU_add_test(pSuite, "recc", optpool_recc))||
+            (NULL == CU_add_test(pSuite, "entropie", optpool_entropie))||
+            (NULL == CU_add_test(pSuite, "disas", optpool_disas))||
+            (NULL == CU_add_test(pSuite, "handbrake", optpool_handbrake)))
+        {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
+    }
+    if (strcmp(MODE, "all") == 0|| strcmp(MODE, "memoire") == 0) {
+        printf("initialisation des tests memoire\n");
+        pSuite = CU_add_suite("tests memoire", init_suite_success, clean_suite_success);
+        if (NULL == pSuite) {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
+        if ((NULL == CU_add_test(pSuite, "recc", mem_recc))||
+            (NULL == CU_add_test(pSuite, "entropie", mem_entropie))||
+            (NULL == CU_add_test(pSuite, "disas", mem_disas))||
+            (NULL == CU_add_test(pSuite, "handbrake", mem_handbrake)))
         {
             CU_cleanup_registry();
             return CU_get_error();
