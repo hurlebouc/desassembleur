@@ -29,13 +29,13 @@ static void setCaseVal(case_mem* corr, uint8_t val){
 
 Memoire* newMemoire(uint64_t tailleMax){
     Memoire* res = malloc(sizeof(Memoire));
-    res->taille = tailleMax;
+    res->size = tailleMax;
     res->tabCorrespondance = malloc(sizeof(case_mem*)*tailleMax);
     return res;
 }
 
 void terminateMemoire(Memoire* mem){
-    for (uint64_t i = 0; i<mem->taille; i++) {
+    for (uint64_t i = 0; i<mem->size; i++) {
         if (mem->tabCorrespondance[i] == NULL) {
             break;
         }

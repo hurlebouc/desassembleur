@@ -19,7 +19,7 @@ typedef struct _case_mem{
 }case_mem;
 
 typedef  struct _memoire {
-    uint64_t taille;
+    uint64_t size;
     case_mem** tabCorrespondance;
 }Memoire;
 
