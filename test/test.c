@@ -34,7 +34,18 @@ int main(int argc, char* argv [])
 {
     
     ROOT = argv[0];
+
+    if (argc < 2) {
+        printf("Le lancement des tests requiert plus d'argument\n");
+        exit(EXIT_FAILURE);
+    }
+    
     TESTS = argv[1];
+    char* MODE = "all";
+    if (argc > 2) {
+        MODE = argv[2];
+    }
+    
     printf("%lu\n", sizeof(Processeur));
     CU_pSuite pSuite = NULL;
     
@@ -45,57 +56,53 @@ int main(int argc, char* argv [])
         return CU_get_error();
     
     /*---------------------------- CREATION DES TEST -------------------------*/
-    
-    /* add a suite to the registry */
-    pSuite = CU_add_suite("comparaison CFG", init_suite_success, clean_suite_success);
-    if (NULL == pSuite) {
-        CU_cleanup_registry();
-        return CU_get_error();
+    if (strcmp(MODE, "all")==0||strcmp(MODE, "cfg")==0||strcmp(MODE, "CFG")==0) {
+        printf("initialisation des tests CFG\n");
+        pSuite = CU_add_suite("comparaison CFG", init_suite_success, clean_suite_success);
+        if (NULL == pSuite) {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
+        if ((NULL == CU_add_test(pSuite, "CFG recc", cfg_recc))||
+            (NULL == CU_add_test(pSuite, "CFG entropie", cfg_entropie))||
+            (NULL == CU_add_test(pSuite, "CFG disas", cfg_disas))||
+            (NULL == CU_add_test(pSuite, "CFG handbrake", cfg_handbrake)))
+        {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
     }
-    
-    /* add the tests to the suite */
-    if ((NULL == CU_add_test(pSuite, "CFG recc", cfg_recc))||
-        (NULL == CU_add_test(pSuite, "CFG entropie", cfg_entropie))||
-        (NULL == CU_add_test(pSuite, "CFG disas", cfg_disas))||
-        (NULL == CU_add_test(pSuite, "CFG handbrake", cfg_handbrake)))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
+    if (strcmp(MODE, "all") == 0 || strcmp(MODE, "vide") == 0) {
+        printf("initialisation des tests vide\n");
+        pSuite = CU_add_suite("comparaison vide", init_suite_success, clean_suite_success);
+        if (NULL == pSuite) {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }        
+        if ((NULL == CU_add_test(pSuite, "vide recc", vide_recc))||
+            (NULL == CU_add_test(pSuite, "vide entropie", vide_entropie))||
+            (NULL == CU_add_test(pSuite, "vide disas", vide_disas))||
+            (NULL == CU_add_test(pSuite, "vide handbrake", vide_handbrake)))
+        {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
     }
-    
-    
-    /* add a suite to the registry */
-    pSuite = CU_add_suite("comparaison vide", init_suite_success, clean_suite_success);
-    if (NULL == pSuite) {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-    
-    /* add the tests to the suite */
-    if ((NULL == CU_add_test(pSuite, "vide recc", vide_recc))||
-        (NULL == CU_add_test(pSuite, "vide entropie", vide_entropie))||
-        (NULL == CU_add_test(pSuite, "vide disas", vide_disas))||
-        (NULL == CU_add_test(pSuite, "vide handbrake", vide_handbrake)))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-    
-    /* add a suite to the registry */
-    pSuite = CU_add_suite("comparaison log optimisation", init_suite_success, clean_suite_success);
-    if (NULL == pSuite) {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-    
-    /* add the tests to the suite */
-    if ((NULL == CU_add_test(pSuite, "pool recc", optpool_recc))||
-        (NULL == CU_add_test(pSuite, "pool entropie", optpool_entropie))||
-        (NULL == CU_add_test(pSuite, "pool disas", optpool_disas))||
-        (NULL == CU_add_test(pSuite, "pool handbrake", optpool_handbrake)))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
+    if (strcmp(MODE, "all") == 0|| strcmp(MODE, "pool") == 0) {
+        printf("initialisation des tests pool\n");
+        pSuite = CU_add_suite("comparaison log optimisation", init_suite_success, clean_suite_success);
+        if (NULL == pSuite) {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
+        if ((NULL == CU_add_test(pSuite, "pool recc", optpool_recc))||
+            (NULL == CU_add_test(pSuite, "pool entropie", optpool_entropie))||
+            (NULL == CU_add_test(pSuite, "pool disas", optpool_disas))||
+            (NULL == CU_add_test(pSuite, "pool handbrake", optpool_handbrake)))
+        {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
     }
     
     /*--------------------------- LANCEMENT DES TESTS ------------------------*/
