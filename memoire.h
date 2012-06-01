@@ -13,8 +13,9 @@
 #include "definitions.h"
 
 enum casIndeterminisationMemoire {
-    CASE_NON_INITIALISE,
-    CASE_INDETERMINEE,
+    SEG_NON_INITIALISE =    0x1,
+    SEG_INDETERMINEE =      0x2,
+    SEG_NON_PRESENT =       0x4,
     };
 
 typedef struct _case_mem{
@@ -38,21 +39,31 @@ void terminateMemoire(Memoire* mem);
  * faibles et byte++ donne les suivants).
  */
 
-uint64_t getVal(Memoire* mem, uint64_t virtualAddr, int taille);
+uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille);
 
 /**
  * Cette fonction donne la classe de la valeur souhaité à partir de l'adresse 
  * virtualAddr sur une longueur taille. On supposera que l'adresse existe dans 
  * la mémoire.
  *
- * @param mem mémoire sur laquelle on travail
- * @param virtualAddr adresse souhaité dans le mémoire
+ * @param mem mémoire sur laquelle on travaille
+ * @param virtualAddr adresse souhaitée dans le mémoire
  * @param taille longueur du mot lu
  * @return un tableau de taille 2 dont le premier élément est la classe, 
  *          le deuxième est toujours nul en cas de case déterminé
  */
-int* getMemClass(Memoire* mem, uint64_t virtualAddr, int taille);
+int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille);
 
-void setVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
+/**
+ * Cette fonction assigne une dans la mémore à l'adresse virtualAddr sur une
+ * taille donnée
+ *
+ * @param mem mémoire sur laquelle on travaille
+ * @param virtualAddr adresse souhaitée dans la mémoire
+ * @param taille longueur du mot dans lequel on souhaite écrire
+ * @param val valeur à écrire
+ * @return partie haute de val qui n'a pas été écrite par manque de place
+ */
+uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
 
 #endif
