@@ -15,6 +15,8 @@
 		B40F68DA150F3B67006ED6E1 /* registre.c in Sources */ = {isa = PBXBuildFile; fileRef = B40F68D9150F3B67006ED6E1 /* registre.c */; };
 		B40F68DB150F3B67006ED6E1 /* registre.c in Sources */ = {isa = PBXBuildFile; fileRef = B40F68D9150F3B67006ED6E1 /* registre.c */; };
 		B416F7F614FE8C9E002E062D /* loaderElf.c in Sources */ = {isa = PBXBuildFile; fileRef = B416F7F514FE8C9E002E062D /* loaderElf.c */; };
+		B417098415795B51000AA605 /* variable.c in Sources */ = {isa = PBXBuildFile; fileRef = B417098315795B51000AA605 /* variable.c */; };
+		B417098515795B51000AA605 /* variable.c in Sources */ = {isa = PBXBuildFile; fileRef = B417098315795B51000AA605 /* variable.c */; };
 		B427934C14DEB0EC007D0319 /* desasembleur.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B427934B14DEB0EC007D0319 /* desasembleur.1 */; };
 		B427935014DEB106007D0319 /* dyndesass.c in Sources */ = {isa = PBXBuildFile; fileRef = B427933114DEB046007D0319 /* dyndesass.c */; };
 		B427935114DEB106007D0319 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B427933714DEB046007D0319 /* main.c */; };
@@ -84,6 +86,8 @@
 		B40F68D9150F3B67006ED6E1 /* registre.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = registre.c; sourceTree = "<group>"; };
 		B416F7F214FE83B3002E062D /* loaderElf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loaderElf.h; sourceTree = "<group>"; };
 		B416F7F514FE8C9E002E062D /* loaderElf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = loaderElf.c; sourceTree = "<group>"; };
+		B417098315795B51000AA605 /* variable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = variable.c; sourceTree = "<group>"; };
+		B417098715795B74000AA605 /* variable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = variable.h; sourceTree = "<group>"; };
 		B427933014DEB046007D0319 /* BeaEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BeaEngine.h; sourceTree = "<group>"; };
 		B427933114DEB046007D0319 /* dyndesass.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = dyndesass.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		B427933214DEB046007D0319 /* dyndesass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = dyndesass.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -170,6 +174,7 @@
 				B44A8BE91577EA1B004DEF89 /* definitions.h */,
 				B4FA7C7F150F3BE00023615C /* registre.h */,
 				B44A8BE81577DFA9004DEF89 /* memoire.h */,
+				B417098715795B74000AA605 /* variable.h */,
 				B4E455A615077C5300D0A41A /* processeur.h */,
 				B43A2EDE151D0907007EB249 /* instruction.h */,
 				B40A6AF0151DD19A00A19FC9 /* liste_instr.h */,
@@ -200,6 +205,7 @@
 				B453217015061AE7001C6689 /* primitives */,
 				B40F68D9150F3B67006ED6E1 /* registre.c */,
 				B44A8BE41577DF95004DEF89 /* memoire.c */,
+				B417098315795B51000AA605 /* variable.c */,
 				B4E455A215077C4900D0A41A /* processeur.c */,
 				B43A2EE0151D0921007EB249 /* instruction.c */,
 				B40A6AEC151DD18500A19FC9 /* liste_instr.c */,
@@ -406,6 +412,7 @@
 				B43A2EE1151D0921007EB249 /* instruction.c in Sources */,
 				B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */,
 				B44A8BE51577DF95004DEF89 /* memoire.c in Sources */,
+				B417098415795B51000AA605 /* variable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +440,7 @@
 				ADF5D0F7156815E900D07044 /* testOtpimizePool.c in Sources */,
 				B44A8BE61577DF95004DEF89 /* memoire.c in Sources */,
 				AD0035811579366B0046A5FD /* testMemoire.c in Sources */,
+				B417098515795B51000AA605 /* variable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
