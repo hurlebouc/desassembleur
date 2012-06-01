@@ -10,9 +10,11 @@
 #include <stdlib.h>
 #include "memoire.h"
 
-static case_mem* newCorr_mem(){
+static case_mem* newCase_mem(){
     case_mem* res = malloc(sizeof(case_mem));
     res->classe = CLASSE_NON_DEFINIE;
+    res->val = 0;
+    res->virtualAddr = 0;
     return res;
 }
 
@@ -53,7 +55,7 @@ void terminateMemoire(Memoire* mem){
 static uint64_t getByteIndex(Memoire* mem, uint64_t virtualAddr){
     uint64_t inf = 0;
     uint64_t sup = mem->sizeAllocatedMemory;
-    while (sup-inf > 1) {
+    while (sup-inf > 0) {
         uint64_t milieu = (sup + inf)/2;
         if (mem->tabCorrespondance[milieu]->virtualAddr == virtualAddr) {
             return milieu;
@@ -64,10 +66,7 @@ static uint64_t getByteIndex(Memoire* mem, uint64_t virtualAddr){
             inf = milieu + 1;
         }
     }
-    if (sup <= inf) { // == devrait suffir
-        return -1;
-    }
-    return inf;
+    return -1;
 }
 
 int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
@@ -120,22 +119,58 @@ uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille){
     return res;
 }
 
-static uint64_t insertCase(Memoire* mem, uint64_t virtualAddr){
-    
+static void shiftRight(Memoire* mem, uint64_t index){
+    if (mem->size == mem->sizeAllocatedMemory) {
+        printf("La mémoire alouée est trop petit pour entrer une nouvelle valeur\n");
+        printf("(TODO faire de l'allocation dynamique)\n");
+        exit(EXIT_FAILURE);
+    }
+    if (mem->sizeAllocatedMemory == 0) {
+        return;
+    }
+    for (uint64_t i = mem->sizeAllocatedMemory; i > index; i--) {
+        mem->tabCorrespondance[i] = mem->tabCorrespondance[i-1];
+    }
+    mem->tabCorrespondance[index] = newCase_mem();
+    mem->sizeAllocatedMemory++;
 }
 
-static void shiftRight(Memoire* mem, uint64_t index){
-    
+static uint64_t insertCase(Memoire* mem, uint64_t virtualAddr){
+    uint64_t inf = 0;
+    uint64_t sup = mem->sizeAllocatedMemory;
+    while (sup-inf > 0) {
+        uint64_t milieu = (sup + inf)/2;
+        if (mem->tabCorrespondance[milieu]->virtualAddr == virtualAddr) {
+            return milieu;
+        }
+        if (milieu > virtualAddr) {
+            sup = milieu;
+        } else {
+            inf = milieu + 1;
+        }
+    }
+    shiftRight(mem, inf); // inf == sup
+    return inf;
 }
 
 static uint64_t initSegment(Memoire* mem, uint64_t virtualAddr, int taille){
     uint64_t i = getByteIndex(mem, virtualAddr);
     if (i == -1) {
-        
-        return ;
+        i = insertCase(mem, virtualAddr);
+        for (int j = 0; j<taille; j++) {
+            if (mem->tabCorrespondance[i+j]->virtualAddr != virtualAddr + j) {
+                shiftRight(mem, i+j);
+                mem->tabCorrespondance[i+j]->virtualAddr = virtualAddr + j;
+//                mem->tabCorrespondance[i+j]->val = 0;
+//                mem->tabCorrespondance[i+j]->classe = CLASSE_NON_DEFINIE;
+            }
+        }
+        return i;
     }
     int* classe = getSegClass(mem, virtualAddr, taille);
     if (classe[0] == CLASSE_NON_DEFINIE) {
+        
+        /* travail à faire ici */
         
         return i;
     }
