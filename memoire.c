@@ -77,7 +77,7 @@ static uint8_t testDrapeau(int typeErreur, int erreur){
 int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
     uint64_t i = getByteIndex(mem, virtualAddr);
     if (i==-1) {
-        printf("l'élément %llu est introuvable\n", virtualAddr);
+        printf("l'élément 0x%llx est introuvable\n", virtualAddr);
         exit(EXIT_FAILURE);
     }
     int* res = calloc(2, sizeof(int));
@@ -109,7 +109,7 @@ uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille){
     }
     int* classe = getSegClass(mem, virtualAddr, taille);
     if (classe[0] == CLASSE_NON_DEFINIE) {
-        printf("La valeur de la case %llu pour la taille %d est indéterminée\n", virtualAddr, taille);
+        printf("La valeur de la case 0x%llx pour la taille %d est indéterminée\n", virtualAddr, taille);
         exit(EXIT_FAILURE);
     }
     free(classe);
@@ -191,7 +191,7 @@ uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val)
 void afficheMemoire(Memoire* mem){
     printf("[");
     for (uint64_t i = 0; i<mem->sizeAllocatedMemory; i++) {
-        printf("[%llx, %x], ", mem->tabCorrespondance[i]->virtualAddr,
+        printf("[0x%llx, %x], ", mem->tabCorrespondance[i]->virtualAddr,
                mem->tabCorrespondance[i]->val);
     }
     printf("]\n");
