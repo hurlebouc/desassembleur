@@ -62,6 +62,10 @@
             argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/mac/"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "cfg"
+            isEnabled = "NO">
+         </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>

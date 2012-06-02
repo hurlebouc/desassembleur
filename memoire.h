@@ -27,7 +27,7 @@ typedef struct _case_mem{
 typedef  struct _memoire {
     uint64_t size;
     uint64_t sizeAllocatedMemory;
-    case_mem** tabCorrespondance;
+    case_mem** tabBytes;
 }Memoire;
 
 typedef struct _segment{
@@ -55,8 +55,7 @@ uint64_t getSegVal(Segment seg);
 
 /**
  * Cette fonction donne la classe de la valeur souhaité à partir de l'adresse 
- * virtualAddr sur une longueur taille. On supposera que l'adresse existe dans 
- * la mémoire.
+ * virtualAddr sur une longueur taille.
  *
  * @param mem mémoire sur laquelle on travaille
  * @param virtualAddr adresse souhaitée dans le mémoire

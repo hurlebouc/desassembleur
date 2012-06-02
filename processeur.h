@@ -184,18 +184,18 @@ extern "C" {
                        */
     }Processeur;
     /**
-     * Crée et renvoi un nouveau procésseur virtuel
-     * @return Processeur renvoi un procésseur non initialiser
+     * Crée et renvoi un nouveau processeur
+     * @return Processeur renvoi un processeur non initialisé
      */
     Processeur* newProcesseur(uint64_t MemorySize);
     /**
-     * Crée une copie d'un processeur virtuel
+     * Crée une copie d'un processeur
      * @param[in] Processeur processeur à copier
      * @return le processeur copié
      */
     Processeur* newProcesseurCopy(const Processeur*);
     /**
-     * Efface un processeur virtuel de la mémoire
+     * Efface un processeur de la mémoire
      * @param[in] proc
      */
     void terminateProcesseur(Processeur* proc);

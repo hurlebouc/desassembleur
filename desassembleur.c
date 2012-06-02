@@ -21,7 +21,7 @@ Desasembleur* newDesassembleur(Desasembleur* desas){
     
     if (desas == NULL) {
         desas = malloc(sizeof(Desasembleur));
-        desas->disasm = malloc(sizeof(DISASM));;
+        desas->disasm = malloc(sizeof(DISASM));
         desas->proc = newProcesseur(TAILLE_MEMOIRE);
     }
     /* ============================= met tous les champs à zéro (important !)*/

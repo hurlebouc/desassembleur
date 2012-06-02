@@ -165,6 +165,7 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_FS);
     terminateRegistre(_GS);
     terminateLinkedList(proc->stack);
+    terminateMemoire(proc->mem);
     free(proc);
 }
 
@@ -209,13 +210,24 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         }
     }
     
-	if (p1->stack != PILE_NON_DEFINIE && 
-        (p2->stack == PILE_NON_DEFINIE ||
-         compare(p1->stack, p2->stack) != 0)) {
-            sprintf(temp, "non inclus par pile\n");
-            pushlog(fichierlog, temp);
-            return NON_INCLUS;
+    Memoire* m1 = p1->mem;
+    Memoire* m2 = p2->mem;
+    for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
+        uint64_t virtualAddr = m1->tabBytes[i]->virtualAddr;
+        if (m1->tabBytes[i]->classe != CLASSE_NON_DEFINIE &&
+            (getSegClass(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
+             m1->tabBytes[i]->val != m2->tabBytes[2]->val)) {
+            
         }
+    }
+//    
+//	if (p1->stack != PILE_NON_DEFINIE && 
+//        (p2->stack == PILE_NON_DEFINIE ||
+//         compare(p1->stack, p2->stack) != 0)) {
+//            sprintf(temp, "non inclus par pile\n");
+//            pushlog(fichierlog, temp);
+//            return NON_INCLUS;
+//        }
 	return res;
 }
 
