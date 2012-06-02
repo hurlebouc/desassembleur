@@ -15,18 +15,18 @@ extern char* ROOT;
 
 void mem_recc(void){
     Memoire* mem = newMemoire(1000);
-    printf("depassement : %llx\n", setSegVal(mem, 0x19843, 8, 0x394451928374));
+    printf("depassement : %llx\n", setSegVal(seg(mem, 0x19843, 8), 0x394451928374));
     afficheMemoire(mem);
-    printf("val seg : %llx\n", getSegVal(mem, 0x19846, 3));
+    printf("val seg : %llx\n", getSegVal(seg(mem, 0x19846, 3)));
     mem->tabCorrespondance[4]->classe = CLASSE_NON_DEFINIE;
-    printf("depassement : %llx\n", setSegVal(mem, 0x19847, 6, 0x2348ef3374));
+    printf("depassement : %llx\n", setSegVal(seg(mem, 0x19847, 6), 0x2348ef3374));
     afficheMemoire(mem);
-    printf("val seg : %llx\n", getSegVal(mem, 0x19846, 3));
-    printf("depassement : %llx\n", setSegVal(mem, 0x200000, 6, 0x2348ef3374));
+    printf("val seg : %llx\n", getSegVal(seg(mem, 0x19846, 3)));
+    printf("depassement : %llx\n", setSegVal(seg(mem, 0x200000, 6), 0x2348ef3374));
     afficheMemoire(mem);
-    printf("val seg : %llx\n", setSegVal(mem, 0x1984b, 5, 0xcaca));
+    printf("val seg : %llx\n", setSegVal(seg(mem, 0x1984b, 5), 0xcaca));
     afficheMemoire(mem);
-    printf("val seg : %llx\n", getSegVal(mem, 0x1984b, 5));
+    printf("val seg : %llx\n", getSegVal(seg(mem, 0x1984b, 5)));
     CU_ASSERT_EQUAL(1, 1);
 }
 void mem_entropie(void){

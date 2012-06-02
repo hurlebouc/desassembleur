@@ -30,8 +30,16 @@ typedef  struct _memoire {
     case_mem** tabCorrespondance;
 }Memoire;
 
+typedef struct _segment{
+    Memoire* mem;
+    uint64_t virtualAddr;
+    uint8_t taille;
+}Segment;
+
 Memoire* newMemoire(uint64_t tailleMax);
 void terminateMemoire(Memoire* mem);
+
+Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
 
 /**
  * Ne peut marcher que si la classe est définie.
@@ -39,7 +47,7 @@ void terminateMemoire(Memoire* mem);
  * faibles et byte++ donne les suivants).
  */
 
-uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille);
+uint64_t getSegVal(Segment seg);
 
 /**
  * Cette fonction donne la classe de la valeur souhaité à partir de l'adresse 
@@ -52,7 +60,7 @@ uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille);
  * @return un tableau de taille 2 dont le premier élément est la classe, 
  *          le deuxième est toujours nul en cas de case déterminé
  */
-int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille);
+int* getSegClass(Segment seg);
 
 /**
  * Cette fonction assigne une dans la mémore à l'adresse virtualAddr sur une
@@ -64,7 +72,7 @@ int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille);
  * @param val valeur à écrire
  * @return partie haute de val qui n'a pas été écrite par manque de place
  */
-uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val);
+uint64_t setSegVal(Segment seg, uint64_t val);
 
 void afficheMemoire(Memoire* mem);
 

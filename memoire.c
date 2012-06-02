@@ -48,11 +48,20 @@ void terminateMemoire(Memoire* mem){
     free(mem->tabCorrespondance);
     free(mem);
 }
+
+Segment seg(Memoire* mem, uint64_t virtualAddr, int taille){
+    Segment seg;
+    seg.mem = mem;
+    seg.taille = taille;
+    seg.virtualAddr = virtualAddr;
+    return seg;
+}
+
 /**
  * Cette fonction cherche l'index de virtuAddr dans le tableau des 
  * correspondances (qui doit être trié par ordre croissant des virtualAddr).
  */
-static uint64_t getByteIndex(Memoire* mem, uint64_t virtualAddr){
+static uint64_t getByteIndex(const Memoire* mem, uint64_t virtualAddr){
     uint64_t inf = 0;
     uint64_t sup = mem->sizeAllocatedMemory;
     while (sup-inf > 0) {
@@ -74,7 +83,10 @@ static uint8_t testDrapeau(int typeErreur, int erreur){
     return (erreur & typeErreur) / typeErreur;
 }
 
-int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
+int* getSegClass(Segment seg){
+    const Memoire* mem = seg.mem;
+    const uint64_t virtualAddr = seg.virtualAddr;
+    int taille = seg.taille;
     uint64_t i = getByteIndex(mem, virtualAddr);
     if (i==-1) {
         printf("l'élément 0x%llx est introuvable\n", virtualAddr);
@@ -101,13 +113,16 @@ int* getSegClass(Memoire* mem, uint64_t virtualAddr, int taille){
     return res;
 }
 
-uint64_t getSegVal(Memoire* mem, uint64_t virtualAddr, int taille){
+uint64_t getSegVal(Segment seg){
+    const Memoire* mem = seg.mem;
+    const uint64_t virtualAddr = seg.virtualAddr;
+    const int taille = seg.taille;
     uint64_t i = getByteIndex(mem, virtualAddr);
     if (i==-1) {
         printf("l'élément %llu est introuvable\n", virtualAddr);
         exit(EXIT_FAILURE);
     }
-    int* classe = getSegClass(mem, virtualAddr, taille);
+    int* classe = getSegClass(seg);
     if (classe[0] == CLASSE_NON_DEFINIE) {
         printf("La valeur de la case 0x%llx pour la taille %d est indéterminée\n", virtualAddr, taille);
         exit(EXIT_FAILURE);
@@ -176,7 +191,10 @@ static uint64_t initSegment(Memoire* mem, uint64_t virtualAddr, int taille){
     return i;
 }
 
-uint64_t setSegVal(Memoire* mem, uint64_t virtualAddr, int taille, uint64_t val){
+uint64_t setSegVal(Segment seg, uint64_t val){
+    Memoire* mem = seg.mem;
+    const uint64_t virtualAddr = seg.virtualAddr;
+    const int taille = seg.taille;
     uint64_t i = initSegment(mem, virtualAddr, taille);
     uint64_t p = 1;
     for (int j = 0; j < taille; j++) {

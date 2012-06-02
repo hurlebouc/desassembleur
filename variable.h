@@ -20,9 +20,11 @@ enum TypeVariable {
 typedef struct _variable{
     uint8_t type;
     Registre* reg;
-    Memoire* mem;
+    Segment seg;
 }Variable;
 
 
+
+uint64_t getVarVal(Variable var);
 
 #endif
