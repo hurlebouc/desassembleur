@@ -267,9 +267,19 @@ void inter(Processeur* p1, const Processeur* p2){
         int f1 = p1->tabFlags[i];
         int f2 = p2->tabFlags[i];
         if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {
-//            printf("passage de f1 de %d à %d\n", f1, FLAG_NON_DEFINI);
             p1->tabFlags[i] = FLAG_NON_DEFINI;
         }
+    }
+    
+    Memoire* m1 = p1->mem;
+    Memoire* m2 = p2->mem;
+    for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
+        uint64_t virtualAddr = m1->tabBytes[i]->virtualAddr;
+        if (m1->tabBytes[i]->classe != CLASSE_NON_DEFINIE &&
+            (getSegClass(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
+             m1->tabBytes[i]->val != getSegVal(seg(m2, virtualAddr, 1)))) {
+                m1->tabBytes[i]->classe = CLASSE_NON_DEFINIE;
+            }
     }
     
     if (p1->stack != PILE_NON_DEFINIE && 
