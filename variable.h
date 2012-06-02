@@ -8,6 +8,20 @@
 
 #ifndef desassembleur_variable_h
 #define desassembleur_variable_h
+#include "stdint.h"
+#include "registre.h"
+#include "memoire.h"
+
+enum TypeVariable {
+    reg_type,
+    mem_type,
+    };
+
+typedef struct _variable{
+    uint8_t type;
+    Registre* reg;
+    Memoire* mem;
+}Variable;
 
 
 

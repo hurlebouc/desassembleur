@@ -33,7 +33,7 @@ static int sf_aux(Registre* reg){
         return FLAG_NON_DEFINI;
     }
     
-    uint64_t n = getValeur(reg);
+    uint64_t n = getRegVal(reg);
     int t = reg->taille;
     if (getbits(n, t) == 1) {
 //        return 1;
@@ -50,7 +50,7 @@ static int pf_aux(Registre* reg){
         return FLAG_NON_DEFINI;
     }
     
-    uint8_t weakbits = getValeur(reg);
+    uint8_t weakbits = getRegVal(reg);
     int nbr_up = nbrup(weakbits);
     if (1 - (nbr_up % 2) == 1) {
         return FLAG_HAUT;
@@ -67,7 +67,7 @@ static int zf_aux(Registre* a, Registre* b){
         return FLAG_NON_DEFINI;
     }
     
-    if (getValeur(a) == getValeur(b)) {
+    if (getRegVal(a) == getRegVal(b)) {
 //        return 1;
         return FLAG_HAUT;
     } else {

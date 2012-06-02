@@ -66,7 +66,7 @@ extern "C" {
      * @param[in] reg Le registre dont on veut calculer la valeur
      * @return La valeur stocké dans le registre
      */
-    uint64_t getValeur(const Registre* reg);
+    uint64_t getRegVal(const Registre* reg);
     
     /**
      * Le paramètre n est trop petit : il faut utiliser un type plus grand
@@ -78,13 +78,13 @@ extern "C" {
      * @param[in] n Valeur à stocker
      * @return Un nombre différent de 0 si le registre est trop petit pour contenir la valeur
      */
-    uint64_t setValeur(Registre* reg, uint64_t n); 
+    uint64_t setRegVal(Registre* reg, uint64_t n); 
     /**
      * Recopie la valeur d'un registre dans un autre
      * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
      * @param[in] src Registre dont on extrait la valeur à copier
      */
-    void copieVal(Registre* dest, Registre* src);
+    void copieRegVal(Registre* dest, Registre* src);
     
     /**
      * Ajout à la valeur d'un registre
@@ -92,10 +92,8 @@ extern "C" {
      * @param[in] len Valeur à ajouter
      */
     void incr(Registre* reg, int len);
-    
-    /* ----------------------------- PROPAGATION --------------------------- */
-    
-    int getClasse(Registre*);
+        
+    int getRegClass(Registre*);
     
 #ifdef __cplusplus
 }

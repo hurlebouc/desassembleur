@@ -14,28 +14,28 @@ static void initialiserFlags(Processeur* proc,uint64_t rflags){
 }
 
 static void initialiseRegistre(Processeur* proc, struct x86_thread_state state){
-    setValeur(_CS, state.uts.ts64.__cs);
-    setValeur(_FS, state.uts.ts64.__fs);
-    setValeur(_GS, state.uts.ts64.__gs);
-    setValeur(_R10, state.uts.ts64.__r10);
-    setValeur(_R11, state.uts.ts64.__r11);
-    setValeur(_R12, state.uts.ts64.__r12);
-    setValeur(_R13, state.uts.ts64.__r13);
-    setValeur(_R14, state.uts.ts64.__r14);
-    setValeur(_R15, state.uts.ts64.__r15);
-    setValeur(_R8, state.uts.ts64.__r8);
-    setValeur(_R9, state.uts.ts64.__r9);
-    setValeur(_RAX, state.uts.ts64.__rax);
-    setValeur(_RBP, state.uts.ts64.__rbp);
-    setValeur(_RBX, state.uts.ts64.__rbx);
-    setValeur(_RCX, state.uts.ts64.__rcx);
-    setValeur(_RDI, state.uts.ts64.__rdi);
-    setValeur(_RDX, state.uts.ts64.__rdx);
-    setValeur(_RFLAGS, state.uts.ts64.__rflags);
-    setValeur(_RIP, state.uts.ts64.__rip);
-    setValeur(_RSI, state.uts.ts64.__rsi);
-    setValeur(_RSP, state.uts.ts64.__rsp);
-    initialiserFlags(proc, getValeur(_RFLAGS));
+    setRegVal(_CS, state.uts.ts64.__cs);
+    setRegVal(_FS, state.uts.ts64.__fs);
+    setRegVal(_GS, state.uts.ts64.__gs);
+    setRegVal(_R10, state.uts.ts64.__r10);
+    setRegVal(_R11, state.uts.ts64.__r11);
+    setRegVal(_R12, state.uts.ts64.__r12);
+    setRegVal(_R13, state.uts.ts64.__r13);
+    setRegVal(_R14, state.uts.ts64.__r14);
+    setRegVal(_R15, state.uts.ts64.__r15);
+    setRegVal(_R8, state.uts.ts64.__r8);
+    setRegVal(_R9, state.uts.ts64.__r9);
+    setRegVal(_RAX, state.uts.ts64.__rax);
+    setRegVal(_RBP, state.uts.ts64.__rbp);
+    setRegVal(_RBX, state.uts.ts64.__rbx);
+    setRegVal(_RCX, state.uts.ts64.__rcx);
+    setRegVal(_RDI, state.uts.ts64.__rdi);
+    setRegVal(_RDX, state.uts.ts64.__rdx);
+    setRegVal(_RFLAGS, state.uts.ts64.__rflags);
+    setRegVal(_RIP, state.uts.ts64.__rip);
+    setRegVal(_RSI, state.uts.ts64.__rsi);
+    setRegVal(_RSP, state.uts.ts64.__rsp);
+    initialiserFlags(proc, getRegVal(_RFLAGS));
 }
 
 void loaderMach(Desasembleur* desas, Fichier* fichier) {

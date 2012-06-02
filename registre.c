@@ -49,14 +49,14 @@ void terminateRegistre(Registre* reg){
     free(reg);
 }
 
-uint64_t getValeur(const Registre* reg){
+uint64_t getRegVal(const Registre* reg){
     if (reg->filsl == NULL) {
         return reg->valeur;
     }
-    return getValeur(reg->filsl) + getValeur(reg->filsh)*pow(2, reg->filsl->taille);
+    return getRegVal(reg->filsl) + getRegVal(reg->filsh)*pow(2, reg->filsl->taille);
 }
 
-uint64_t setValeur(Registre* reg, uint64_t n){
+uint64_t setRegVal(Registre* reg, uint64_t n){
     if (reg->classe == CLASSE_NON_DEFINIE) {
         reg->classe = CLASSE_DEFINI;
     }
@@ -73,19 +73,19 @@ uint64_t setValeur(Registre* reg, uint64_t n){
         uint64_t pl = pow(2, reg->filsl->taille);
         uint64_t restel = reste % pl;
         uint64_t quotienth = reste / pl;
-        setValeur(reg->filsl,restel);
-        setValeur(reg->filsh,quotienth);
+        setRegVal(reg->filsl,restel);
+        setRegVal(reg->filsh,quotienth);
     } else {
         reg->valeur = reste;
     }
     return n - reste; // différent de 0 lorsque ne peut pas être stocké dans le registre
 }
 
-int getClasse(Registre* reg){
+int getRegClass(Registre* reg){
     if (reg == NULL) {
         return CLASSE_DEFINI;
     }
-    int n = getClasse(reg->filsh)*getClasse(reg->filsl)*reg->classe;
+    int n = getRegClass(reg->filsh)*getRegClass(reg->filsl)*reg->classe;
     if (n == 0) {
         return 0;
     } else {
@@ -93,10 +93,10 @@ int getClasse(Registre* reg){
     }
 }
 
-void copieVal(Registre* dest, Registre* src){
-    setValeur(dest, getValeur(src));
+void copieRegVal(Registre* dest, Registre* src){
+    setRegVal(dest, getRegVal(src));
 }
 
 void incr(Registre* reg, int n){
-    setValeur(reg, getValeur(reg) + n);
+    setRegVal(reg, getRegVal(reg) + n);
 }

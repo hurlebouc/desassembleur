@@ -73,7 +73,7 @@ static unsigned long tryDeterminise(Graphe* i){
     Registre* reg = getRegistre(disasm->Argument1, proc);
     free(disasm);
     if (reg->classe != CLASSE_NON_DEFINIE) {
-        return getValeur(reg);
+        return getRegVal(reg);
     }
     return 0;
 }

@@ -54,10 +54,10 @@ static Registre* f_and(Registre* destination, Registre* masque, Registre* stub,P
     }
     
     incr(_RIP, lenInstr);
-    uint64_t dest = getValeur(destination);
-    uint64_t mask = getValeur(masque);
+    uint64_t dest = getRegVal(destination);
+    uint64_t mask = getRegVal(masque);
     dest &= mask;
-    setValeur(destination, dest);
+    setRegVal(destination, dest);
     return destination;
 }
 
@@ -75,8 +75,8 @@ static int of_add(const Registre* a, const Registre* b, const Registre* stub){
         return FLAG_NON_DEFINI;
     }
     
-    uint64_t aa = getValeur(a);
-    uint64_t bb = getValeur(b);
+    uint64_t aa = getRegVal(a);
+    uint64_t bb = getRegVal(b);
     uint64_t c = aa+bb;
     uint64_t p = pow(2, a->taille);
     if (p!= 0) {
@@ -98,8 +98,8 @@ static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
         return FLAG_NON_DEFINI;
     }
     
-    uint64_t aa = getValeur(a);
-    uint64_t bb = getValeur(b);
+    uint64_t aa = getRegVal(a);
+    uint64_t bb = getRegVal(b);
     uint64_t c = aa+bb;
     uint64_t p = pow(2, a->taille);
     if (p!= 0) {
@@ -121,8 +121,8 @@ static int af_add(const Registre* a, const Registre* b, const Registre* stub){
         return FLAG_NON_DEFINI;
     }
     
-    uint64_t aa = getValeur(a) % 8; // donne les 3 bits les plus faibles
-    uint64_t bb = getValeur(b) % 8;
+    uint64_t aa = getRegVal(a) % 8; // donne les 3 bits les plus faibles
+    uint64_t bb = getRegVal(b) % 8;
     if ((aa + bb) / 8 == 1) {
         return FLAG_HAUT;
     } else {
@@ -139,10 +139,10 @@ static Registre* f_add(Registre* destination, Registre* masque, Registre* stub ,
     }
     
     incr(_RIP, lenInstr);
-    uint64_t a = getValeur(destination);
-    uint64_t b = getValeur(masque);
+    uint64_t a = getRegVal(destination);
+    uint64_t b = getRegVal(masque);
     uint64_t c = a+b;
-    setValeur(destination, c);
+    setRegVal(destination, c);
     return destination;
 }
 
@@ -174,8 +174,8 @@ static Registre* f_mov(Registre* gauche, Registre* droite, Registre* stub, Proce
     }
     
     incr(_RIP, lenInstr);
-    uint64_t a = getValeur(gauche);
-    setValeur(droite, a);
+    uint64_t a = getRegVal(gauche);
+    setRegVal(droite, a);
     return droite;
     /*
      * Que se passe t'il si les deux registres n'ont pas la même taille ?

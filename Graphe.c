@@ -556,11 +556,11 @@ Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
     switch (hi) {
         case CONSTANT_TYPE + RELATIVE_: //faux
             r = newRegistreFeuille(64);
-            setValeur(r, disasm->Instruction.Immediat);
+            setRegVal(r, disasm->Instruction.Immediat);
             break;
         case CONSTANT_TYPE + ABSOLUTE_:
             r = newRegistreFeuille(64);
-            setValeur(r, disasm->Instruction.Immediat);
+            setRegVal(r, disasm->Instruction.Immediat);
             break;
         default:
             printf("l'argument n'est pas une constante\n");
