@@ -32,3 +32,11 @@ uint64_t setVarVal(Variable var, uint64_t val){
         return setSegVal(var.seg, val);
     }
 }
+
+int getVarTaille(Variable var){
+    if (var.type == reg_type) {
+        return var.reg->taille;
+    } else {
+        return var.seg.taille;
+    }
+}

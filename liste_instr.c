@@ -31,24 +31,24 @@ static int getbits(uint64_t n, int p){
 
 /* ----------------------- AND -----------------------*/
 
-static int of_and(const Registre* a, const Registre* b, const Registre* c){
+static int of_and(const Variable a, const Variable b, const Variable c){
 //    return 0;
     return FLAG_BAS;
 }
 
-static int cf_and(const Registre* a, const Registre* b, const Registre* c){
+static int cf_and(const Variable a, const Variable b, const Variable c){
 //    return 0;
     return FLAG_BAS;
 }
 
-static int af_and(const Registre* a, const Registre* b, const Registre* c){
+static int af_and(const Variable a, const Variable b, const Variable c){
 //    return -1;
     return FLAG_UNMODIFIED;
 }
 
-static Registre* f_and(Registre* destination, Registre* masque, Registre* stub,Processeur* proc, int lenInstr){
+static Variable f_and(Variable destination, Variable masque, Variable stub,Processeur* proc, int lenInstr){
     
-    if (masque->classe == CLASSE_NON_DEFINIE) {
+    if (getVarClass(masque) == CLASSE_NON_DEFINIE) {
         destination->classe = CLASSE_NON_DEFINIE;
         return destination;
     }

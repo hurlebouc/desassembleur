@@ -27,14 +27,15 @@ static int getbits(uint64_t n, int p){
     return  n % 2;
 }
 
-static int sf_aux(Registre* reg){
+static int sf_aux(Variable var){
     
-    if (reg->classe == CLASSE_NON_DEFINIE) {
+    if (getVarClass(var) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
-    uint64_t n = getRegVal(reg);
-    int t = reg->taille;
+    uint64_t n = getVarVal(var);
+//    int t = var->taille;
+    int t = getVarTaille(var);
     if (getbits(n, t) == 1) {
 //        return 1;
         return FLAG_HAUT;
@@ -44,30 +45,29 @@ static int sf_aux(Registre* reg){
     }
 }
 
-static int pf_aux(Registre* reg){
+static int pf_aux(Variable var){
     
-    if (reg->classe == CLASSE_NON_DEFINIE) {
+    if (getVarClass(var) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
-    uint8_t weakbits = getRegVal(reg);
+    uint8_t weakbits = getVarVal(var);
     int nbr_up = nbrup(weakbits);
     if (1 - (nbr_up % 2) == 1) {
         return FLAG_HAUT;
     } else {
         return FLAG_BAS;
     }
-//    return 1 - (nbr_up % 2);
 }
 
-static int zf_aux(Registre* a, Registre* b){
+static int zf_aux(Variable a, Variable b){
     
-    if (a->classe == CLASSE_NON_DEFINIE ||
-        b->classe == CLASSE_NON_DEFINIE) {
+    if (getVarClass(a) == CLASSE_NON_DEFINIE ||
+        getVarClass(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
-    if (getRegVal(a) == getRegVal(b)) {
+    if (getVarVal(a) == getVarVal(b)) {
 //        return 1;
         return FLAG_HAUT;
     } else {
@@ -93,7 +93,7 @@ static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*,
  * instruction afin d'obliger leur utilisation dans un ordre pré-établi.
  */
 
-Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, int lenInstr, Processeur* proc){
+Variable do_instr(Instruction* instr, Variable a, Variable b, Variable c, int lenInstr, Processeur* proc){
     
     if (instr->zf_aux == UNLOCKED) {
         _ZF = zf_aux(a, b);
@@ -114,7 +114,7 @@ Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, in
         _OF = of;
     }
     
-    Registre* _res = instr->f(a, b, c, proc, lenInstr);
+    Variable _res = instr->f(a, b, c, proc, lenInstr);
     
     if (instr->sf_aux == UNLOCKED) {
         _SF = sf_aux(_res);
@@ -128,21 +128,21 @@ Registre* do_instr(Instruction* instr, Registre* a, Registre* b, Registre* c, in
 }
 
 Instruction* newInstruction(
-                            int of(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
-                            int cf(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
-                            int af(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
+                            int of(const Variable, 
+                                   const Variable,
+                                   const Variable),
+                            int cf(const Variable, 
+                                   const Variable,
+                                   const Variable),
+                            int af(const Variable, 
+                                   const Variable,
+                                   const Variable),
                             int zf,
                             int pf,
                             int sf, 
-                            Registre* f(Registre*, 
-                                        Registre*, 
-                                        Registre*,
+                            Variable f(Variable, 
+                                        Variable, 
+                                        Variable,
                                         Processeur*, int)
                             ){
     Instruction* res = malloc(sizeof(Instruction));

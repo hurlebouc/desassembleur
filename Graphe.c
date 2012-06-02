@@ -585,7 +585,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     INSTRTYPE instr = disasm->Instruction;
     
     Instruction* instruction = NULL;
-    Registre* reg[] = {NULL, NULL, NULL};
+    Variable var[] = {0,0,0};
     
     /* initialisation de l'instruction */
     switch (instr.Opcode) {
@@ -617,22 +617,25 @@ static void setPool(const Graphe* g, Processeur* newPool) {
         ARGTYPE arg = argument[i];
         
         uint32_t hiword = arg.ArgType & 0xffff0000;
-        Registre* res = NULL;
+        Variable res;
         
         switch (hiword & 0xf0000000) {
             case NO_ARGUMENT:
                 ;
                 break;
             case REGISTER_TYPE:
-                res = getRegistre(arg, newPool);
+                res.type = reg_type;
+                res.reg = getRegistre(arg, newPool);
                 break;
                 
             case CONSTANT_TYPE:
-                res = getConstant(arg, disasm);
+                res.type = reg_type;
+                res.reg = getConstant(arg, disasm);
                 aSuppr[i] = 1;
                 break;
                 
             case MEMORY_TYPE:
+                res.type = seg_type;
                 ;
                 break;
                 
@@ -640,15 +643,15 @@ static void setPool(const Graphe* g, Processeur* newPool) {
                 break;
         }
         
-        reg[i] = res;
+        var[i] = res;
     }
     if (instruction != NULL) {
-        do_instr(instruction, reg[0], reg[1], reg[2], len, newPool);
+        do_instr(instruction, var[0], var[1], var[2], len, newPool);
         terminateInstruction(instruction);
     }
     for (int i = 0; i<3; i++) {
         if (aSuppr[i]) {
-            terminateRegistre(reg[i]);
+            terminateRegistre(var[i].reg);
         }
     }
     

@@ -15,7 +15,7 @@
 #ifndef desassembleur_instruction_h
 #define desassembleur_instruction_h
 
-#include "registre.h"
+#include "variable.h"
 #include "processeur.h"
 
 enum Permission {
@@ -37,17 +37,17 @@ typedef struct _instruction{
      * @param c
      * @return La méthode renvoie un élément de armement_flag
      */
-    int(* of_aux)(const Registre*a, const Registre*b, const Registre*c);
+    int(* of_aux)(const Variable a, const Variable b, const Variable c);
     
     /**
      * Cette méthode indique comment doit être réglé le drapeau CF
      */
-    int(* cf_aux)(const Registre*a, const Registre*b, const Registre*c);
+    int(* cf_aux)(const Variable a, const Variable b, const Variable c);
     
     /**
      * Cette méthode indique comment doit être réglé le drapeau CF
      */
-    int(* af_aux)(const Registre*a, const Registre*b, const Registre*c);
+    int(* af_aux)(const Variable a, const Variable b, const Variable c);
     int zf_aux;         /*!<UNLOKED si l'instruction modifie ZF*/
     int pf_aux;         /*!<UNLOKED si l'instruction modifie PF*/
     int sf_aux;         /*!<UNLOKED si l'instruction modifie SF*/
@@ -57,11 +57,8 @@ typedef struct _instruction{
      * ne modifie par le registre de flags
      * par contre il doit modifier le registre IP.
      */
-    Registre* (*f)(Registre*a, Registre*b, Registre*c, Processeur*p, int len); 
+    Variable (*f)(Variable a, Variable b, Variable c, Processeur*p, int len); 
     
-                    // f renvoie un pointeur sur le registre qu'il a modifié 
-                    // ne modifie par le registre de flags
-                    // par contre il doit modifier le registre IP.
 }Instruction;
 
         /**
@@ -75,7 +72,7 @@ typedef struct _instruction{
          * @param Taille de l'instruction en octet
          * @param Processeur virtuel
          */
-Registre* do_instr(Instruction*, Registre*, Registre*,Registre*,int, Processeur*);
+Variable do_instr(Instruction*, Variable, Variable, Variable, int, Processeur*);
 
 /**
  * Crée une instruction
@@ -91,21 +88,21 @@ Registre* do_instr(Instruction*, Registre*, Registre*,Registre*,int, Processeur*
  * @param sf 1 si le flag de signe peut être modifié, 0 sinon
  */
 Instruction* newInstruction(
-                            int of(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
-                            int cf(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
-                            int af(const Registre*, 
-                                   const Registre*,
-                                   const Registre*),
+                            int of(const Variable, 
+                                   const Variable,
+                                   const Variable),
+                            int cf(const Variable, 
+                                   const Variable,
+                                   const Variable),
+                            int af(const Variable, 
+                                   const Variable,
+                                   const Variable),
                             int zf,
                             int pf,
                             int sf, 
-                            Registre* f(Registre*, 
-                                        Registre*, 
-                                        Registre*,
+                            Variable f(Variable, 
+                                        Variable, 
+                                        Variable,
                                         Processeur*, int)
                             );
 

@@ -31,5 +31,7 @@ int getVarClass(Variable);
 
 uint64_t setVarVal(Variable, uint64_t);
 
+int getVarTaille(Variable);
+
 
 #endif
