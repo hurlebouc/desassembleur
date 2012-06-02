@@ -34,15 +34,18 @@ void optpool_recc(void){
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
-    terminateGraphe(g);
-    terminateDesassembleur(desas);    
+       
     
     long diff = fequals(log, modele);
     if (diff == -1) {
         removeFichier(log);
     } else {
         renameFile(log, "recc_opt.log");
+        enregistreGraphe(g, newFichier("recc.dot"));
     }
+    
+    terminateGraphe(g);
+    terminateDesassembleur(desas); 
     
     terminateFichier(log);
     terminateFichier(modele);
@@ -77,6 +80,7 @@ void optpool_entropie(void){
         removeFichier(log);
     } else {
         renameFile(log, "entropie_opt.log");
+        enregistreGraphe(g, newFichier("entropie.dot"));
     }
     
     terminateFichier(log);
@@ -112,6 +116,7 @@ void optpool_disas(void){
         removeFichier(log);
     } else {
         renameFile(log, "disas_opt.log");
+        enregistreGraphe(g, newFichier("disas.dot"));
     }
     
     terminateFichier(log);
@@ -147,6 +152,7 @@ void optpool_handbrake(void){
         removeFichier(log);
     } else {
         renameFile(log, "handbrake_opt.log");
+        enregistreGraphe(g, newFichier("handbrake.dot"));
     }
     
     terminateFichier(log);

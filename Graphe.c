@@ -585,7 +585,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     INSTRTYPE instr = disasm->Instruction;
     
     Instruction* instruction = NULL;
-    Variable var[] = {0,0,0};
+    Variable var[3];
     
     /* initialisation de l'instruction */
     switch (instr.Opcode) {

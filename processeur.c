@@ -188,9 +188,9 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
             getRegVal(r1) != getRegVal(r2))) {
             sprintf(temp, "non inclus par registre\n");
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r1 = (%d, %lu)\n", getRegClass(r1), (long) getRegVal(r1));
+            sprintf(temp, "\t r1 : %d = (%d, %lu)\n", i, getRegClass(r1), (long) getRegVal(r1));
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r2 = (%d, %lu)\n", getRegClass(r2), (long) getRegVal(r2));
+            sprintf(temp, "\t r2 : %d = (%d, %lu)\n", i, getRegClass(r2), (long) getRegVal(r2));
             pushlog(fichierlog, temp);
             return NON_INCLUS;
         }

@@ -41,10 +41,10 @@ int getVarTaille(Variable var){
     }
 }
 
-void setVarClass(Variable var, int classe){
+void setVarClassRec(Variable var, int classe){
     if (var.type == reg_type) {
-        setRegClass(var.reg, classe);
+        setRegClassRec(var.reg, classe);
     } else {
-        setSegClass(var.seg, classe);
+        setSegClassRec(var.seg, classe);
     }
 }

@@ -49,7 +49,7 @@ static int af_and(const Variable a, const Variable b, const Variable c){
 static Variable f_and(Variable destination, Variable masque, Variable stub,Processeur* proc, int lenInstr){
     
     if (getVarClass(masque) == CLASSE_NON_DEFINIE) {
-        setVarClass(destination, CLASSE_NON_DEFINIE);
+        setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
     
@@ -132,7 +132,7 @@ static int af_add(const Variable a, const Variable b, const Variable stub){
 static Variable f_add(Variable destination, Variable masque, Variable stub , Processeur* proc, int lenInstr){
     
     if (getVarClass(masque) == CLASSE_NON_DEFINIE) {
-        setVarClass(destination, CLASSE_NON_DEFINIE);
+        setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
     
@@ -167,7 +167,7 @@ static int af_mov(const Variable a, const Variable b, const Variable stub){
 static Variable f_mov(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
     
     if (getVarClass(gauche) == CLASSE_NON_DEFINIE) {
-        setVarClass(droite, CLASSE_NON_DEFINIE);
+        setVarClassRec(droite, CLASSE_NON_DEFINIE);
         return droite;
     }
     
@@ -177,8 +177,9 @@ static Variable f_mov(Variable gauche, Variable droite, Variable stub, Processeu
     return droite;
     /*
      * Que se passe t'il si les deux registres n'ont pas la même taille ?
-     * Dans ce cas, comment se passe une extention d'une valeur (signé, non signé) ?
-     * Si la destinantion est plus petites que la source et qu'il y a overflow, est-ce que le mov modife les registres de flags
+     * Dans ce cas, comment se passe une extention d'une valeur (signé, non 
+     * signé) ? Si la destinantion est plus petites que la source et qu'il y a 
+     * overflow, est-ce que le mov modife les registres de flags
      */
 }
 

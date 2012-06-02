@@ -33,7 +33,7 @@ uint64_t setVarVal(Variable, uint64_t);
 
 int getVarTaille(Variable);
 
-void setVarClass(Variable, int classe);
+void setVarClassRec(Variable, int classe);
 
 
 #endif

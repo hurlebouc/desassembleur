@@ -210,7 +210,7 @@ uint64_t setSegVal(Segment seg, uint64_t val){
     return val*p;
 }
 
-void setSegClass(Segment seg, int classe){
+void setSegClassRec(Segment seg, int classe){
     Memoire* mem = seg.mem;
     const uint64_t virtualAddr = seg.virtualAddr;
     const int taille = seg.taille;

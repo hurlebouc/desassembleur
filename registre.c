@@ -81,13 +81,13 @@ uint64_t setRegVal(Registre* reg, uint64_t n){
     return n - reste; // différent de 0 lorsque ne peut pas être stocké dans le registre
 }
 
-void setRegClass(Registre* reg, int classe){
+void setRegClassRec(Registre* reg, int classe){
     if (reg == NULL) {
         return;
     }
     reg->classe = classe;
-    setRegClass(reg->filsh, classe);
-    setRegClass(reg->filsl, classe);
+    setRegClassRec(reg->filsh, classe);
+    setRegClassRec(reg->filsl, classe);
 }
 
 int getRegClass(Registre* reg){
