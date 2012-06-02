@@ -215,6 +215,52 @@ void afficheMemoire(Memoire* mem){
     printf("]\n");
 }
 
+/* ---------------------------------------------------------------------- *
+ *                          FONCTIONS ANNEXES                             *
+ * ---------------------------------------------------------------------- */
+
+static void copieCaseVal(case_mem* dest, case_mem* src){
+    if (dest == NULL || src == NULL) {
+        printf("Erreur : aucun des paramètres ne doit être NULL");
+        exit(EXIT_FAILURE);
+    }
+    dest->classe = src->classe;
+    dest->val = src->val;
+    dest->virtualAddr = src->virtualAddr;
+}
+
+void copieMemVal(Memoire* dest, Memoire* src){
+    if (dest->size < src->sizeAllocatedMemory) {
+        printf("Erreur : la taille maximale de la destination est insuffisante pour contenir la mémoire alloué de la source.\n");
+        printf("Utilisez copieMemTot() pour faire une copie conforme de la source.\n");
+        exit(EXIT_FAILURE);
+    }
+    uint64_t max;
+    uint64_t min;
+    if (dest->sizeAllocatedMemory < src->sizeAllocatedMemory) {
+        max = src->sizeAllocatedMemory;
+        min = dest->sizeAllocatedMemory;
+    } else {
+        max = dest->sizeAllocatedMemory;
+        min = src->sizeAllocatedMemory;
+    }
+    for (uint64_t i = 0; i < min; i++) {
+        copieCaseVal(dest->tabCorrespondance[i], src->tabCorrespondance[i]);
+    }
+    
+    for (uint64_t i = min; i<max;i++) {
+        if (i >= src->sizeAllocatedMemory) {
+            terminateCaseMem(dest->tabCorrespondance[i]);
+            dest->tabCorrespondance[i] = NULL;
+        } else {
+            dest->tabCorrespondance[i] = newCase_mem();
+            copieCaseVal(dest->tabCorrespondance[i], src->tabCorrespondance[i]);
+        }
+    }
+    dest->sizeAllocatedMemory = src->sizeAllocatedMemory;
+}
+
+
 
 
 

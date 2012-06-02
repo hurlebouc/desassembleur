@@ -115,17 +115,9 @@ Processeur* newProcesseur(void){
         proc->tabFlags[i] = FLAG_NON_DEFINI;
     }
     
-//    _CF     =   FLAG_BAS;
-//    _PF     =   FLAG_BAS;
-//    _AF     =   FLAG_BAS;
-//    _ZF     =   FLAG_BAS;
-//    _SF     =   FLAG_BAS;
-//    _TF     =   FLAG_BAS;
-//    _IF     =   FLAG_BAS;
-//    _DF     =   FLAG_BAS;
-//    _OF     =   FLAG_BAS;
     
     _STACK  =   newLinkedList();
+    proc->mem = newMemoire(TAILLE_MEMOIRE);
     
     proc->delta = DELTA_BAISSE;
     
@@ -143,6 +135,7 @@ Processeur* newProcesseurCopy(const Processeur* p){
     for (int i = 0; i<NOMBRE_FLAGS; i++) {
         res->tabFlags[i] = res->tabFlags[i];
     }
+    
     return res;
 }
 

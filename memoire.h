@@ -41,6 +41,10 @@ void terminateMemoire(Memoire* mem);
 
 Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
 
+/* ---------------------------------------------------------------------- *
+ *                       FONCTIONS ESSENTIELLES                           *
+ * ---------------------------------------------------------------------- */
+
 /**
  * Ne peut marcher que si la classe est définie.
  * Lecture en little-endian (le premier byte donne les 8 bits de poids les plus 
@@ -73,6 +77,12 @@ int* getSegClass(Segment seg);
  * @return partie haute de val qui n'a pas été écrite par manque de place
  */
 uint64_t setSegVal(Segment seg, uint64_t val);
+
+/* ---------------------------------------------------------------------- *
+ *                          FONCTIONS ANNEXES                             *
+ * ---------------------------------------------------------------------- */
+
+void copieMemVal(Memoire* dest, Memoire* src);
 
 void afficheMemoire(Memoire* mem);
 
