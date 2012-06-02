@@ -53,9 +53,9 @@ typedef struct _instruction{
     int sf_aux;         /*!<UNLOKED si l'instruction modifie SF*/
     
     /**
-     * f renvoie un pointeur sur le registre qu'il
-     * ne modifie par le registre de flags
-     * par contre il doit modifier le registre IP.
+     * f renvoie un pointeur sur la Variable qu'il
+     * ne modifie par la Variable de flags
+     * par contre il doit modifier la Variable IP.
      */
     Variable (*f)(Variable a, Variable b, Variable c, Processeur*p, int len); 
     
@@ -66,9 +66,9 @@ typedef struct _instruction{
          * divers flags. Enregistre le changement d'état
          * dans un processeur virtuel
          * @param Instruction à executer
-         * @param Registe concerné
-         * @param Registre concerné
-         * @param Registre concerné
+         * @param Variable concernée
+         * @param Variable concernée
+         * @param Variable concernée
          * @param Taille de l'instruction en octet
          * @param Processeur virtuel
          */

@@ -78,13 +78,13 @@ static int zf_aux(Variable a, Variable b){
 /**
  * @deprecated
  */
-static int app_aux(int aux(const Registre*, const Registre*, const Registre*), const Registre*a, const Registre*b, const Registre*c){
+static int app_aux(int aux(const Variable, const Variable, const Variable), const Variable a, const Variable b, const Variable c){
     return aux(a,b,c);
 }
 /**
  * @deprecated
  */
-static Registre* app_f(Registre* f(Registre*, Registre*, Registre*, Processeur*, int), Registre*a, Registre*b, Registre*c, Processeur* proc, int lenInstr){
+static Variable app_f(Variable f(Variable, Variable, Variable, Processeur*, int), Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
     return f(a,b,c,proc,lenInstr);
 }
 
