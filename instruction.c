@@ -29,7 +29,7 @@ static int getbits(uint64_t n, int p){
 
 static int sf_aux(Variable var){
     
-    if (getVarClass(var) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(var) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -47,7 +47,7 @@ static int sf_aux(Variable var){
 
 static int pf_aux(Variable var){
     
-    if (getVarClass(var) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(var) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -62,8 +62,8 @@ static int pf_aux(Variable var){
 
 static int zf_aux(Variable a, Variable b){
     
-    if (getVarClass(a) == CLASSE_NON_DEFINIE ||
-        getVarClass(b) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     

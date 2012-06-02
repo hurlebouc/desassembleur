@@ -27,7 +27,7 @@ typedef struct _variable{
 
 uint64_t getVarVal(Variable);
 
-int getVarClass(Variable);
+int getVarClassRec(Variable);
 
 uint64_t setVarVal(Variable, uint64_t);
 

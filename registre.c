@@ -82,24 +82,38 @@ uint64_t setRegVal(Registre* reg, uint64_t n){
 }
 
 void setRegClassRec(Registre* reg, int classe){
-    if (reg == NULL) {
-        return;
+    if (reg->filsh == NULL) { // alors filsl est NULL aussi
+        reg->classe = classe;
+    } else {
+        setRegClassRec(reg->filsh, classe);
+        setRegClassRec(reg->filsl, classe);
     }
-    reg->classe = classe;
-    setRegClassRec(reg->filsh, classe);
-    setRegClassRec(reg->filsl, classe);
+//    if (reg == NULL) {
+//        return;
+//    }
+//    reg->classe = classe;
+//    setRegClassRec(reg->filsh, classe);
+//    setRegClassRec(reg->filsl, classe);
 }
 
-int getRegClass(Registre* reg){
+/*
+ * Cette nouvelle version (révision 263) reconnait plus de chose que la version 
+ * précédente, c'est à dire qu'elle est moins discriminante au sans de la
+ * définiftion ou non d'un registre.
+ */
+
+int getRegClassRec(Registre* reg){
     if (reg == NULL) {
         return CLASSE_DEFINI;
     }
-    int n = getRegClass(reg->filsh)*getRegClass(reg->filsl)*reg->classe;
-    if (n == 0) {
-        return 0;
-    } else {
-        return reg->classe;
+    
+    int ih = getRegClassRec(reg->filsh);
+    int il = getRegClassRec(reg->filsl);
+    
+    if (ih == CLASSE_NON_DEFINIE || il == CLASSE_NON_DEFINIE) {
+        return CLASSE_NON_DEFINIE;
     }
+    return CLASSE_DEFINI;
 }
 
 void copieRegVal(Registre* dest, Registre* src){
@@ -108,4 +122,19 @@ void copieRegVal(Registre* dest, Registre* src){
 
 void incr(Registre* reg, int n){
     setRegVal(reg, getRegVal(reg) + n);
+}
+
+int getRegClassHigher(const Registre* reg){
+    if (reg->filsh == NULL) {
+        return reg->classe;
+    }
+    return getRegClassHigher(reg->filsh);
+}
+
+void setRegClassHigher(Registre* reg, int classe){
+    if (reg->filsh == NULL) {
+        reg->classe = classe;
+    } else {
+        setRegClassHigher(reg->filsh, classe);
+    }
 }

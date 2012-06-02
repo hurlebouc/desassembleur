@@ -48,7 +48,7 @@ static int af_and(const Variable a, const Variable b, const Variable c){
 
 static Variable f_and(Variable destination, Variable masque, Variable stub,Processeur* proc, int lenInstr){
     
-    if (getVarClass(masque) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE) {
         setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
@@ -70,8 +70,8 @@ Instruction* init_and(){
 
 static int of_add(const Variable a, const Variable b, const Variable stub){
     
-    if (getVarClass(a) == CLASSE_NON_DEFINIE ||
-        getVarClass(b) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -93,8 +93,8 @@ static int of_add(const Variable a, const Variable b, const Variable stub){
 
 static int cf_add(const Variable a, const Variable b, const Variable stub){
     
-    if (getVarClass(a) == CLASSE_NON_DEFINIE ||
-        getVarClass(b) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     
@@ -116,8 +116,8 @@ static int cf_add(const Variable a, const Variable b, const Variable stub){
 
 static int af_add(const Variable a, const Variable b, const Variable stub){
     
-    if (getVarClass(a) == CLASSE_NON_DEFINIE ||
-        getVarClass(b) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;
     }
     uint64_t aa = getVarVal(a) % 8; // donne les 3 bits les plus faibles
@@ -131,7 +131,7 @@ static int af_add(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_add(Variable destination, Variable masque, Variable stub , Processeur* proc, int lenInstr){
     
-    if (getVarClass(masque) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE) {
         setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
@@ -166,7 +166,7 @@ static int af_mov(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_mov(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
     
-    if (getVarClass(gauche) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE) {
         setVarClassRec(droite, CLASSE_NON_DEFINIE);
         return droite;
     }

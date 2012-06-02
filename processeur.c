@@ -183,14 +183,14 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
-        if (getRegClass(r1) != CLASSE_NON_DEFINIE && (
-            getRegClass(r2) == CLASSE_NON_DEFINIE ||
+        if (getRegClassRec(r1) != CLASSE_NON_DEFINIE && (
+            getRegClassRec(r2) == CLASSE_NON_DEFINIE ||
             getRegVal(r1) != getRegVal(r2))) {
             sprintf(temp, "non inclus par registre\n");
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r1 : %d = (%d, %lu)\n", i, getRegClass(r1), (long) getRegVal(r1));
+            sprintf(temp, "\t r1 : %d = (%d, %lu)\n", i, getRegClassRec(r1), (long) getRegVal(r1));
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r2 : %d = (%d, %lu)\n", i, getRegClass(r2), (long) getRegVal(r2));
+            sprintf(temp, "\t r2 : %d = (%d, %lu)\n", i, getRegClassRec(r2), (long) getRegVal(r2));
             pushlog(fichierlog, temp);
             return NON_INCLUS;
         }
@@ -215,7 +215,7 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
     for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
         uint64_t virtualAddr = m1->tabBytes[i]->virtualAddr;
         if (m1->tabBytes[i]->classe != CLASSE_NON_DEFINIE &&
-            (getSegClass(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
+            (getSegClassRec(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
              m1->tabBytes[i]->val != getSegVal(seg(m2, virtualAddr, 1)))) {
                 sprintf(temp,"non inclus par mémoire\n");
                 pushlog(fichierlog, temp);
@@ -226,7 +226,7 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
                 pushlog(fichierlog, temp);
                 sprintf(temp, "\t le byte %llu du pool 2 vaut (%d, %u)\n",
                         virtualAddr, 
-                        getSegClass(seg(m2, virtualAddr, 1))[0], 
+                        getSegClassRec(seg(m2, virtualAddr, 1))[0], 
                         (char) getSegVal(seg(m2, virtualAddr, 1)));
                 pushlog(fichierlog, temp);
                 return NON_INCLUS;
@@ -256,10 +256,10 @@ void inter(Processeur* p1, const Processeur* p2){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
-        if (getRegClass(r1) != CLASSE_NON_DEFINIE && (
-            getRegClass(r2) == CLASSE_NON_DEFINIE ||
+        if (getRegClassHigher(r1) != CLASSE_NON_DEFINIE && (
+            getRegClassHigher(r2) == CLASSE_NON_DEFINIE ||
             getRegVal(r1) != getRegVal(r2))) {
-            r1->classe = CLASSE_NON_DEFINIE;
+            setRegClassHigher(r1, CLASSE_NON_DEFINIE);
         }
     }
     
@@ -276,7 +276,7 @@ void inter(Processeur* p1, const Processeur* p2){
     for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
         uint64_t virtualAddr = m1->tabBytes[i]->virtualAddr;
         if (m1->tabBytes[i]->classe != CLASSE_NON_DEFINIE &&
-            (getSegClass(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
+            (getSegClassRec(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
              m1->tabBytes[i]->val != getSegVal(seg(m2, virtualAddr, 1)))) {
                 m1->tabBytes[i]->classe = CLASSE_NON_DEFINIE;
             }

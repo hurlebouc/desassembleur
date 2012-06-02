@@ -63,7 +63,7 @@ uint64_t getSegVal(Segment seg);
  * @return un tableau de taille 2 dont le premier élément est la classe, 
  *          le deuxième est toujours nul en cas de case déterminé
  */
-int* getSegClass(Segment seg);
+int* getSegClassRec(Segment seg);
 
 /**
  * Cette fonction assigne une dans la mémore à l'adresse virtualAddr sur une

@@ -85,7 +85,7 @@ extern "C" {
      */
     uint64_t setRegVal(Registre* reg, uint64_t n); 
     
-    int getRegClass(Registre*);
+    int getRegClassRec(Registre*);
     
     void setRegClassRec(Registre*, int classe);
     
@@ -106,6 +106,9 @@ extern "C" {
      * @param[in] len Valeur à ajouter
      */
     void incr(Registre* reg, int len);
+    
+    int getRegClassHigher(const Registre* );
+    void setRegClassHigher(Registre*, int classe);
         
     
     

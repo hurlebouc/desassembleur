@@ -83,7 +83,7 @@ static uint8_t testDrapeau(int typeErreur, int erreur){
     return (erreur & typeErreur) / typeErreur;
 }
 
-int* getSegClass(Segment seg){
+int* getSegClassRec(Segment seg){
     const Memoire* mem = seg.mem;
     const uint64_t virtualAddr = seg.virtualAddr;
     int taille = seg.taille;
@@ -126,7 +126,7 @@ uint64_t getSegVal(Segment seg){
         printf("l'élément %llu est introuvable\n", virtualAddr);
         exit(EXIT_FAILURE);
     }
-    int* classe = getSegClass(seg);
+    int* classe = getSegClassRec(seg);
     if (classe[0] == CLASSE_NON_DEFINIE) {
         printf("La valeur de la case 0x%llx pour la taille %d est indéterminée\n", virtualAddr, taille);
         exit(EXIT_FAILURE);

@@ -17,11 +17,11 @@ uint64_t getVarVal(Variable var){
     }
 }
 
-int getVarClass(Variable var){
+int getVarClassRec(Variable var){
     if (var.type == reg_type) {
-        return getRegClass(var.reg);
+        return getRegClassRec(var.reg);
     } else {
-        return getSegClass(var.seg)[0];
+        return getSegClassRec(var.seg)[0];
     }
 }
 
