@@ -784,9 +784,6 @@ void optimizePool(Graphe* g, const Processeur* initialPool){
 }
 
 void optimizePool2(Graphe* g, const Processeur* initialPool){
-//    char chemin_log[FILENAME_MAX];
-//    strcpy(chemin_log, ROOT);
-//    strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
     Fichier* fichierlog = newFichier(CHEMIN_LOG_OPTIMISATION);    
     char temp[MAX_BUFFER];
     

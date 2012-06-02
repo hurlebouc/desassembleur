@@ -18,6 +18,7 @@ extern "C" {
 
 #include "LinkedList.h"
 #include "desassembleur.h"
+#include "variable.h"
 #include "macro.h"
 
 #define EST_RECOUVERT 1
