@@ -20,7 +20,7 @@ Graphe* newGraphe(void){
     g->recouvert = 0;
     g->listeFils = NULL;
     g->listePeres = NULL;
-    g->pool = newProcesseur();
+    g->pool = newProcesseur(TAILLE_MEMOIRE);
     g->pool->delta = DELTA_LEVE;
     for (int i = 0; i < NOMBRE_FLAGS; i++) {
         g->pool->tabFlags[i] = FLAG_BAS;

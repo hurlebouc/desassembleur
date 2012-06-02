@@ -187,7 +187,7 @@ extern "C" {
      * Crée et renvoi un nouveau procésseur virtuel
      * @return Processeur renvoi un procésseur non initialiser
      */
-    Processeur* newProcesseur(void);
+    Processeur* newProcesseur(uint64_t MemorySize);
     /**
      * Crée une copie d'un processeur virtuel
      * @param[in] Processeur processeur à copier

@@ -10,7 +10,7 @@
 #include "_macro_Build.h"
 
 
-Processeur* newProcesseur(void){
+Processeur* newProcesseur(uint64_t MemorySize){
     Processeur* proc = malloc(sizeof(Processeur));
     _AL     =   newRegistreFeuille(8);
     _AH     =   newRegistreFeuille(8);
@@ -117,7 +117,7 @@ Processeur* newProcesseur(void){
     
     
     _STACK  =   newLinkedList();
-    proc->mem = newMemoire(TAILLE_MEMOIRE);
+    proc->mem = newMemoire(MemorySize);
     
     proc->delta = DELTA_BAISSE;
     
@@ -125,7 +125,7 @@ Processeur* newProcesseur(void){
 }
 
 Processeur* newProcesseurCopy(const Processeur* p){
-    Processeur* res = newProcesseur();
+    Processeur* res = newProcesseur(p->mem->size);
     res->delta = p->delta;
     res->stack = newLinkedListCopy(p->stack);
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
@@ -135,7 +135,7 @@ Processeur* newProcesseurCopy(const Processeur* p){
     for (int i = 0; i<NOMBRE_FLAGS; i++) {
         res->tabFlags[i] = res->tabFlags[i];
     }
-    
+    cloneMem(res->mem, p->mem);
     return res;
 }
 
