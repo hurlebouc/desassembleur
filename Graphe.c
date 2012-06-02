@@ -26,7 +26,7 @@ Graphe* newGraphe(void){
         g->pool->tabFlags[i] = FLAG_BAS;
     }
     for (int i = 0; i < NOMBRE_REGISTRES; i++) {
-        g->pool->tabRegistre[i]->classe = CLASSE_DEFINI;
+        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
     }
     return g;
 }

@@ -10,19 +10,19 @@
 #include <stdlib.h>
 #include "memoire.h"
 
-static case_mem* newCase_mem(){
-    case_mem* res = malloc(sizeof(case_mem));
+static Byte* newCase_mem(){
+    Byte* res = malloc(sizeof(Byte));
     res->classe = CLASSE_NON_DEFINIE;
     res->val = 0;
     res->virtualAddr = 0;
     return res;
 }
 
-static void terminateCaseMem(case_mem* cas){
+static void terminateCaseMem(Byte* cas){
     free(cas);
 }
 
-static void setCaseVal(case_mem* corr, uint8_t val){
+static void setCaseVal(Byte* corr, uint8_t val){
     corr->val = val;
     if (corr->classe == CLASSE_NON_DEFINIE) {
         corr->classe = CLASSE_DEFINI;
@@ -37,7 +37,7 @@ Memoire* newMemoire(uint64_t tailleMax){
     Memoire* res = malloc(sizeof(Memoire));
     res->size = tailleMax;
     res->sizeAllocatedMemory = 0;
-    res->tabBytes = calloc(tailleMax, sizeof(case_mem*));
+    res->tabBytes = calloc(tailleMax, sizeof(Byte*));
     return res;
 }
 
@@ -66,7 +66,7 @@ static uint64_t getByteIndex(const Memoire* mem, uint64_t virtualAddr){
     uint64_t sup = mem->sizeAllocatedMemory;
     while (sup-inf > 0) {
         uint64_t milieu = (sup + inf)/2;
-        case_mem* byte = mem->tabBytes[milieu];
+        Byte* byte = mem->tabBytes[milieu];
         if (byte->virtualAddr == virtualAddr) {
             return milieu;
         }
@@ -135,7 +135,7 @@ uint64_t getSegVal(Segment seg){
     uint64_t res = 0;
     uint64_t p = 1;
     for (int j = 0; j<taille; j++) {
-        case_mem* cas = mem->tabBytes[i+j];
+        Byte* cas = mem->tabBytes[i+j];
         res += cas->val * p;
         p = p * 256;
     }
@@ -164,7 +164,7 @@ static uint64_t insertCase(Memoire* mem, uint64_t virtualAddr){
     uint64_t sup = mem->sizeAllocatedMemory;
     while (sup-inf > 0) {
         uint64_t milieu = (sup + inf)/2;
-        case_mem* byte = mem->tabBytes[milieu];
+        Byte* byte = mem->tabBytes[milieu];
         if (byte->virtualAddr == virtualAddr) {
             return milieu;
         }
@@ -186,7 +186,7 @@ static uint64_t initCase(Memoire* mem, uint64_t virtualAddr){
 static uint64_t initSegment(Memoire* mem, uint64_t virtualAddr, int taille){
     uint64_t i = initCase(mem, virtualAddr);
     for (int j = 0; j<taille; j++) {
-        case_mem* byte = mem->tabBytes[i+j];
+        Byte* byte = mem->tabBytes[i+j];
         if (byte == NULL || byte->virtualAddr != virtualAddr + j) {
             shiftRight(mem, i+j);
             mem->tabBytes[i+j]->virtualAddr = virtualAddr + j;
@@ -233,7 +233,7 @@ void afficheMemoire(Memoire* mem){
  *                          FONCTIONS ANNEXES                             *
  * ---------------------------------------------------------------------- */
 
-static void copieCaseVal(case_mem* dest, case_mem* src){
+static void copieCaseVal(Byte* dest, Byte* src){
     if (dest == NULL || src == NULL) {
         printf("Erreur : aucun des paramètres ne doit être NULL");
         exit(EXIT_FAILURE);
@@ -284,7 +284,7 @@ void cloneMem(Memoire* dest, Memoire* src){
         terminateCaseMem(dest->tabBytes[i]);
     }
     free(dest->tabBytes);
-    dest->tabBytes = calloc(src->size, sizeof(case_mem*));
+    dest->tabBytes = calloc(src->size, sizeof(Byte*));
     for (uint64_t i = 0; i<src->sizeAllocatedMemory; i++) {
         dest->tabBytes[i] = newCase_mem();
         copieCaseVal(dest->tabBytes[i], src->tabBytes[i]);
@@ -292,10 +292,30 @@ void cloneMem(Memoire* dest, Memoire* src){
     dest->sizeAllocatedMemory = src->sizeAllocatedMemory;
 }
 
+Byte* getByte(const Memoire* mem, uint64_t virtualAddr){
+    uint64_t i = getByteIndex(mem, virtualAddr);
+    return mem->tabBytes[i];
+}
 
+uint64_t getVirtualAddr(Byte* byte){
+    return byte->virtualAddr;
+}
 
+int getByteClass(Byte* byte){
+    return byte->classe;
+}
 
+uint8_t getByteVal(Byte* byte){
+    return byte->val;
+}
 
+void setByteClass(Byte* byte, int classe){
+    byte->classe = classe;
+}
+
+void setByteVal(Byte* byte, uint8_t val){
+    byte->val = val;
+}
 
 
 

@@ -18,7 +18,7 @@ void mem_recc(void){
     printf("depassement : %llx\n", setSegVal(seg(mem, 0x19843, 8), 0x394451928374));
     afficheMemoire(mem);
     printf("val seg : %llx\n", getSegVal(seg(mem, 0x19846, 3)));
-    mem->tabBytes[4]->classe = CLASSE_NON_DEFINIE;
+    setByteClass(mem->tabBytes[4], CLASSE_NON_DEFINIE);
     printf("depassement : %llx\n", setSegVal(seg(mem, 0x19847, 6), 0x2348ef3374));
     afficheMemoire(mem);
     printf("val seg : %llx\n", getSegVal(seg(mem, 0x19846, 3)));

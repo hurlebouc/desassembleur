@@ -94,11 +94,26 @@ extern "C" {
      * ---------------------------------------------------------------------- */
     
     /**
+     * Cette fonction renvoie 1 si le registre n'a pas de fils et 0 sinon.
+     */
+    int estRegFeuille(Registre*);
+    
+    /**
      * Recopie la valeur d'un registre dans un autre
      * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
      * @param[in] src Registre dont on extrait la valeur à copier
      */
     void copieRegVal(Registre* dest, Registre* src);
+    
+    /**
+     * Cette fonction copie atomiquement le contenu d'un registre dans un autre.
+     * Atomique signifique que on ne suit pas les dépendances des registres. 
+     * Comme seul les valeurs des registres feuilles sont utilisables, si dest
+     * n'est pas un registre feuille, la fonction renvoie une erreur.
+     * @param dest registre devant être un registre feuille.
+     * @param src registre à copier
+     */
+    void copieRegAto(Registre* dest, Registre* src);
     
     /**
      * Ajout à la valeur d'un registre

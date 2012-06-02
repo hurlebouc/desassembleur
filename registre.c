@@ -116,8 +116,27 @@ int getRegClassRec(Registre* reg){
     return CLASSE_DEFINI;
 }
 
+/* ---------------------------------------------------------------------- *
+ *                          FONCTIONS ANNEXES                             *
+ * ---------------------------------------------------------------------- */
+
+
 void copieRegVal(Registre* dest, Registre* src){
     setRegVal(dest, getRegVal(src));
+}
+
+int estRegFeuille(Registre* reg){
+    return reg->filsl == NULL;
+}
+
+
+void copieRegAto(Registre* dest, Registre* src){
+    if (!estRegFeuille(dest)) {
+        printf("Erreur : la copie a échouée car le registre de destination n'est pas un registre feuille.\n");
+        exit(EXIT_FAILURE);
+    }
+    dest->classe = src->classe;
+    dest->valeur = src->valeur;
 }
 
 void incr(Registre* reg, int n){

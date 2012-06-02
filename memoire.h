@@ -18,16 +18,16 @@ enum casIndeterminisationMemoire {
     SEG_NON_PRESENT =       0x4,
     };
 
-typedef struct _case_mem{
+typedef struct _byte{
     uint64_t virtualAddr;
     uint8_t val;
     uint8_t classe;
-}case_mem;
+}Byte;
 
 typedef  struct _memoire {
     uint64_t size;
     uint64_t sizeAllocatedMemory;
-    case_mem** tabBytes;
+    Byte** tabBytes;
 }Memoire;
 
 typedef struct _segment{
@@ -85,6 +85,12 @@ void setSegClassRec(Segment, int classe);
 
 void copieMemVal(Memoire* dest, Memoire* src);
 void cloneMem(Memoire* dest, Memoire* src);
+Byte* getByte(const Memoire*, uint64_t virtualAddr);
+uint64_t getVirtualAddr(Byte*);
+int getByteClass(Byte*);
+uint8_t getByteVal(Byte*);
+void setByteClass(Byte*, int classe);
+void setByteVal(Byte*, uint8_t val);
 
 void afficheMemoire(Memoire* mem);
 
