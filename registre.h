@@ -87,6 +87,8 @@ extern "C" {
     
     int getRegClass(Registre*);
     
+    void setRegClass(Registre*, int classe);
+    
     /* ---------------------------------------------------------------------- *
      *                          FONCTIONS ANNEXES                             *
      * ---------------------------------------------------------------------- */

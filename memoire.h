@@ -77,6 +77,8 @@ int* getSegClass(Segment seg);
  */
 uint64_t setSegVal(Segment seg, uint64_t val);
 
+void setSegClass(Segment, int classe);
+
 /* ---------------------------------------------------------------------- *
  *                          FONCTIONS ANNEXES                             *
  * ---------------------------------------------------------------------- */

@@ -210,6 +210,16 @@ uint64_t setSegVal(Segment seg, uint64_t val){
     return val*p;
 }
 
+void setSegClass(Segment seg, int classe){
+    Memoire* mem = seg.mem;
+    const uint64_t virtualAddr = seg.virtualAddr;
+    const int taille = seg.taille;
+    uint64_t i = initSegment(mem, virtualAddr, taille);
+    for (int j = 0; j<taille; j++) {
+        mem->tabBytes[i+j]->classe = classe;
+    }
+}
+
 void afficheMemoire(Memoire* mem){
     printf("[");
     for (uint64_t i = 0; i<mem->sizeAllocatedMemory; i++) {
