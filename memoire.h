@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/**
+ * @file memoire.h
+ */
+
 #ifndef desassembleur_memoire_h
 #define desassembleur_memoire_h
 
@@ -54,14 +58,11 @@ Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
 uint64_t getSegVal(Segment seg);
 
 /**
- * Cette fonction donne la classe de la valeur souhaité à partir de l'adresse 
- * virtualAddr sur une longueur taille.
+ * Cette fonction donne la classe du segment souhaité sur une longueur donnée.
  *
- * @param mem mémoire sur laquelle on travaille
- * @param virtualAddr adresse souhaitée dans le mémoire
- * @param taille longueur du mot lu
- * @return un tableau de taille 2 dont le premier élément est la classe, 
- *          le deuxième est toujours nul en cas de case déterminé
+ * @param seg segment de la mémoire dont on veut connaitre la classe
+ * @return tableau de taille 2 dont le premier élément est la classe, 
+ *          le deuxième est toujours nul en cas de byte déterminé
  */
 int* getSegClassRec(Segment seg);
 
@@ -69,14 +70,15 @@ int* getSegClassRec(Segment seg);
  * Cette fonction assigne une dans la mémore à l'adresse virtualAddr sur une
  * taille donnée
  *
- * @param mem mémoire sur laquelle on travaille
- * @param virtualAddr adresse souhaitée dans la mémoire
- * @param taille longueur du mot dans lequel on souhaite écrire
+ * @param seg segment de la mémoire sur lequel on souhaite écrire
  * @param val valeur à écrire
  * @return partie haute de val qui n'a pas été écrite par manque de place
  */
 uint64_t setSegVal(Segment seg, uint64_t val);
 
+/**
+ * 
+ */
 void setSegClassRec(Segment, int classe);
 
 /* ---------------------------------------------------------------------- *
