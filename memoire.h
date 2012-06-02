@@ -83,6 +83,7 @@ uint64_t setSegVal(Segment seg, uint64_t val);
  * ---------------------------------------------------------------------- */
 
 void copieMemVal(Memoire* dest, Memoire* src);
+void cloneMem(Memoire* dest, Memoire* src);
 
 void afficheMemoire(Memoire* mem);
 

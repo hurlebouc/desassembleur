@@ -232,7 +232,7 @@ static void copieCaseVal(case_mem* dest, case_mem* src){
 void copieMemVal(Memoire* dest, Memoire* src){
     if (dest->size < src->sizeAllocatedMemory) {
         printf("Erreur : la taille maximale de la destination est insuffisante pour contenir la mémoire alloué de la source.\n");
-        printf("Utilisez copieMemTot() pour faire une copie conforme de la source.\n");
+        printf("Utilisez cloneMem() pour faire une copie conforme de la source.\n");
         exit(EXIT_FAILURE);
     }
     uint64_t max;
@@ -260,6 +260,23 @@ void copieMemVal(Memoire* dest, Memoire* src){
     dest->sizeAllocatedMemory = src->sizeAllocatedMemory;
 }
 
+void cloneMem(Memoire* dest, Memoire* src){
+    if (dest->size == src->size) {
+        copieMemVal(dest, src);
+        return;
+    }
+    dest->size = src->size;
+    for (uint64_t i = 0; i<dest->sizeAllocatedMemory; i++) {
+        terminateCaseMem(dest->tabCorrespondance[i]);
+    }
+    free(dest->tabCorrespondance);
+    dest->tabCorrespondance = calloc(src->size, sizeof(case_mem*));
+    for (uint64_t i = 0; i<src->sizeAllocatedMemory; i++) {
+        dest->tabCorrespondance[i] = newCase_mem();
+        copieCaseVal(dest->tabCorrespondance[i], src->tabCorrespondance[i]);
+    }
+    dest->sizeAllocatedMemory = src->sizeAllocatedMemory;
+}
 
 
 
