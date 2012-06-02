@@ -216,8 +216,20 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         uint64_t virtualAddr = m1->tabBytes[i]->virtualAddr;
         if (m1->tabBytes[i]->classe != CLASSE_NON_DEFINIE &&
             (getSegClass(seg(m2, virtualAddr, 1)) == CLASSE_NON_DEFINIE ||
-             m1->tabBytes[i]->val != m2->tabBytes[2]->val)) {
-            
+             m1->tabBytes[i]->val != getSegVal(seg(m2, virtualAddr, 1)))) {
+                sprintf(temp,"non inclus par mémoire\n");
+                pushlog(fichierlog, temp);
+                sprintf(temp, "\t le byte %llu du pool 1 vaut (%d, %u)\n",
+                        virtualAddr, 
+                        m1->tabBytes[i]->classe, 
+                        m1->tabBytes[i]->val);
+                pushlog(fichierlog, temp);
+                sprintf(temp, "\t le byte %llu du pool 2 vaut (%d, %u)\n",
+                        virtualAddr, 
+                        getSegClass(seg(m2, virtualAddr, 1))[0], 
+                        (char) getSegVal(seg(m2, virtualAddr, 1)));
+                pushlog(fichierlog, temp);
+                return NON_INCLUS;
         }
     }
 //    
