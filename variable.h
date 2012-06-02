@@ -14,7 +14,7 @@
 
 enum TypeVariable {
     reg_type,
-    mem_type,
+    seg_type,
     };
 
 typedef struct _variable{
@@ -25,6 +25,11 @@ typedef struct _variable{
 
 
 
-uint64_t getVarVal(Variable var);
+uint64_t getVarVal(Variable);
+
+int getVarClass(Variable);
+
+uint64_t setVarVal(Variable, uint64_t);
+
 
 #endif

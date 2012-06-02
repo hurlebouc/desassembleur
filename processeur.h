@@ -20,6 +20,7 @@ extern "C" {
 #include <stdio.h>
 #include "LinkedList.h"
 #include "registre.h"
+#include "memoire.h"
 #include "Fichier.h"
     
 #define CF_POWER 1
@@ -170,6 +171,7 @@ extern "C" {
      */
     typedef struct _Processeur{
         LinkedList* stack;
+        Memoire* mem;
         Registre*   tabRegistre[NOMBRE_REGISTRES];
         int8_t      tabFlags[NOMBRE_FLAGS];
         

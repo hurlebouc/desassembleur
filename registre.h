@@ -61,6 +61,11 @@ extern "C" {
      * @param[in] reg Registre à éffacer
      */
     void terminateRegistre(Registre* reg);
+    
+    /* ---------------------------------------------------------------------- *
+     *                       FONCTIONS ESSENTIELLES                           *
+     * ---------------------------------------------------------------------- */
+    
     /**
      * Calcul la valeur stocké dans un registre
      * @param[in] reg Le registre dont on veut calculer la valeur
@@ -79,6 +84,13 @@ extern "C" {
      * @return Un nombre différent de 0 si le registre est trop petit pour contenir la valeur
      */
     uint64_t setRegVal(Registre* reg, uint64_t n); 
+    
+    int getRegClass(Registre*);
+    
+    /* ---------------------------------------------------------------------- *
+     *                          FONCTIONS ANNEXES                             *
+     * ---------------------------------------------------------------------- */
+    
     /**
      * Recopie la valeur d'un registre dans un autre
      * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
@@ -93,7 +105,7 @@ extern "C" {
      */
     void incr(Registre* reg, int len);
         
-    int getRegClass(Registre*);
+    
     
 #ifdef __cplusplus
 }
