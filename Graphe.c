@@ -851,16 +851,49 @@ void debranchage(Graphe* g){
             }
             ;
             break;
+            
+            case JNO:
+            if(!g->pool->tabRegistre[_nOF]){
+            }
+            else {
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            }
+            ;
+            break;
 
         case JC:
             if (g->pool->tabRegistre[_nCF]) {
             } else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            }
+
+            ;
+            break;
+
+        case JNC:
+            if (!g->pool->tabRegistre[_nCF]) {
+            } else {
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -871,14 +904,13 @@ void debranchage(Graphe* g){
             break;
 
         case JE:
-            if (g->pool->tabRegistre[_nZF]) {
+            if (!g->pool->tabRegistre[_nZF]) {
 
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -890,14 +922,13 @@ void debranchage(Graphe* g){
             break;
 
         case JNE:
-            if (g->pool->tabRegistre[_nZF]) {
+            if (!g->pool->tabRegistre[_nZF]) {
             } else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -910,12 +941,12 @@ void debranchage(Graphe* g){
         case JA:
             if (!(g->pool->tabRegistre[_nZF]) && !(g->pool->tabRegistre[_nCF])) {
             } else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
+
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -925,18 +956,52 @@ void debranchage(Graphe* g){
             ;
             break;
 
-        default:
+        case JNA:
+            if ((g->pool->tabRegistre[_nZF]) || (g->pool->tabRegistre[_nCF])) {
+
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            } else {
+            }
+
+            ;
             break;
+
+
 
         case JS:
             if (!g->pool->tabRegistre[_nSF]) {
 
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            } else {
+            }
+
+            ;
+            break;
+
+        case JNS:
+            if (g->pool->tabRegistre[_nSF]) {
+
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -950,12 +1015,29 @@ void debranchage(Graphe* g){
         case JP:
             if (!g->pool->tabRegistre[_nPF]) {
 
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            } else {
+            }
+
+            ;
+            break;
+
+        case JNP:
+            if (g->pool->tabRegistre[_nPF]) {
+
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -970,12 +1052,11 @@ void debranchage(Graphe* g){
             if (g->pool->tabRegistre[_nSF] != g->pool->tabRegistre[_nOF]) {
             } else {
 
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -984,17 +1065,34 @@ void debranchage(Graphe* g){
 
             ;
             break;
-            
-            case JG:
-            if ((!g->pool->tabRegistre[_nZF])&&(g->pool->tabRegistre[_nSF]==g->pool->tabRegistre[_nOF])) {
+
+        case JNL:
+            if (g->pool->tabRegistre[_nSF] = g->pool->tabRegistre[_nOF]) {
+            } else {
+
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            }
+
+            ;
+            break;
+
+        case JG:
+            if ((!g->pool->tabRegistre[_nZF]) && (g->pool->tabRegistre[_nSF] == g->pool->tabRegistre[_nOF])) {
 
             } else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -1003,16 +1101,33 @@ void debranchage(Graphe* g){
 
             ;
             break;
-            
-            case JB:
+
+        case JNG:
+            if ((g->pool->tabRegistre[_nZF]) || (g->pool->tabRegistre[_nSF] != g->pool->tabRegistre[_nOF])) {
+
+            } else {
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+            }
+
+            ;
+            break;
+
+        case JB:
             if (!g->pool->tabRegistre[_nCF]) {//si CF à 1 saut
 
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
@@ -1022,24 +1137,45 @@ void debranchage(Graphe* g){
 
             ;
             break;
-            
-            case JECXZ:
-            if (getRegVal(g->pool->tabRegistre[_nECX])==0) {//si ECX=0 on saute
- } else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+
+
+        case JNB:
+            if (g->pool->tabRegistre[_nCF]) {//si CF à 0 saut
+
+                while (g->listeFils->longueur > 1) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                    } else {//forcement le suivant n'est pas le fils!
+                    } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
                     }
                 }
-           
+            } else {
             }
 
             ;
+            break;
+
+        case JECXZ:
+            if (getRegVal(g->pool->tabRegistre[_nECX]) == 0) {//si ECX=0 on saute
+            } else {
+                while (g->listeFils->longueur > 1) {
+                    Graphe* G = (Graphe*) g->listeFils->valeur;
+                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                        removeLinkRec(g, G);
+                    } else {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                    }
+                }
+
+            }
+
+            ;
+            break;
+
+        default:
             break;
     }
     free(disasm);
