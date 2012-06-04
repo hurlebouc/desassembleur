@@ -48,7 +48,6 @@
       <itemPath>memoire.c</itemPath>
       <itemPath>processeur.c</itemPath>
       <itemPath>registre.c</itemPath>
-      <itemPath>test7.c</itemPath>
       <itemPath>variable.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"

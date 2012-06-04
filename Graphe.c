@@ -9,8 +9,8 @@
 #include "Graphe.h"
 #include "_macro_Build.h"
 
-Graphe* newGraphe(void){
-    Graphe* g = malloc(sizeof(Graphe));
+Graphe* newGraphe(void) {
+    Graphe* g = malloc(sizeof (Graphe));
     g->VirtualAddr = 0;
     g->aif = 0;
     g->etat = SANS_INTERET;
@@ -22,12 +22,12 @@ Graphe* newGraphe(void){
     g->listePeres = NULL;
     g->pool = newProcesseur(TAILLE_MEMOIRE);
     g->pool->delta = DELTA_LEVE;
-//    for (int i = 0; i < NOMBRE_FLAGS; i++) {
-//        g->pool->tabFlags[i] = FLAG_BAS;
-//    }
-//    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
-//        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
-//    }
+    //    for (int i = 0; i < NOMBRE_FLAGS; i++) {
+    //        g->pool->tabFlags[i] = FLAG_BAS;
+    //    }
+    //    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
+    //        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
+    //    }
     return g;
 }
 
@@ -43,20 +43,20 @@ Graphe* newGraphe(void){
  * @param fils Noeud suivant dont on enlève le noeud père de ses prédécésseurs
  */
 
-static void removeLink(Graphe* pere, Graphe* fils){
+static void removeLink(Graphe* pere, Graphe* fils) {
     removeElementLL(pere->listeFils, fils);
     removeElementLL(fils->listePeres, pere);
 }
 
-static void terminateNoeud(Graphe* g){
-    
+static void terminateNoeud(Graphe* g) {
+
     if (g->listePeres != NULL) {
         while (sizeLL(g->listePeres) != 0) {
             Graphe* pere = getFirstLL(g->listePeres);
             removeLink(pere, g);
         }
     }
-    
+
     if (g->listeFils != NULL) {
         while (sizeLL(g->listeFils) != 0) {
             Graphe* fils = getFirstLL(g->listeFils);
@@ -73,14 +73,14 @@ static void terminateNoeud(Graphe* g){
     free(g);
 }
 
-void terminateGraphe(Graphe* g){
+void terminateGraphe(Graphe* g) {
     // Il faut eviter que se faire supprimer comme étant
     // un (arriere petit) fils de ses fils.
     if (g->_immediat == EST_LIBERE) {
         return;
     }
     g->_immediat = EST_LIBERE;
-    
+
     // suppression de la liste des fils de chaque pere
     if (g->listePeres != NULL) {
         while (sizeLL(g->listePeres) != 0) {
@@ -88,7 +88,7 @@ void terminateGraphe(Graphe* g){
             removeLink(pere, g);
         }
     }
-    
+
     // effacement de chaque fils
     /*
      * Rq : la liste des fils de g diminue toute seule car les fils de g s'y 
@@ -110,8 +110,7 @@ void terminateGraphe(Graphe* g){
     free(g);
 }
 
-
-void removeLinkRec(Graphe* pere, Graphe* fils){
+void removeLinkRec(Graphe* pere, Graphe* fils) {
     removeLink(pere, fils);
     if (sizeLL(fils->listePeres) == 0) {
         while (sizeLL(fils->listeFils) != 0) {
@@ -121,7 +120,7 @@ void removeLinkRec(Graphe* pere, Graphe* fils){
     }
 }
 
-void addLink(Graphe* pere, Graphe* fils){
+void addLink(Graphe* pere, Graphe* fils) {
     if (pere->listeFils == NULL) {
         pere->listeFils = newLinkedList();
     }
@@ -136,13 +135,13 @@ void addLink(Graphe* pere, Graphe* fils){
  * Un noeud inaccessible ne sera pas trouvé
  */
 
-Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
+Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va) {
     if (g->_immediat == PASSAGE_GET_NODE_WITH_VIRTUALADDR) {
         return NULL;
     }
     uint8_t etatinit = g->_immediat;
     g->_immediat = PASSAGE_GET_NODE_WITH_VIRTUALADDR;
-    if(g->VirtualAddr == va){
+    if (g->VirtualAddr == va) {
         g->_immediat = etatinit;
         return g;
     }
@@ -152,24 +151,24 @@ Graphe* getNodeWithVirtualAddr(Graphe* g, uintptr_t va){
     }
     int l = sizeLL(g->listeFils);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
         if (res != NULL) {
             g->_immediat = etatinit;
             return res;
         }
-        tete=tete->suiv;
+        tete = tete->suiv;
     }
     g->_immediat = etatinit;
     return NULL;
 }
 
-Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
+Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va) {
     if (g->_immediat == PASSAGE_GET_NODE_WITH_VIRTUALADDR_U) {
         return NULL;
     }
     g->_immediat = PASSAGE_GET_NODE_WITH_VIRTUALADDR_U;
-    if(g->VirtualAddr == va){
+    if (g->VirtualAddr == va) {
         return g;
     }
     if (g->listeFils == NULL) {
@@ -177,12 +176,12 @@ Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va){
     }
     int l = sizeLL(g->listeFils);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         Graphe* res = getNodeWithVirtualAddr(getFirstLL(tete), va);
         if (res != NULL) {
             return res;
         }
-        tete=tete->suiv;
+        tete = tete->suiv;
     }
     return NULL;
 }
@@ -507,7 +506,7 @@ static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
 /**
  * @deprecated
  */
-static void setGeneralRegistre(int i,ARGTYPE argument[],Processeur*proc,Registre**reg) {
+static void setGeneralRegistre(int i, ARGTYPE argument[], Processeur*proc, Registre**reg) {
     reg[i] = getGeneralRegistre(argument[i], proc);
 }
 
@@ -581,12 +580,12 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
     int len = Disasm(disasm);
-    
+
     INSTRTYPE instr = disasm->Instruction;
-    
+
     Instruction* instruction = NULL;
     Variable var[3];
-    
+
     /* initialisation de l'instruction */
     switch (instr.Opcode) {
         case 0x00:
@@ -597,28 +596,28 @@ static void setPool(const Graphe* g, Processeur* newPool) {
             //instruction = init_add_EbGb();
             instruction = init_add();
             break;
-            
+
         default:
             //            printf("litInstruction() : opcode inconnu\n");
             //            exit(EXIT_FAILURE);
             break;
     }
-    
+
     ARGTYPE argument[] = {
         disasm->Argument1,
         disasm->Argument2,
         disasm->Argument3
     };
-    
-    uint8_t aSuppr[]={0,0,0};
-    
+
+    uint8_t aSuppr[] = {0, 0, 0};
+
     /* initialisation des arguments*/
-    for (int i = 0; i<3; i++) {
+    for (int i = 0; i < 3; i++) {
         ARGTYPE arg = argument[i];
-        
+
         uint32_t hiword = arg.ArgType & 0xffff0000;
         Variable res;
-        
+
         switch (hiword & 0xf0000000) {
             case NO_ARGUMENT:
                 ;
@@ -627,34 +626,34 @@ static void setPool(const Graphe* g, Processeur* newPool) {
                 res.type = reg_type;
                 res.reg = getRegistre(arg, newPool);
                 break;
-                
+
             case CONSTANT_TYPE:
                 res.type = reg_type;
                 res.reg = getConstant(arg, disasm);
                 aSuppr[i] = 1;
                 break;
-                
+
             case MEMORY_TYPE:
                 res.type = seg_type;
                 ;
                 break;
-                
+
             default:
                 break;
         }
-        
+
         var[i] = res;
     }
     if (instruction != NULL) {
         do_instr(instruction, var[0], var[1], var[2], len, newPool);
         terminateInstruction(instruction);
     }
-    for (int i = 0; i<3; i++) {
+    for (int i = 0; i < 3; i++) {
         if (aSuppr[i]) {
             terminateRegistre(var[i].reg);
         }
     }
-    
+
     free(disasm);
 }
 
@@ -666,33 +665,33 @@ static void setPool(const Graphe* g, Processeur* newPool) {
  * à partir de g qui lui n'est pas constant.
  */
 
-static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
+static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]) {
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    
+
     Processeur* copyPool = newProcesseurCopy(initialPool);
     setPool(g, copyPool);
     int inc = incluDans(g->pool, copyPool, fichierlog);
-    if (inc !=NON_INCLUS){
+    if (inc != NON_INCLUS) {
         terminateProcesseur(copyPool);
-        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, copyPool); // l'intercection est dans g->pool
     terminateProcesseur(copyPool);
     if (g->listeFils == NULL) {
-        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     int l = sizeLL(g->listeFils);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         optimizePool_aux(tete->valeur, g->pool, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -704,33 +703,33 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
  * à partir de g qui lui n'est pas constant.
  */
 
-static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog, char temp[MAX_BUFFER]){
+static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog, char temp[MAX_BUFFER]) {
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    
+
     Processeur* copyPool = newProcesseurCopy(pere->pool);
     setPool(pere, copyPool);
     int inc = incluDans(g->pool, copyPool, fichierlog);
-    if (inc !=NON_INCLUS){
+    if (inc != NON_INCLUS) {
         terminateProcesseur(copyPool);
-        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, copyPool); // l'intercection est dans g->pool
     terminateProcesseur(copyPool);
     if (g->listeFils == NULL) {
-        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     int l = sizeLL(g->listeFils);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         optimizePool_aux2(tete->valeur, g, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -739,19 +738,19 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
  * (a utiliser dans optimizePool (version 1)
  */
 
-static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]){
+static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]) {
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    
+
     int inc = incluDans(g->pool, initialPool, fichierlog);
-    if (inc !=NON_INCLUS){
-        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+    if (inc != NON_INCLUS) {
+        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, initialPool); // l'intercection est dans g->pool
     if (g->listeFils == NULL) {
-        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -760,12 +759,12 @@ static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, F
     int l = sizeLL(g->listeFils);
     pushlog(fichierlog, temp);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         optimizePool_aux_kildall(tete->valeur, newPool, fichierlog, temp);
         tete = tete->suiv;
     }
     terminateProcesseur(newPool);
-    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -774,53 +773,53 @@ static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, F
  * pool du père
  */
 
-void optimizePool(Graphe* g, const Processeur* initialPool){
+void optimizePool(Graphe* g, const Processeur* initialPool) {
     char chemin_log[FILENAME_MAX];
     strcpy(chemin_log, ROOT);
     strcat(chemin_log, CHEMIN_LOG_OPTIMISATION);
-    Fichier* fichierlog = newFichier(chemin_log);    
+    Fichier* fichierlog = newFichier(chemin_log);
     char temp[MAX_BUFFER];
-    
+
     optimizePool_aux(g, initialPool, fichierlog, temp);
-    
+
     terminateFichier(fichierlog);
 }
 
-void optimizePool2(Graphe* g, const Processeur* initialPool){
-    Fichier* fichierlog = newFichier(CHEMIN_LOG_OPTIMISATION);    
+void optimizePool2(Graphe* g, const Processeur* initialPool) {
+    Fichier* fichierlog = newFichier(CHEMIN_LOG_OPTIMISATION);
     char temp[MAX_BUFFER];
-    
+
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    
+
     int inc = incluDans(g->pool, initialPool, fichierlog);
-    if (inc !=NON_INCLUS){
-        sprintf(temp,"fin de 0x%lx par inclusion\n", g->VirtualAddr);
+    if (inc != NON_INCLUS) {
+        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
-    
+
     inter(g->pool, initialPool); // l'intercection est dans g->pool
-    
+
     if (g->listeFils == NULL) {
-        sprintf(temp,"fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     int l = sizeLL(g->listeFils);
     LinkedList* tete = g->listeFils;
-    for (int i = 0; i<l; i++) {
+    for (int i = 0; i < l; i++) {
         Graphe* fils = tete->valeur;
         optimizePool_aux2(fils, g, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp,"fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
-    
+
     terminateFichier(fichierlog);
 }
 
-DISASM* newDisasmFromGraph(Graphe* g){
+DISASM* newDisasmFromGraph(Graphe* g) {
     DISASM* disasm = newDisasm();
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
@@ -828,41 +827,67 @@ DISASM* newDisasmFromGraph(Graphe* g){
     return disasm;
 }
 
-void debranchage(Graphe* g){
+int debranchage(Graphe* g) {
     DISASM* disasm = newDisasmFromGraph(g);
-    
+
     int branch = disasm->Instruction.BranchType;
-    
+    int res = 0;
     switch (branch) {
         case JO:
-            if(g->pool->tabRegistre[_nOF]){
-            }//saute à l'endroit en argument
-            else {
-                while (g->listeFils->longueur > 1) {//le noeud qui va suivre est forcément le suivant
+            if (g->pool->tabRegistre[_nOF]) {//au moins un fils! 2 si l'adresse de saut connu
+
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    //si le fils n'est pas l'instruction suivante
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
+            } else {
+                if (g->listeFils->longueur == 2) {//le noeud qui va suivre est forcément le suivant
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {//forcement le suivant n'est pas le fils!
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
             ;
             break;
-            
-            case JNO:
-            if(!g->pool->tabRegistre[_nOF]){
-            }
-            else {
-                while (g->listeFils->longueur > 1) {
+
+        case JNO:
+            if (!g->pool->tabRegistre[_nOF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
+            } else {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -871,14 +896,27 @@ void debranchage(Graphe* g){
 
         case JC:
             if (g->pool->tabRegistre[_nCF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -888,14 +926,27 @@ void debranchage(Graphe* g){
 
         case JNC:
             if (!g->pool->tabRegistre[_nCF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -906,16 +957,29 @@ void debranchage(Graphe* g){
         case JE:
             if (!g->pool->tabRegistre[_nZF]) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -923,14 +987,27 @@ void debranchage(Graphe* g){
 
         case JNE:
             if (!g->pool->tabRegistre[_nZF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -940,15 +1017,27 @@ void debranchage(Graphe* g){
 
         case JA:
             if (!(g->pool->tabRegistre[_nZF]) && !(g->pool->tabRegistre[_nCF])) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -959,16 +1048,29 @@ void debranchage(Graphe* g){
         case JNA:
             if ((g->pool->tabRegistre[_nZF]) || (g->pool->tabRegistre[_nCF])) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -979,16 +1081,29 @@ void debranchage(Graphe* g){
         case JS:
             if (!g->pool->tabRegistre[_nSF]) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -997,16 +1112,29 @@ void debranchage(Graphe* g){
         case JNS:
             if (g->pool->tabRegistre[_nSF]) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -1015,16 +1143,29 @@ void debranchage(Graphe* g){
         case JP:
             if (!g->pool->tabRegistre[_nPF]) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -1033,16 +1174,29 @@ void debranchage(Graphe* g){
         case JNP:
             if (g->pool->tabRegistre[_nPF]) {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -1050,15 +1204,28 @@ void debranchage(Graphe* g){
 
         case JL:
             if (g->pool->tabRegistre[_nSF] != g->pool->tabRegistre[_nOF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -1068,15 +1235,28 @@ void debranchage(Graphe* g){
 
         case JNL:
             if (g->pool->tabRegistre[_nSF] = g->pool->tabRegistre[_nOF]) {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -1086,15 +1266,27 @@ void debranchage(Graphe* g){
 
         case JG:
             if ((!g->pool->tabRegistre[_nZF]) && (g->pool->tabRegistre[_nSF] == g->pool->tabRegistre[_nOF])) {
-
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -1104,15 +1296,27 @@ void debranchage(Graphe* g){
 
         case JNG:
             if ((g->pool->tabRegistre[_nZF]) || (g->pool->tabRegistre[_nSF] != g->pool->tabRegistre[_nOF])) {
-
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             }
@@ -1123,16 +1327,29 @@ void debranchage(Graphe* g){
         case JB:
             if (!g->pool->tabRegistre[_nCF]) {//si CF à 1 saut
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -1142,16 +1359,29 @@ void debranchage(Graphe* g){
         case JNB:
             if (g->pool->tabRegistre[_nCF]) {//si CF à 0 saut
 
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
             } else {
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             }
 
             ;
@@ -1159,14 +1389,28 @@ void debranchage(Graphe* g){
 
         case JECXZ:
             if (getRegVal(g->pool->tabRegistre[_nECX]) == 0) {//si ECX=0 on saute
+
+                Graphe* G = (Graphe*) g->listeFils->valeur;
+                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 0;
+                } else {
+                    if (g->listeFils->longueur == 2) {
+                        Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
+                        removeLinkRec(g, G);
+                        res = 0;
+                    }
+                }
             } else {
-                while (g->listeFils->longueur > 1) {
+                if (g->listeFils->longueur == 2) {
                     Graphe* G = (Graphe*) g->listeFils->valeur;
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
+                        res = 0;
                     } else {
                         Graphe* G = (Graphe*) g->listeFils->suiv->valeur;
                         removeLinkRec(g, G);
+                        res = 0;
                     }
                 }
 
@@ -1174,6 +1418,39 @@ void debranchage(Graphe* g){
 
             ;
             break;
+
+            /*
+                    case CallType:
+                        ;
+                        break;
+
+                    case RetType:
+                        ;
+                        break;
+
+                    case JmpType:
+                        switch (disasm->Argument1->ArgType) {
+                            case MEMORY_TYPE:
+                                if(g->pool->tabRegistre[getRegistre(disasm->Argument1->ArgType,g->pool)]->classe){//si la classe a été défini
+                                    //ie on connait la valeur du registre
+                    
+                                };
+                                ;
+                                break;
+                            case CONSTANT_TYPE:
+                                ;
+                                break;
+
+                            case REGISTER_TYPE:
+                                ;
+                                break;
+
+                            default:
+                                break;
+                        }
+                        ;
+                        break;
+             */
 
         default:
             break;

@@ -165,7 +165,7 @@ extern "C" {
      * propagation des constantes
      * @param g
      */
-    void debranchage(Graphe* g);
+    int debranchage(Graphe* g);
     
     /**
      * Cette fonction désassemble l'instruction présente dans le noeud n. Elle

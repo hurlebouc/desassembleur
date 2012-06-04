@@ -39,7 +39,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/loader.o \
 	${OBJECTDIR}/loaderElf.o \
 	${OBJECTDIR}/processeur.o \
-	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/desassembleur.o \
 	${OBJECTDIR}/dyndesass.o \
 	${OBJECTDIR}/Fichier.o \
@@ -103,11 +102,6 @@ ${OBJECTDIR}/processeur.o: processeur.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/processeur.o processeur.c
-
-${OBJECTDIR}/test7.o: test7.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/test7.o test7.c
 
 ${OBJECTDIR}/desassembleur.o: desassembleur.c 
 	${MKDIR} -p ${OBJECTDIR}
