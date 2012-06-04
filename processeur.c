@@ -126,18 +126,22 @@ Processeur* newProcesseur(uint64_t MemorySize){
 
 Processeur* newProcesseurCopy(const Processeur* p){
     Processeur* res = newProcesseur(p->mem->size);
-    res->delta = p->delta;
-    res->stack = newLinkedListCopy(p->stack);
+    initProcesseurCopy(res, p);
+    return res;
+}
+
+void initProcesseurCopy(Processeur* dest, const Processeur* src){
+    dest->delta = src->delta;
+    dest->stack = newLinkedListCopy(src->stack);
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
-        if (estRegFeuille(res->tabRegistre[i])) {
-            copieRegAto(res->tabRegistre[i], p->tabRegistre[i]);
+        if (estRegFeuille(dest->tabRegistre[i])) {
+            copieRegAto(dest->tabRegistre[i], src->tabRegistre[i]);
         }
     }
     for (int i = 0; i<NOMBRE_FLAGS; i++) {
-        res->tabFlags[i] = res->tabFlags[i];
+        dest->tabFlags[i] = dest->tabFlags[i];
     }
-    cloneMem(res->mem, p->mem);
-    return res;
+    cloneMem(dest->mem, src->mem);
 }
 
 void terminateProcesseur(Processeur* proc){
@@ -256,6 +260,10 @@ void inter(Processeur* p1, const Processeur* p2){
     
     if (p1->delta == DELTA_LEVE) {
         p1->delta = p2->delta;
+        if (p2->delta == DELTA_BAISSE) {
+            initProcesseurCopy(p1, p2);
+            return;
+        }
     }
     
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {

@@ -194,6 +194,9 @@ extern "C" {
      * @return le processeur copié
      */
     Processeur* newProcesseurCopy(const Processeur*);
+    
+    void initProcesseurCopy(Processeur* dest, const Processeur* src);
+    
     /**
      * Efface un processeur de la mémoire
      * @param[in] proc
