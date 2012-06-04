@@ -191,11 +191,11 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         if (getRegClassRec(r1) != CLASSE_NON_DEFINIE && (
             getRegClassRec(r2) == CLASSE_NON_DEFINIE ||
             getRegVal(r1) != getRegVal(r2))) {
-            sprintf(temp, "non inclus par registre\n");
+            sprintf(temp, "non inclus par registre %d\n", i);
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r1 : %d = (%d, %lu)\n", i, getRegClassRec(r1), (long) getRegVal(r1));
+            sprintf(temp, "\t r1 = (%d, %lu)\n", getRegClassRec(r1), (long) getRegVal(r1));
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r2 : %d = (%d, %lu)\n", i, getRegClassRec(r2), (long) getRegVal(r2));
+            sprintf(temp, "\t r2 = (%d, %lu)\n", getRegClassRec(r2), (long) getRegVal(r2));
             pushlog(fichierlog, temp);
             return NON_INCLUS;
         }
@@ -205,7 +205,7 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         int f1 = p1->tabFlags[i];
         int f2 = p2->tabFlags[i];
         if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {            
-            sprintf(temp,"non inclus par drapeau\n");
+            sprintf(temp,"non inclus par drapeau %d\n", i);
             pushlog(fichierlog, temp);
             sprintf(temp, "\t f1 = %d\n", f1);
             pushlog(fichierlog, temp);
@@ -226,7 +226,7 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
         if (getByteClass(b1) != CLASSE_NON_DEFINIE &&
             (getByteClass(b2) == CLASSE_NON_DEFINIE ||
              getByteVal(b1) != getByteVal(b2))) {
-                sprintf(temp,"non inclus par mémoire\n");
+                sprintf(temp,"non inclus par byte %llu\n", virtualAddr);
                 pushlog(fichierlog, temp);
                 sprintf(temp, "\t le byte %llu du pool 1 vaut (%d, %u)\n",
                         virtualAddr, 
@@ -257,13 +257,17 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
  */
 
 void inter(Processeur* p1, const Processeur* p2){
+#ifdef DEBUG_MODE
+    Fichier* fichierLog = newFichier(CHEMIN_LOG_OPTIMISATION); 
+#endif
+    char temp[MAX_BUFFER];
     
     if (p1->delta == DELTA_LEVE) {
         p1->delta = p2->delta;
-        if (p2->delta == DELTA_BAISSE) {
-            initProcesseurCopy(p1, p2);
-            return;
-        }
+//        if (p2->delta == DELTA_BAISSE) {
+//            initProcesseurCopy(p1, p2);
+//            return;
+//        }
     }
     
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
@@ -273,6 +277,10 @@ void inter(Processeur* p1, const Processeur* p2){
             getRegClassHigher(r2) == CLASSE_NON_DEFINIE ||
             getRegVal(r1) != getRegVal(r2))) {
             setRegClassHigher(r1, CLASSE_NON_DEFINIE);
+#ifdef DEBUG_MODE
+            sprintf(temp, "\t***INTER*** : registre %d devient non défini\n", i);
+            pushlog(fichierLog, temp);
+#endif
         }
     }
     
@@ -281,6 +289,10 @@ void inter(Processeur* p1, const Processeur* p2){
         int f2 = p2->tabFlags[i];
         if (f1 != FLAG_NON_DEFINI && (f2 == FLAG_NON_DEFINI || f1 != f2)) {
             p1->tabFlags[i] = FLAG_NON_DEFINI;
+#ifdef DEBUG_MODE
+            sprintf(temp, "\t***INTER*** : drapeaux %d devient non défini\n", i);
+            pushlog(fichierLog, temp);
+#endif
         }
     }
     
@@ -296,6 +308,10 @@ void inter(Processeur* p1, const Processeur* p2){
             (getByteClass(b2) == CLASSE_NON_DEFINIE ||
              getByteVal(b1) != getByteVal(b2))) {
                 setByteClass(b1, CLASSE_NON_DEFINIE);
+#ifdef DEBUG_MODE
+                sprintf(temp, "\t***INTER*** : byte %llu devient non défini\n", virtualAddr);
+                pushlog(fichierLog, temp);
+#endif
             }
     }
     
@@ -304,5 +320,13 @@ void inter(Processeur* p1, const Processeur* p2){
          compare(p1->stack, p2->stack) != 0)) {
             terminateLinkedList(p1->stack);
             p1->stack = PILE_NON_DEFINIE;
+#ifdef DEBUG_MODE
+            sprintf(temp, "\t***INTER*** : pile devient non définie\n");
+            pushlog(fichierLog, temp);
+#endif
         }
+    
+#ifdef DEBUG_MODE
+    terminateFichier(fichierLog);
+#endif
 }
