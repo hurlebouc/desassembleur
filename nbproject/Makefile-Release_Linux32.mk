@@ -38,7 +38,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/LinkedList.o \
 	${OBJECTDIR}/loader.o \
 	${OBJECTDIR}/loaderElf.o \
-	${OBJECTDIR}/pool.o \
 	${OBJECTDIR}/processeur.o \
 	${OBJECTDIR}/test7.o \
 	${OBJECTDIR}/desassembleur.o \
@@ -48,6 +47,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/commandes.o \
 	${OBJECTDIR}/Graphe.o \
 	${OBJECTDIR}/registre.o \
+	${OBJECTDIR}/memoire.o \
+	${OBJECTDIR}/variable.o \
 	${OBJECTDIR}/Vide.o \
 	${OBJECTDIR}/main.o
 
@@ -98,11 +99,6 @@ ${OBJECTDIR}/loaderElf.o: loaderElf.c
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/loaderElf.o loaderElf.c
 
-${OBJECTDIR}/pool.o: pool.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/pool.o pool.c
-
 ${OBJECTDIR}/processeur.o: processeur.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -147,6 +143,16 @@ ${OBJECTDIR}/registre.o: registre.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/registre.o registre.c
+
+${OBJECTDIR}/memoire.o: memoire.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/memoire.o memoire.c
+
+${OBJECTDIR}/variable.o: variable.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/variable.o variable.c
 
 ${OBJECTDIR}/Vide.o: Vide.c 
 	${MKDIR} -p ${OBJECTDIR}

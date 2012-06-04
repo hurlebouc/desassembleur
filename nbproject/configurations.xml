@@ -12,6 +12,7 @@
       <itemPath>_macro_Build.h</itemPath>
       <itemPath>beaengine/basic_types.h</itemPath>
       <itemPath>commandes.h</itemPath>
+      <itemPath>definitions.h</itemPath>
       <itemPath>desassembleur.h</itemPath>
       <itemPath>dyndesass.h</itemPath>
       <itemPath>beaengine/export.h</itemPath>
@@ -20,9 +21,10 @@
       <itemPath>loader.h</itemPath>
       <itemPath>macro.h</itemPath>
       <itemPath>beaengine/macros.h</itemPath>
-      <itemPath>pool.h</itemPath>
+      <itemPath>memoire.h</itemPath>
       <itemPath>processeur.h</itemPath>
       <itemPath>registre.h</itemPath>
+      <itemPath>variable.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -43,10 +45,11 @@
       <itemPath>loader.c</itemPath>
       <itemPath>loaderElf.c</itemPath>
       <itemPath>main.c</itemPath>
-      <itemPath>pool.c</itemPath>
+      <itemPath>memoire.c</itemPath>
       <itemPath>processeur.c</itemPath>
       <itemPath>registre.c</itemPath>
       <itemPath>test7.c</itemPath>
+      <itemPath>variable.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"

@@ -18,7 +18,7 @@ void load(Desasembleur* desas, Fichier* fichier){
     //#endif
     
     if (SYS == DESASSEMBLEUR_MAC) {
-        loaderMach(desas, fichier);
+      //  loaderMach(desas, fichier);
     } else {
         loaderElf(desas, fichier);
     }
