@@ -57,7 +57,7 @@ uint64_t getRegVal(const Registre* reg){
 }
 
 uint64_t setRegVal(Registre* reg, uint64_t n){
-    if (reg->classe == CLASSE_NON_DEFINIE) {
+    if (reg->classe == CLASSE_NON_DEFINIE && reg->filsh == NULL) {
         reg->classe = CLASSE_DEFINI;
     }
     uint64_t p = pow(2, reg->taille);
@@ -98,7 +98,7 @@ void setRegClassRec(Registre* reg, int classe){
 
 /*
  * Cette nouvelle version (révision 263) reconnait plus de chose que la version 
- * précédente, c'est à dire qu'elle est moins discriminante au sans de la
+ * précédente, c'est à dire qu'elle est moins discriminante au sens de la
  * définiftion ou non d'un registre.
  */
 
@@ -121,8 +121,26 @@ int getRegClassRec(Registre* reg){
  * ---------------------------------------------------------------------- */
 
 
-void copieRegVal(Registre* dest, Registre* src){
+void copieValReg(Registre* dest, Registre* src){
     setRegVal(dest, getRegVal(src));
+}
+
+void cloneRegTerminaisons(Registre* dest, Registre* src){
+    if (dest->filsh == NULL && src->filsh == NULL) {
+        dest->classe = src->classe;
+        dest->valeur = src->valeur;
+        return;
+    }
+    if (dest->filsh == NULL && src->filsh != NULL) {
+        printf("Erreur : les registres ne sont pas du même type\n");
+        exit(EXIT_FAILURE);
+    }
+    if (dest->filsh != NULL && src->filsh == NULL) {
+        printf("Erreur : les registres ne sont pas du même type\n");
+        exit(EXIT_FAILURE);
+    }
+    cloneRegTerminaisons(dest->filsh, src->filsh);
+    cloneRegTerminaisons(dest->filsl, src->filsl);
 }
 
 int estRegFeuille(Registre* reg){

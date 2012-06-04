@@ -134,12 +134,10 @@ void initProcesseurCopy(Processeur* dest, const Processeur* src){
     dest->delta = src->delta;
     dest->stack = newLinkedListCopy(src->stack);
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
-        if (estRegFeuille(dest->tabRegistre[i])) {
-            copieRegAto(dest->tabRegistre[i], src->tabRegistre[i]);
-        }
+        cloneRegTerminaisons(dest->tabRegistre[i], src->tabRegistre[i]);
     }
     for (int i = 0; i<NOMBRE_FLAGS; i++) {
-        dest->tabFlags[i] = dest->tabFlags[i];
+        dest->tabFlags[i] = src->tabFlags[i];
     }
     cloneMem(dest->mem, src->mem);
 }
@@ -188,14 +186,14 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         Registre* r1 = p1->tabRegistre[i];
         Registre* r2 = p2->tabRegistre[i];
-        if (getRegClassRec(r1) != CLASSE_NON_DEFINIE && (
-            getRegClassRec(r2) == CLASSE_NON_DEFINIE ||
+        if (getRegClassHigher(r1) != CLASSE_NON_DEFINIE && (
+            getRegClassHigher(r2) == CLASSE_NON_DEFINIE ||
             getRegVal(r1) != getRegVal(r2))) {
             sprintf(temp, "non inclus par registre %d\n", i);
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r1 = (%d, %lu)\n", getRegClassRec(r1), (long) getRegVal(r1));
+            sprintf(temp, "\t r1 = (%d, %lu)\n", getRegClassHigher(r1), (long) getRegVal(r1));
             pushlog(fichierlog, temp);
-            sprintf(temp, "\t r2 = (%d, %lu)\n", getRegClassRec(r2), (long) getRegVal(r2));
+            sprintf(temp, "\t r2 = (%d, %lu)\n", getRegClassHigher(r2), (long) getRegVal(r2));
             pushlog(fichierlog, temp);
             return NON_INCLUS;
         }
@@ -264,10 +262,10 @@ void inter(Processeur* p1, const Processeur* p2){
     
     if (p1->delta == DELTA_LEVE) {
         p1->delta = p2->delta;
-//        if (p2->delta == DELTA_BAISSE) {
-//            initProcesseurCopy(p1, p2);
-//            return;
-//        }
+        if (p2->delta == DELTA_BAISSE) {
+            initProcesseurCopy(p1, p2);
+            return;
+        }
     }
     
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {

@@ -103,7 +103,7 @@ extern "C" {
      * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
      * @param[in] src Registre dont on extrait la valeur à copier
      */
-    void copieRegVal(Registre* dest, Registre* src);
+    void copieValReg(Registre* dest, Registre* src);
     
     /**
      * Cette fonction copie atomiquement le contenu d'un registre dans un autre.
@@ -114,6 +114,20 @@ extern "C" {
      * @param src registre à copier
      */
     void copieRegAto(Registre* dest, Registre* src);
+    
+    /**
+     * Cette fonction copie les caractéristiques VALABLES du neurones source dans 
+     * le neurone de destination. Par valable, on comprendra "dont la valeur joue 
+     * dans le calcul de la valeur du registre ou de sa classe". Ainsi, seules 
+     * les classes et les valeurs des registres feuilles sont copiées. Pour 
+     * respecter cette condition, il faut que les registres en paramètre ai la mê
+     * me forme du graphe. 
+     *
+     * Cette fonction NE DEVRAIT PAS être utilisée dans la création des 
+     * instructions : elle est trop spécifique et ne correspond pas à l
+     * 'utilisation qui peut être fait d'un programme assembleur.
+     */
+    void cloneRegTerminaisons(Registre* dest, Registre* src);
     
     /**
      * Ajout à la valeur d'un registre

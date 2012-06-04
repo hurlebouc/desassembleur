@@ -22,12 +22,12 @@ Graphe* newGraphe(void){
     g->listePeres = NULL;
     g->pool = newProcesseur(TAILLE_MEMOIRE);
     g->pool->delta = DELTA_LEVE;
-    for (int i = 0; i < NOMBRE_FLAGS; i++) {
-        g->pool->tabFlags[i] = FLAG_BAS;
-    }
-    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
-        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
-    }
+//    for (int i = 0; i < NOMBRE_FLAGS; i++) {
+//        g->pool->tabFlags[i] = FLAG_BAS;
+//    }
+//    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
+//        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
+//    }
     return g;
 }
 
