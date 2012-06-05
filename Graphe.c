@@ -1456,4 +1456,5 @@ int debranchage(Graphe* g) {
             break;
     }
     free(disasm);
+    return 1-res;
 }
