@@ -835,36 +835,27 @@ int debranchage(Graphe* g) {
     int8_t* tabFlags = g->pool->tabFlags;
     switch (branch) {
         case JO:
-            if (tabFlags[_nOF] == FLAG_HAUT) {//au moins un fils! 2 si l'adresse de saut connu
-
+            if (tabFlags[_nOF] == FLAG_HAUT) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
-                    //si le fils n'est pas l'instruction suivante
                     removeLinkRec(g, G);
                     res = 1;
-                } else {
-                    if (sizeLL(g->listeFils) == 2) {
-                        Graphe* G = (Graphe*) getLastLL(g->listeFils);
-                        removeLinkRec(g, G);
-                        res = 1;
-                    }
+                } else if (sizeLL(g->listeFils) == 2){
+                    Graphe* G = (Graphe*) getLastLL(g->listeFils);
+                    removeLinkRec(g, G);
+                    res = 1;
                 }
-            } else {
-                if (sizeLL(g->listeFils) == 2) {
-                    //le noeud qui va suivre est forcément le suivant
-                    Graphe* G = (Graphe*) getFirstLL(g->listeFils);
-                    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                        //si le fils n'est pas l'instruction suivante
-                        removeLinkRec(g, G);
-                        res = 1;
-                    } else {//forcement le suivant n'est pas le fils!
-                        Graphe* G = (Graphe*) getLastLL(g->listeFils);
-                        removeLinkRec(g, G);
-                        res = 1;
-                    }
+            } else if (tabFlags[_nOF] == FLAG_BAS) {
+                Graphe* G = (Graphe*) getFirstLL(g->listeFils);
+                if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+                    removeLinkRec(g, G);
+                    res = 1;
+                } else if (sizeLL(g->listeFils) == 2){
+                    Graphe* G = (Graphe*) getLastLL(g->listeFils);
+                    removeLinkRec(g, G);
+                    res = 1;
                 }
             }
-            ;
             break;
 
         case JNO:
@@ -952,8 +943,6 @@ int debranchage(Graphe* g) {
                     }
                 }
             }
-
-            ;
             break;
 
         case JE:
@@ -983,8 +972,6 @@ int debranchage(Graphe* g) {
                     }
                 }
             }
-
-            ;
             break;
 
         case JNE:
