@@ -834,7 +834,7 @@ int debranchage(Graphe* g) {
     int res = 0;
     switch (branch) {
         case JO:
-            if (g->pool->tabFlags[_nOF]) {//au moins un fils! 2 si l'adresse de saut connu
+            if (g->pool->tabFlags[_nOF] == FLAG_HAUT) {//au moins un fils! 2 si l'adresse de saut connu
 
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
@@ -867,7 +867,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNO:
-            if (!g->pool->tabFlags[_nOF]) {
+            if (g->pool->tabFlags[_nOF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -896,7 +896,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JC:
-            if (g->pool->tabFlags[_nCF]) {
+            if (g->pool->tabFlags[_nCF] == FLAG_HAUT) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -926,7 +926,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNC:
-            if (!g->pool->tabFlags[_nCF]) {
+            if (g->pool->tabFlags[_nCF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
