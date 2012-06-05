@@ -1234,7 +1234,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNL:
-            if (g->pool->tabRegistre[_nSF] = g->pool->tabRegistre[_nOF]) {
+            if (g->pool->tabRegistre[_nSF] == g->pool->tabRegistre[_nOF]) {
                 Graphe* G = (Graphe*) g->listeFils->valeur;
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
