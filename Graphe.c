@@ -902,9 +902,9 @@ int debranchage(Graphe* g) {
 
         case JE:
             if (tabFlags[_nZF] == FLAG_HAUT) {
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
             break;
 
@@ -930,10 +930,9 @@ int debranchage(Graphe* g) {
 
         case JNA:
             if (tabFlags[_nZF] == FLAG_HAUT || tabFlags[_nCF] == FLAG_HAUT) {
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
 
             ;
@@ -943,21 +942,18 @@ int debranchage(Graphe* g) {
 
         case JS:
             if (tabFlags[_nSF] == FLAG_HAUT) {
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
-
             ;
             break;
 
         case JNS:
             if (tabFlags[_nSF] == FLAG_BAS) {
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
 
             ;
@@ -965,10 +961,9 @@ int debranchage(Graphe* g) {
 
         case JP:
             if (tabFlags[_nPF] == FLAG_HAUT) {
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
 
             ;
@@ -976,10 +971,9 @@ int debranchage(Graphe* g) {
 
         case JNP:
             if (tabFlags[_nPF] == FLAG_BAS) {
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
 
             ;
@@ -1034,10 +1028,9 @@ int debranchage(Graphe* g) {
 
         case JB:
             if (tabFlags[_nCF] == FLAG_HAUT) {//si CF à 1 saut
-
-                res = debranche_fils_saut(g);
-            } else {
                 res = debranche_fils_direct(g);
+            } else {
+                res = debranche_fils_saut(g);
             }
 
             ;
@@ -1046,10 +1039,9 @@ int debranchage(Graphe* g) {
 
         case JNB:
             if (tabFlags[_nCF] == FLAG_BAS) {//si CF à 0 saut
-
-                res = debranche_fils_saut(g);
+     res = debranche_fils_direct(g);
             } else {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_saut(g);
             }
 
             ;
