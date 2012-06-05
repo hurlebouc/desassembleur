@@ -827,6 +827,34 @@ DISASM* newDisasmFromGraph(Graphe* g) {
     return disasm;
 }
 
+static int debranche_fils_direct(Graphe* g){
+    int res = 0;
+    Graphe* G = (Graphe*) getFirstLL(g->listeFils);
+    if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
+        removeLinkRec(g, G);
+        res = 1;
+    } else if (sizeLL(g->listeFils) == 2){
+        Graphe* G = (Graphe*) getLastLL(g->listeFils);
+        removeLinkRec(g, G);
+        res = 1;
+    }
+    return res;
+}
+
+static int debranche_fils_saut(Graphe* g){
+    int res = 0;
+    Graphe* G = (Graphe*) getFirstLL(g->listeFils);
+    if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
+        removeLinkRec(g, G);
+        res = 1;
+    } else if (sizeLL(g->listeFils) == 2){
+        Graphe* G = (Graphe*) getLastLL(g->listeFils);
+        removeLinkRec(g, G);
+        res = 1;
+    }
+    return res;
+}
+
 int debranchage(Graphe* g) {
     DISASM* disasm = newDisasmFromGraph(g);
 
@@ -836,25 +864,9 @@ int debranchage(Graphe* g) {
     switch (branch) {
         case JO:
             if (tabFlags[_nOF] == FLAG_HAUT) {
-                Graphe* G = (Graphe*) getFirstLL(g->listeFils);
-                if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
-                    removeLinkRec(g, G);
-                    res = 1;
-                } else if (sizeLL(g->listeFils) == 2){
-                    Graphe* G = (Graphe*) getLastLL(g->listeFils);
-                    removeLinkRec(g, G);
-                    res = 1;
-                }
+                res = debranche_fils_direct(g);
             } else if (tabFlags[_nOF] == FLAG_BAS) {
-                Graphe* G = (Graphe*) getFirstLL(g->listeFils);
-                if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
-                    removeLinkRec(g, G);
-                    res = 1;
-                } else if (sizeLL(g->listeFils) == 2){
-                    Graphe* G = (Graphe*) getLastLL(g->listeFils);
-                    removeLinkRec(g, G);
-                    res = 1;
-                }
+                res = debranche_fils_saut(g);
             }
             break;
 
