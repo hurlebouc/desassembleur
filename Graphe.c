@@ -832,9 +832,10 @@ int debranchage(Graphe* g) {
 
     int branch = disasm->Instruction.BranchType;
     int res = 0;
+    int8_t* tabFlags = g->pool->tabFlags;
     switch (branch) {
         case JO:
-            if (g->pool->tabFlags[_nOF] == FLAG_HAUT) {//au moins un fils! 2 si l'adresse de saut connu
+            if (tabFlags[_nOF] == FLAG_HAUT) {//au moins un fils! 2 si l'adresse de saut connu
 
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
@@ -867,7 +868,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNO:
-            if (g->pool->tabFlags[_nOF] == FLAG_BAS) {
+            if (tabFlags[_nOF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -926,7 +927,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNC:
-            if (g->pool->tabFlags[_nCF] == FLAG_BAS) {
+            if (tabFlags[_nCF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -956,7 +957,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JE:
-            if (!g->pool->tabFlags[_nZF]) {
+            if (tabFlags[_nZF] == FLAG_HAUT) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -987,7 +988,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNE:
-            if (!g->pool->tabFlags[_nZF]) {
+            if (tabFlags[_nZF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1017,7 +1018,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JA:
-            if (!(g->pool->tabFlags[_nZF]) && !(g->pool->tabFlags[_nCF])) {
+            if (tabFlags[_nZF] == FLAG_BAS && tabFlags[_nCF] == FLAG_BAS) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1047,7 +1048,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNA:
-            if ((g->pool->tabFlags[_nZF]) || (g->pool->tabFlags[_nCF])) {
+            if (tabFlags[_nZF] == FLAG_HAUT || tabFlags[_nCF] == FLAG_HAUT) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1080,7 +1081,7 @@ int debranchage(Graphe* g) {
 
 
         case JS:
-            if (!g->pool->tabFlags[_nSF]) {
+            if (tabFlags[_nSF] == FLAG_HAUT) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1111,7 +1112,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNS:
-            if (g->pool->tabFlags[_nSF]) {
+            if (tabFlags[_nSF] == FLAG_BAS) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1142,7 +1143,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JP:
-            if (!g->pool->tabFlags[_nPF]) {
+            if (tabFlags[_nPF] == FLAG_HAUT) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1173,7 +1174,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JNP:
-            if (g->pool->tabFlags[_nPF]) {
+            if (tabFlags[_nPF] == FLAG_BAS) {
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1204,7 +1205,8 @@ int debranchage(Graphe* g) {
             break;
 
         case JL:
-            if (g->pool->tabFlags[_nSF] != g->pool->tabFlags[_nOF]) {
+            if ((tabFlags[_nSF]==FLAG_BAS && tabFlags[_nOF]==FLAG_HAUT) ||
+                (tabFlags[_nSF]==FLAG_HAUT && tabFlags[_nOF]==FLAG_BAS)) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1235,7 +1237,8 @@ int debranchage(Graphe* g) {
             break;
 
         case JNL:
-            if (g->pool->tabFlags[_nSF] == g->pool->tabFlags[_nOF]) {
+            if ((tabFlags[_nSF]==FLAG_BAS && tabFlags[_nOF]==FLAG_BAS) ||
+                (tabFlags[_nSF]==FLAG_HAUT && tabFlags[_nOF]==FLAG_HAUT)) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1266,7 +1269,9 @@ int debranchage(Graphe* g) {
             break;
 
         case JG:
-            if ((!g->pool->tabFlags[_nZF]) && (g->pool->tabFlags[_nSF] == g->pool->tabFlags[_nOF])) {
+            if (tabFlags[_nZF]==FLAG_BAS && 
+                ((tabFlags[_nSF]==FLAG_BAS && tabFlags[_nOF]==FLAG_BAS) ||
+                 (tabFlags[_nSF]==FLAG_HAUT && tabFlags[_nOF]==FLAG_HAUT))) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1296,7 +1301,9 @@ int debranchage(Graphe* g) {
             break;
 
         case JNG:
-            if ((g->pool->tabFlags[_nZF]) || (g->pool->tabFlags[_nSF] != g->pool->tabFlags[_nOF])) {
+            if (tabFlags[_nZF] == FLAG_HAUT ||
+                (tabFlags[_nSF]==FLAG_BAS && tabFlags[_nOF]==FLAG_HAUT) ||
+                (tabFlags[_nSF]==FLAG_HAUT && tabFlags[_nOF]==FLAG_BAS)) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
@@ -1326,7 +1333,7 @@ int debranchage(Graphe* g) {
             break;
 
         case JB:
-            if (!g->pool->tabFlags[_nCF]) {//si CF à 1 saut
+            if (tabFlags[_nCF] == FLAG_HAUT) {//si CF à 1 saut
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
@@ -1358,7 +1365,7 @@ int debranchage(Graphe* g) {
 
 
         case JNB:
-            if (g->pool->tabFlags[_nCF]) {//si CF à 0 saut
+            if (tabFlags[_nCF] == FLAG_BAS) {//si CF à 0 saut
 
                 if (sizeLL(g->listeFils) == 2) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
