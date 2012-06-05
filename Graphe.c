@@ -841,12 +841,12 @@ int debranchage(Graphe* g) {
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     //si le fils n'est pas l'instruction suivante
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -856,11 +856,11 @@ int debranchage(Graphe* g) {
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         //si le fils n'est pas l'instruction suivante
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {//forcement le suivant n'est pas le fils!
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -872,12 +872,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -885,11 +885,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -901,12 +901,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -914,11 +914,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -931,12 +931,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -944,11 +944,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -963,23 +963,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -992,12 +992,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1005,11 +1005,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1022,12 +1022,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1035,11 +1035,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1054,23 +1054,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1087,23 +1087,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1118,23 +1118,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1149,23 +1149,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1180,23 +1180,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1210,12 +1210,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1224,11 +1224,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1242,12 +1242,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1256,11 +1256,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1275,12 +1275,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1288,11 +1288,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1307,12 +1307,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1320,11 +1320,11 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1339,23 +1339,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1371,23 +1371,23 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             }
@@ -1401,12 +1401,12 @@ int debranchage(Graphe* g) {
                 Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                 if (G->VirtualAddr == (g->VirtualAddr + g->tailleInstruction)) {
                     removeLinkRec(g, G);
-                    res = 0;
+                    res = 1;
                 } else {
                     if (sizeLL(g->listeFils) == 2) {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
             } else {
@@ -1414,55 +1414,20 @@ int debranchage(Graphe* g) {
                     Graphe* G = (Graphe*) getFirstLL(g->listeFils);
                     if (G->VirtualAddr != (g->VirtualAddr + g->tailleInstruction)) {
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     } else {
                         Graphe* G = (Graphe*) getLastLL(g->listeFils);
                         removeLinkRec(g, G);
-                        res = 0;
+                        res = 1;
                     }
                 }
 
             }
-
-            ;
             break;
-
-            /*
-                    case CallType:
-                        ;
-                        break;
-
-                    case RetType:
-                        ;
-                        break;
-
-                    case JmpType:
-                        switch (disasm->Argument1->ArgType) {
-                            case MEMORY_TYPE:
-                                if(g->pool->tabRegistre[getRegistre(disasm->Argument1->ArgType,g->pool)]->classe){//si la classe a été défini
-                                    //ie on connait la valeur du registre
-                    
-                                };
-                                ;
-                                break;
-                            case CONSTANT_TYPE:
-                                ;
-                                break;
-
-                            case REGISTER_TYPE:
-                                ;
-                                break;
-
-                            default:
-                                break;
-                        }
-                        ;
-                        break;
-             */
 
         default:
             break;
     }
     free(disasm);
-    return 1-res;
+    return res;
 }
