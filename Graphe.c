@@ -1039,7 +1039,7 @@ int debranchage(Graphe* g) {
 
         case JNB:
             if (tabFlags[_nCF] == FLAG_BAS) {//si CF à 0 saut
-     res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g);
             } else {
                 res = debranche_fils_saut(g);
             }
