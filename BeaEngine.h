@@ -7,7 +7,6 @@ namespace BeaEngine {
 #include "beaengine/macros.h"
 #include "beaengine/export.h"
 #include "beaengine/basic_types.h"
-//#define ARCHI_PROC 64
     
 #if !defined(BEA_ENGINE_STATIC)
 	#if defined(BUILD_BEA_ENGINE_DLL)

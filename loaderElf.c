@@ -19,7 +19,7 @@ void loaderElf(Desasembleur* desas, Fichier* fichier) {
     unsigned long debutVirtuel = 0;
     Elf32_Ehdr *header = (Elf32_Ehdr *) debutReel; //les premier bits du elf contiennent un header général
     unsigned long per = (unsigned long) debutReel;
-    printf("debut réel %lx \n", (unsigned long) debutReel);
+//    printf("debut réel %lx \n", (unsigned long) debutReel);
     if (header->e_type != ET_EXEC) {//vérifie que c'est bien un fichier executable pure
         printf("Ce fichier n'est pas un executable\n");
     } else {
@@ -81,7 +81,7 @@ void loaderElf(Desasembleur* desas, Fichier* fichier) {
             retrieve.SecurityBlock -= lenght; //fait un tour.
 
             if (lenght != UNKNOWN_OPCODE) {
-                (void) puts(retrieve.CompleteInstr);
+//                (void) puts(retrieve.CompleteInstr);
                 retrieve.EIP = retrieve.EIP + (UIntPtr) lenght;
                 i++;
                 if (strcmp(retrieve.Instruction.Mnemonic, "push ") == 0) {
@@ -115,10 +115,6 @@ void loaderElf(Desasembleur* desas, Fichier* fichier) {
 
 
     }
-
-
-
-
 }
 
 

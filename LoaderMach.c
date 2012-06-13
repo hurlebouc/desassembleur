@@ -120,7 +120,7 @@ void loaderMach(Desasembleur* desas, Fichier* fichier) {
     unsigned long per = ((unsigned long) debutReel) + pev - (debutVirtuel - section->offset);
     
     prog->EIP = (UIntPtr) per;
-    prog->Archi = ARCHI_PROC;
+    prog->Archi = 64;
     prog->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     prog->VirtualAddr = pev;
     prog->SecurityBlock = (unsigned int) (taille - (pev - debutVirtuel));
