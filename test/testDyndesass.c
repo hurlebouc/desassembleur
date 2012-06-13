@@ -27,9 +27,6 @@ void cfg_recc(void){
     strcat(chemin_bin, "mac/recc");
     Fichier* binaire = newFichier(chemin_bin);
     
-//    Desasembleur* desas = newDesassembleur(NULL);
-//    load(desas, binaire);
-    
     enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
@@ -58,16 +55,12 @@ void cfg_entropie(void){
     strcat(chemin_bin, "mac/entropie");
     Fichier* binaire = newFichier(chemin_bin);
     
-//    Desasembleur* desas = newDesassembleur(NULL);
-//    load(desas, binaire);
-    
     enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-//    terminateDesassembleur(desas);
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
@@ -90,16 +83,12 @@ void cfg_disas(void){
     strcat(chemin_bin, "mac/disas");
     Fichier* binaire = newFichier(chemin_bin);
     
-//    Desasembleur* desas = newDesassembleur(NULL);
-//    load(desas, binaire);
-    
     enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-//    terminateDesassembleur(desas);
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
@@ -122,16 +111,12 @@ void cfg_handbrake(void){
     strcat(chemin_bin, "mac/handbrake");
     Fichier* binaire = newFichier(chemin_bin);
     
-//    Desasembleur* desas = newDesassembleur(NULL);
-//    load(desas, binaire);
-    
     enregistrerCFG(binaire, temp);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
     }
-//    terminateDesassembleur(desas);
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
