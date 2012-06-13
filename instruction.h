@@ -8,7 +8,7 @@
 //  Cette classe a pour but de faire de la POO en C..
 //
 
-/**
+/*!
  * @file instruction.h
  */
 
@@ -23,14 +23,14 @@ enum Permission {
     UNLOCKED,
     };
 
-/**
+/*!
  * Cette structure donne toutes les informations permettant de réaliser une 
  * instruction assembleur. Chacune des méthodes doivent également tenir compte du 
  * fait que certain de leurs paamètres peuvent être indéterminés.
  */
 typedef struct _instruction{
     
-    /**
+    /*!
      * Cette méthode indique comment doit être réglé le drapeau d'overflow
      * @param a 
      * @param b
@@ -39,12 +39,12 @@ typedef struct _instruction{
      */
     int(* of_aux)(const Variable a, const Variable b, const Variable c);
     
-    /**
+    /*!
      * Cette méthode indique comment doit être réglé le drapeau CF
      */
     int(* cf_aux)(const Variable a, const Variable b, const Variable c);
     
-    /**
+    /*!
      * Cette méthode indique comment doit être réglé le drapeau CF
      */
     int(* af_aux)(const Variable a, const Variable b, const Variable c);
@@ -52,7 +52,7 @@ typedef struct _instruction{
     int pf_aux;         /*!<UNLOKED si l'instruction modifie PF*/
     int sf_aux;         /*!<UNLOKED si l'instruction modifie SF*/
     
-    /**
+    /*!
      * f renvoie un pointeur sur la Variable qu'il
      * ne modifie par la Variable de flags
      * par contre il doit modifier la Variable IP.
@@ -61,7 +61,7 @@ typedef struct _instruction{
     
 }Instruction;
 
-        /**
+        /*!
          * Execute l'instruction virtuelement si possible et ses conséquentes sur les
          * divers flags. Enregistre le changement d'état
          * dans un processeur virtuel
@@ -74,7 +74,7 @@ typedef struct _instruction{
          */
 Variable do_instr(Instruction*, Variable, Variable, Variable, int, Processeur*);
 
-/**
+/*!
  * Crée une instruction
  * Il vaut mieux ne pas utiliser directement cette fonction dans le cadre de 
  * l'utilisation pour le désassemblage. En effet, il vaut mieux utiliser des
@@ -106,7 +106,7 @@ Instruction* newInstruction(
                                         Processeur*, int)
                             );
 
-/**
+/*!
  * Efface de la mémoire une Instruction.
  * @param Instruction à effacer
  */

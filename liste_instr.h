@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file liste_instr.h
  *  
  */

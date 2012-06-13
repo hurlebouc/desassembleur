@@ -188,7 +188,35 @@ Instruction* init_mov(){
     return newInstruction(of_mov, cf_mov, af_mov, LOCKED, LOCKED, LOCKED, f_mov);
 }
 
+/* ----------------------- SHL -----------------------*/
 
+static int of_shl(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static int cf_shl(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+static int af_shl(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_shl(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
+    
+    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE) {
+        setVarClassRec(droite, CLASSE_NON_DEFINIE);
+        return droite;
+    }
+    
+    incr(_RIP, lenInstr);
+    uint64_t a = getVarVal(gauche);
+    setVarVal(droite, a);
+    return droite;
+}
+
+Instruction* init_shl(){
+    return newInstruction(of_mov, cf_mov, af_mov, LOCKED, LOCKED, LOCKED, f_mov);
+}
 
 /*----------------------------------------------------------------*/
 

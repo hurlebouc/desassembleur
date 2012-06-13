@@ -31,7 +31,7 @@ Graphe* newGraphe(void) {
     return g;
 }
 
-/**
+/*!
  * Efface du graphe une liaison de succession.
  *
  * Cette fonction ne devrait pas être utilisée hors de cette classe car elle
@@ -503,7 +503,7 @@ static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
     return res;
 }
 
-/**
+/*!
  * @deprecated
  */
 static void setGeneralRegistre(int i, ARGTYPE argument[], Processeur*proc, Registre**reg) {
@@ -569,7 +569,7 @@ Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
     return r;
 }
 
-/**
+/*!
  * Cette fonction lit l'instruction du noeud g à partir du (nouveau) pool de 
  * son père
  * Ici g ne sert qu'à donner l'instruction (on utilise pas son pool)
@@ -657,7 +657,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     free(disasm);
 }
 
-/**
+/*!
  * Cette version de l'algorithme de propagation des constantes est une 
  * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
  * 
@@ -695,7 +695,7 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
     pushlog(fichierlog, temp);
 }
 
-/**
+/*!
  * Cette version de l'algorithme de propagation des constantes est une 
  * optimisation mémoire de l'algo de Kildall. Il se fait en espace constant.
  *
@@ -733,7 +733,7 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
     pushlog(fichierlog, temp);
 }
 
-/**
+/*!
  * Cette version de propagation des constante respecte l'agorithme de Kildall
  * (a utiliser dans optimizePool (version 1)
  */

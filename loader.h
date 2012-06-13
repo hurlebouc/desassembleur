@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file loader.h
  */
 
@@ -29,7 +29,7 @@ extern "C" {
 //#endif
     
     extern int SYS;
-    /**
+    /*!
      * Récupère le point d'entrée et met la structure sous la forme approprié pour
      * pouvoir commencer le désassemblage
      * @param[out] desas  Qui va être mis en forme adéquate

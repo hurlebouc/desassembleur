@@ -57,7 +57,7 @@ Segment seg(Memoire* mem, uint64_t virtualAddr, int taille){
     return seg;
 }
 
-/**
+/*!
  * Cette fonction cherche l'index de virtuAddr dans le tableau des 
  * correspondances (qui doit être trié par ordre croissant des virtualAddr).
  */

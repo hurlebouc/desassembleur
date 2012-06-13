@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file registre.h
  */
 
@@ -23,7 +23,7 @@ extern "C" {
 #include <math.h>
 #include "definitions.h"    
     
-    /**
+    /*!
      * Registre virtuel
      */
     typedef struct _registre{ // 32 bytes
@@ -34,21 +34,21 @@ extern "C" {
         struct _registre*   filsh;/*!<registre correspondant aux 16 premiers bytes*/
     }Registre;
     
-    /**
+    /*!
      * Créer un registre virtuel qui n'a pas de sous registres
      * @param[in] taille Taille du registre à creer
      * @param[in] valeur A VOIR AVEC HUBERT
      * @return Renvoie le registre sans fils crée
      */
     Registre* newRegistreFeuille(int taille/*, uint64_t valeur*/);
-    /**
+    /*!
      * Crée un registre avec une seule sous partie (dernier bytes)
      * @param[in] filsl registre qui est la sous partie
      * @return Le registre crée associé à sa sous partie
      */
     Registre* newRegistreFilsUnique(Registre* filsl);
     
-    /**
+    /*!
      * Créer un registre avec deux sous-registres
      * @param[in] filsh Registre qui est la sous partie représentée par les derniers bytes
      * @param[in] filsl Registre qui est la sous partie représentée par les premiers bytes
@@ -56,7 +56,7 @@ extern "C" {
      */
     Registre* newRegistreDeuxFils(Registre* filsh, Registre* filsl);
     
-    /**
+    /*!
      * Efface un registre virtuel de la mémoire
      * @param[in] reg Registre à éffacer
      */
@@ -66,18 +66,18 @@ extern "C" {
      *                       FONCTIONS ESSENTIELLES                           *
      * ---------------------------------------------------------------------- */
     
-    /**
+    /*!
      * Calcul la valeur stocké dans un registre
      * @param[in] reg Le registre dont on veut calculer la valeur
      * @return La valeur stocké dans le registre
      */
     uint64_t getRegVal(const Registre* reg);
     
-    /**
+    /*!
      * Le paramètre n est trop petit : il faut utiliser un type plus grand
      */
     
-    /**
+    /*!
      * Stock une valeur dans un registre si cela est possible
      * @param[in/out] reg Registre dans lequel on veut stocker la valeur
      * @param[in] n Valeur à stocker
@@ -93,19 +93,19 @@ extern "C" {
      *                          FONCTIONS ANNEXES                             *
      * ---------------------------------------------------------------------- */
     
-    /**
+    /*!
      * Cette fonction renvoie 1 si le registre n'a pas de fils et 0 sinon.
      */
     int estRegFeuille(Registre*);
     
-    /**
+    /*!
      * Recopie la valeur d'un registre dans un autre
      * @param[in/out] dest Registre dans lequel on stock la nouvel valeur
      * @param[in] src Registre dont on extrait la valeur à copier
      */
     void copieValReg(Registre* dest, Registre* src);
     
-    /**
+    /*!
      * Cette fonction copie atomiquement le contenu d'un registre dans un autre.
      * Atomique signifique que on ne suit pas les dépendances des registres. 
      * Comme seul les valeurs des registres feuilles sont utilisables, si dest
@@ -115,7 +115,7 @@ extern "C" {
      */
     void copieRegAto(Registre* dest, Registre* src);
     
-    /**
+    /*!
      * Cette fonction copie les caractéristiques VALABLES du neurones source dans 
      * le neurone de destination. Par valable, on comprendra "dont la valeur joue 
      * dans le calcul de la valeur du registre ou de sa classe". Ainsi, seules 
@@ -129,7 +129,7 @@ extern "C" {
      */
     void cloneRegTerminaisons(Registre* dest, Registre* src);
     
-    /**
+    /*!
      * Ajout à la valeur d'un registre
      * @param[in/out] reg Registre auquel on veut ajouter la valeur
      * @param[in] len Valeur à ajouter

@@ -24,7 +24,7 @@ extern "C" {
 #include "Fichier.h"
 #include "desassembleur.h"
 
-/**
+/*!
  * Loader spécifique aux fichier elf 32 bits
  * Cela va chercher le point d'entrée du programme, la taille de l'objet à 
  * desassembler.

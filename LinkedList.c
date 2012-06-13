@@ -297,7 +297,7 @@ unsigned long indexOfLL(LinkedList* liste, void* element) {
     return index;
 }
 
-/**
+/*!
  *
  * @param liste
  * @param element

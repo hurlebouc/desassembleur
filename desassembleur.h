@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file desassembleur.h
  */
 
@@ -34,7 +34,7 @@ extern "C" {
 #include "liste_instr.h"
     
     
-    /**
+    /*!
      Structure qui va être utilisé à chaque étape du désassemblage. */
     typedef struct _desassembleur{
         DISASM* disasm;/*!< Structure nécéssaire à Beaengine pour désassembler */
@@ -42,20 +42,20 @@ extern "C" {
         Processeur* proc; /*!<Processeur virtuel dans l'état avant instruction */
     }Desasembleur;
     
-    /**
+    /*!
      * Créer une structure Disasm utilisé par BeaEngine
      * @return La structure disasm
      */
     PDISASM newDisasm(void);
     
-    /**
+    /*!
      * Crée un nouveau déassembleur
      * @param[in] Désassembleur vide à doter d'un disasm entre autres
      * @return Le désassembleur
      */
     Desasembleur* newDesassembleur(Desasembleur*);
     
-    /**
+    /*!
      * Efface de la mémoire un Desassembleur
      * @param[in] Désassembleur à éffacer
      */

@@ -75,20 +75,20 @@ static int zf_aux(Variable a, Variable b){
         return FLAG_BAS;
     }
 }
-/**
+/*!
  * @deprecated
  */
 static int app_aux(int aux(const Variable, const Variable, const Variable), const Variable a, const Variable b, const Variable c){
     return aux(a,b,c);
 }
-/**
+/*!
  * @deprecated
  */
 static Variable app_f(Variable f(Variable, Variable, Variable, Processeur*, int), Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
     return f(a,b,c,proc,lenInstr);
 }
 
-/**
+/*!
  * Cette fonction sert à formaliser l'utilisation les méthodes d'une 
  * instruction afin d'obliger leur utilisation dans un ordre pré-établi.
  */

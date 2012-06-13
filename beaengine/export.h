@@ -1,4 +1,4 @@
-/**
+/*!
  * @file   export.h
  * @author igor.gutnik@gmail.com
  * @date   Mon Sep 22 09:28:54 2008

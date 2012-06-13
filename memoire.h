@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file memoire.h
  */
 
@@ -49,7 +49,7 @@ Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
  *                       FONCTIONS ESSENTIELLES                           *
  * ---------------------------------------------------------------------- */
 
-/**
+/*!
  * Ne peut marcher que si la classe est définie.
  * Lecture en little-endian (le premier byte donne les 8 bits de poids les plus 
  * faibles et byte++ donne les suivants).
@@ -57,7 +57,7 @@ Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
 
 uint64_t getSegVal(Segment seg);
 
-/**
+/*!
  * Cette fonction donne la classe du segment souhaité sur une longueur donnée.
  *
  * @param seg segment de la mémoire dont on veut connaitre la classe
@@ -66,7 +66,7 @@ uint64_t getSegVal(Segment seg);
  */
 int* getSegClassRec(Segment seg);
 
-/**
+/*!
  * Cette fonction assigne une dans la mémore à l'adresse virtualAddr sur une
  * taille donnée
  *
@@ -76,7 +76,7 @@ int* getSegClassRec(Segment seg);
  */
 uint64_t setSegVal(Segment seg, uint64_t val);
 
-/**
+/*!
  * 
  */
 void setSegClassRec(Segment, int classe);

@@ -314,7 +314,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
 }
 
 
-/**
+/*!
  * Cette fonction est reccursive.
  *
  * au moment ou un fait la reccursion, il faut verifier que on ne passe pas 
@@ -540,7 +540,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     return;
 }
 
-/**
+/*!
  * Cette fonction assemble les elements du tableau
  * pour en faire un seul graphe
  */
@@ -594,7 +594,7 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
 
-/**
+/*!
  * TODO :   Amélioration des couleurs en fonctions des différents cas.
  */
 

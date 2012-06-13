@@ -1,4 +1,4 @@
-/**
+/*!
  * @file   basic_types.h
  * @author  <igor.gutnik@gmail.com>
  * @date   Thu Dec 24 19:31:22 2009

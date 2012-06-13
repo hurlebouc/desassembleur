@@ -1,4 +1,4 @@
-/** 
+/*! 
  * @file dyndesass.h
  */
 

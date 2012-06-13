@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
-/**
+/*!
  * @file processeur.h
  */
 
@@ -166,7 +166,7 @@ extern "C" {
         DELTA_LEVE,
         
     };
-    /**
+    /*!
      * Modélisation du processeur
      */
     typedef struct _Processeur{
@@ -175,7 +175,7 @@ extern "C" {
         Registre*   tabRegistre[NOMBRE_REGISTRES];
         int8_t      tabFlags[NOMBRE_FLAGS];
         
-        int8_t delta; /**
+        int8_t delta; /*!
                        * Ce terme permet de donner à un pool la propriété de ne 
                        * pas appartenir à l'ensemble des pools possibles
                        * (permet à tous les pools du graphe d'être visités au 
@@ -183,12 +183,12 @@ extern "C" {
                        * Par defaut il est baissé.
                        */
     }Processeur;
-    /**
+    /*!
      * Crée et renvoi un nouveau processeur
      * @return Processeur renvoi un processeur non initialisé
      */
     Processeur* newProcesseur(uint64_t MemorySize);
-    /**
+    /*!
      * Crée une copie d'un processeur
      * @param[in] Processeur processeur à copier
      * @return le processeur copié
@@ -197,7 +197,7 @@ extern "C" {
     
     void initProcesseurCopy(Processeur* dest, const Processeur* src);
     
-    /**
+    /*!
      * Efface un processeur de la mémoire
      * @param[in] proc
      */
@@ -208,7 +208,7 @@ extern "C" {
     
     int incluDans(const Processeur* p1, const Processeur* p2,  Fichier* fichierlog);
     
-    /**
+    /*!
      * Le l'intercection des deux pools se trouve dans le premier pool p1.
      * L'autre n'est pas modifié.
      */

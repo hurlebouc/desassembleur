@@ -5,7 +5,7 @@
 //  Created by Hubert Godfroy on 05/02/12.
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
-/** 
+/*! 
  * @file Graphe.h
  */
 
@@ -73,7 +73,7 @@ extern "C" {
     };
     
     extern char* ROOT;
-    /**
+    /*!
      * Elément d'un graphe de flow. C'est en fait un noeud qui donne l'adresse 
      * de ses père et de ses fils.
      */
@@ -94,20 +94,20 @@ extern "C" {
         LinkedList* listePeres;     /*!<Pointeur vers les noeuds précédent*/
     }Graphe;
     
-    /**
+    /*!
      * Crée une structure de type graphe initialisé sans caractéristiques 
      * particulière
      * @return Le graphe crée
      */
     Graphe* newGraphe(void);
     
-    /**
+    /*!
      * Fonction de destruction d'un graphe
      * @param g
      */
     void terminateGraphe(Graphe* g);
     
-    /**
+    /*!
      * Efface la liaison entre deux noeuds. Si cette liaison rends une partie du 
      * graphe inaccessible, cette fonction supprime la partie inaccessible
      * @param pere Noeud dont on veut enlever la liaison avec le noeud fils 
@@ -116,7 +116,7 @@ extern "C" {
      */
     void removeLinkRec(Graphe* pere, Graphe* fils);
     
-    /**
+    /*!
      * Ajoute une liaison entre deux noeud du graphe. 
      * @param[in] pere Noeud auquel on ajoute le noeud fils en tant que 
      * successeur
@@ -125,7 +125,7 @@ extern "C" {
      */
     void addLink(Graphe* pere, Graphe* fils);
     
-    /**
+    /*!
      * Trouve un noeud du graphe en compléxité linaire
      * @param Graphe à parcourir
      * @param Virtuel addresse du noeuf à trouver
@@ -133,7 +133,7 @@ extern "C" {
      */
     Graphe* getNodeWithVirtualAddr(Graphe*, uintptr_t);
 
-    /**
+    /*!
      * Trouve un noeud du graphe en compléxité linaire. Cependant cette fonction
      * ne peut être utilisé qu'une seule fois par graphe.
      * @param Graphe à parcourir
@@ -142,7 +142,7 @@ extern "C" {
      */    
     Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va);
     
-    /**
+    /*!
      * Cette fonction propage les constantes dans un graph à partir du pool 
      * initial. Chaque noeud contient les constantes APRÈS application de 
      * l'instruction
@@ -151,7 +151,7 @@ extern "C" {
      */
     void optimizePool(Graphe*, const Processeur* initialPool);
     
-    /**
+    /*!
      * Cette fonction propage les constantes dans un graph à partir du pool 
      * initial. Chaque noeud contient les constantes AVANT application de 
      * l'instruction
@@ -160,21 +160,21 @@ extern "C" {
      */
     void optimizePool2(Graphe*, const Processeur* initialPool);
     
-    /**
+    /*!
      * Cette fonction supprime les branches qui ne sont pas accessibles après
      * propagation des constantes
      * @param g
      */
     int debranchage(Graphe* g);
     
-    /**
+    /*!
      * Cette fonction désassemble l'instruction présente dans le noeud n. Elle
      * nécéssite la présence en mémoire du programme désassemblé.
      * @param n noeud contenant l'instruction
      */
     DISASM* newDisasmFromGraph(Graphe* n);
     
-    /**
+    /*!
      * Cette fonction renvoie le registre du pool donné en paramètre déterminé
      * par l'argument de type ARGTYPE
      * @param arg définition du registre par la syntaxe de Beaengine
@@ -183,7 +183,7 @@ extern "C" {
      */
     Registre * getRegistre(ARGTYPE arg, Processeur *newPool);
     
-    /**
+    /*!
      * Cette fonction renvoie la constante déterminé par arg à la position du 
      * programme déterminé par disasm
      * @param arg définition de la constante par la syntaxe de Beaengine
