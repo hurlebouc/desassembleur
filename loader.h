@@ -24,9 +24,7 @@ extern "C" {
 #ifdef __APPLE__
 #include "LoaderMach.h"
 #endif
-//#ifdef __linux__
 #include "loaderElf.h"
-//#endif
     
     extern int SYS;
     /*!

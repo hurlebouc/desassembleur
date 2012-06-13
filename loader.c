@@ -10,13 +10,6 @@
 
 void load(Desasembleur* desas, Fichier* fichier){
     
-    //#ifdef __APPLE__
-    //    loaderMach(desas, fichier);
-    //#endif
-    //#ifdef __linux__
-    //    loaderElf(desas, fichier);
-    //#endif
-    
     if (SYS == DESASSEMBLEUR_MAC) {
         loaderMach(desas, fichier);
     } else {

@@ -4,19 +4,6 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "LinkedList.c"
-         timestampString = "352315998.966187"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "195"
-         endingLineNumber = "195"
-         landmarkName = "removeLastLL()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
@@ -95,20 +82,6 @@
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         condition = "g-&gt;VirtualAddr == 0x100000eb6"
-         continueAfterRunningActions = "No"
-         filePath = "Graphe.c"
-         timestampString = "360528579.404912"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "713"
-         endingLineNumber = "713"
-         landmarkName = "optimizePool_aux2()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
@@ -119,59 +92,6 @@
          startingLineNumber = "712"
          endingLineNumber = "712"
          landmarkName = "optimizePool_aux2()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "processeur.c"
-         timestampString = "360531804.416147"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "139"
-         endingLineNumber = "139"
-         landmarkName = "initProcesseurCopy()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "processeur.c"
-         timestampString = "360531804.416147"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "142"
-         endingLineNumber = "142"
-         landmarkName = "initProcesseurCopy()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         condition = "res-&gt;tabRegistre[0]-&gt;filsh-&gt;classe != p-&gt;tabRegistre[0]-&gt;filsh-&gt;classe"
-         continueAfterRunningActions = "No"
-         filePath = "processeur.c"
-         timestampString = "360529818.362902"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "130"
-         endingLineNumber = "130"
-         landmarkName = "newProcesseurCopy()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "processeur.c"
-         timestampString = "360531856.994966"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "134"
-         endingLineNumber = "134"
-         landmarkName = "initProcesseurCopy()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

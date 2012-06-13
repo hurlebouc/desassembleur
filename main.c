@@ -20,7 +20,7 @@ int main(int argc, char* argv []) {
     Fichier* binaire = newFichier("/Users/hubert/Desktop/a.out");
     Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire);
-    Graphe* g = ControleFlow_entier(desas);
-    afficheGraphe(g);
+    Graphe* g = ControleFlow_simplifie(desas);
+    enregistreGraphe(g, newFichier("prog.dot"));
     return 0;
 }

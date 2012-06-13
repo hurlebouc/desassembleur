@@ -68,7 +68,8 @@ int main(int argc, char* argv [])
         if ((NULL == CU_add_test(pSuite, "recc", cfg_recc))||
             (NULL == CU_add_test(pSuite, "entropie", cfg_entropie))||
             (NULL == CU_add_test(pSuite, "disas", cfg_disas))||
-            (NULL == CU_add_test(pSuite, "handbrake", cfg_handbrake)))
+            (NULL == CU_add_test(pSuite, "handbrake", cfg_handbrake))||
+            (NULL == CU_add_test(pSuite, "linux", cfg_prog_linux)))
         {
             CU_cleanup_registry();
             return CU_get_error();

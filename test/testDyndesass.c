@@ -13,6 +13,7 @@ extern char* TESTS;
 
 void cfg_recc(void){
         
+    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -41,6 +42,7 @@ void cfg_recc(void){
 
 void cfg_entropie(void){
         
+    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -69,6 +71,7 @@ void cfg_entropie(void){
 
 void cfg_disas(void){
         
+    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -97,6 +100,7 @@ void cfg_disas(void){
 
 void cfg_handbrake(void){
         
+    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -110,6 +114,36 @@ void cfg_handbrake(void){
     strcpy(chemin_bin, TESTS); 
     strcat(chemin_bin, "mac/handbrake");
     Fichier* binaire = newFichier(chemin_bin);
+    
+    enregistrerCFG(binaire, temp);
+    
+    long diff = fequals(temp, modele);
+    if (diff == -1) {
+        removeFichier(temp);
+    }
+    terminateFichier(temp);
+    terminateFichier(modele);
+    terminateFichier(binaire);
+    CU_ASSERT_EQUAL(diff, -1);
+}
+
+void cfg_prog_linux(void){
+    
+    SYS = DESASSEMBLEUR_LINUX;
+    char chemintmp[L_tmpnam];
+    tmpnam(chemintmp);
+    Fichier* temp = newFichier(chemintmp);
+    
+    char chemin_modele[FILENAME_MAX];
+    strcpy(chemin_modele, TESTS); 
+    strcat(chemin_modele, "linux/prog.dot");
+    Fichier* modele = newFichier(chemin_modele);
+    
+    char chemin_bin[FILENAME_MAX];
+    strcpy(chemin_bin, TESTS); 
+    strcat(chemin_bin, "linux/prog");
+    Fichier* binaire = newFichier(chemin_bin);
+    
     
     enregistrerCFG(binaire, temp);
     
