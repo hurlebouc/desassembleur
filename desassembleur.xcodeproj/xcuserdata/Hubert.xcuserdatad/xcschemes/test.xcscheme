@@ -59,7 +59,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/mac/"
+            argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

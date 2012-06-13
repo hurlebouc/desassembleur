@@ -19,12 +19,12 @@ void cfg_recc(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "recc.dot");
+    strcat(chemin_modele, "mac/recc.dot");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "recc");
+    strcat(chemin_bin, "mac/recc");
     Fichier* binaire = newFichier(chemin_bin);
     
 //    Desasembleur* desas = newDesassembleur(NULL);
@@ -50,12 +50,12 @@ void cfg_entropie(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "entropie.dot");
+    strcat(chemin_modele, "mac/entropie.dot");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "entropie");
+    strcat(chemin_bin, "mac/entropie");
     Fichier* binaire = newFichier(chemin_bin);
     
 //    Desasembleur* desas = newDesassembleur(NULL);
@@ -82,12 +82,12 @@ void cfg_disas(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "disas.dot");
+    strcat(chemin_modele, "mac/disas.dot");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "disas");
+    strcat(chemin_bin, "mac/disas");
     Fichier* binaire = newFichier(chemin_bin);
     
 //    Desasembleur* desas = newDesassembleur(NULL);
@@ -114,12 +114,12 @@ void cfg_handbrake(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "handbrake.dot");
+    strcat(chemin_modele, "mac/handbrake.dot");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "handbrake");
+    strcat(chemin_bin, "mac/handbrake");
     Fichier* binaire = newFichier(chemin_bin);
     
 //    Desasembleur* desas = newDesassembleur(NULL);

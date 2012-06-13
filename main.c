@@ -11,32 +11,16 @@
 
 char* ROOT;
 
-int SYS = DESASSEMBLEUR_MAC;
+int SYS = DESASSEMBLEUR_LINUX;
 
 int main(int argc, char* argv []) {
         
     ROOT = argv[0];
     
-    unsigned int n = 0xc00a;
-//    int* p = &n;
-//    printf("p = %lx\n", p);
-//    printf("p + 1 = %lx\n", p+1);
-//    p = p+1;
-//    printf("p + 1 = %lx\n", p);
-    unsigned char i = *( ((char*) &n) + 1 );
-//    unsigned char i = *( (char*) p );
-    printf("i = %d\n", i);
-    
-    int** tab = malloc(sizeof(void*)*10);
-    tab[2] = malloc(sizeof(int));
-    *tab[2] = 4;
-    free(tab[2]);
-    if (tab[2] == NULL) {
-        printf("NULL\n");
-    } else {
-        printf("%d\n", *tab[2]);
-    }
-    
-    printf("done.\n");
+    Fichier* binaire = newFichier("/Users/hubert/Desktop/a.out");
+    Desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire);
+    Graphe* g = ControleFlow_entier(desas);
+    afficheGraphe(g);
     return 0;
 }

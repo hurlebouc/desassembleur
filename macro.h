@@ -18,5 +18,6 @@
 #define DESASSEMBLEUR_MAC 1
 #define DEBUG_MODE
 #define TAILLE_MEMOIRE 0x1000
+#define ARCHI_PROC 64
 
 #endif

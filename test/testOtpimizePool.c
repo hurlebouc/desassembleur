@@ -21,12 +21,12 @@ void optpool_recc(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "recc_opt.log");
+    strcat(chemin_modele, "mac/recc_opt.log");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "recc");
+    strcat(chemin_bin, "mac/recc");
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
@@ -59,12 +59,12 @@ void optpool_entropie(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "entropie_opt.log");
+    strcat(chemin_modele, "mac/entropie_opt.log");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "entropie");
+    strcat(chemin_bin, "mac/entropie");
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
@@ -95,12 +95,12 @@ void optpool_disas(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "disas_opt.log");
+    strcat(chemin_modele, "mac/disas_opt.log");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "disas");
+    strcat(chemin_bin, "mac/disas");
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
@@ -131,12 +131,12 @@ void optpool_handbrake(void){
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
-    strcat(chemin_modele, "handbrake_opt.log");
+    strcat(chemin_modele, "mac/handbrake_opt.log");
     Fichier* modele = newFichier(chemin_modele);
     
     char chemin_bin[FILENAME_MAX];
     strcpy(chemin_bin, TESTS); 
-    strcat(chemin_bin, "handbrake");
+    strcat(chemin_bin, "mac/handbrake");
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
