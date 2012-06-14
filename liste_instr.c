@@ -22,11 +22,26 @@ static int nbrup(uint8_t n){
     return res;
 }
 
+/*!
+ * Donne le p-eme bit de n en partant du bit le plus faible (commence à 0)
+ */
 static int getbits(uint64_t n, int p){
-    for (int i = 0; i<p-1; i++) {
+    for (int i = 0; i<p; i++) {
         n=n/2;
     }
     return  n % 2;
+}
+
+/*!
+ * Donne le nombre de bits sur lesquels est écrit n
+ */
+static int getSize(uint64_t n){
+    int res = 0;
+    while (n != 0) {
+        n = n/2;
+        res++;
+    }
+    return res;
 }
 
 /* ----------------------- AND -----------------------*/
@@ -48,7 +63,8 @@ static int af_and(const Variable a, const Variable b, const Variable c){
 
 static Variable f_and(Variable destination, Variable masque, Variable stub,Processeur* proc, int lenInstr){
     
-    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(destination) == CLASSE_NON_DEFINIE) {
         setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
@@ -131,7 +147,8 @@ static int af_add(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_add(Variable destination, Variable masque, Variable stub , Processeur* proc, int lenInstr){
     
-    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(masque) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(destination) == CLASSE_NON_DEFINIE) {
         setVarClassRec(destination, CLASSE_NON_DEFINIE);
         return destination;
     }
@@ -166,15 +183,15 @@ static int af_mov(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_mov(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
     
-    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE) {
-        setVarClassRec(droite, CLASSE_NON_DEFINIE);
-        return droite;
+    if (getVarClassRec(droite) == CLASSE_NON_DEFINIE) {
+        setVarClassRec(gauche, CLASSE_NON_DEFINIE);
+        return gauche;
     }
     
     incr(_RIP, lenInstr);
-    uint64_t a = getVarVal(gauche);
-    setVarVal(droite, a);
-    return droite;
+    uint64_t a = getVarVal(droite);
+    setVarVal(gauche, a);
+    return gauche;
     /*
      * Que se passe t'il si les deux registres n'ont pas la même taille ?
      * Dans ce cas, comment se passe une extention d'une valeur (signé, non 
@@ -188,34 +205,85 @@ Instruction* init_mov(){
     return newInstruction(of_mov, cf_mov, af_mov, LOCKED, LOCKED, LOCKED, f_mov);
 }
 
-/* ----------------------- SHL -----------------------*/
+/* ----------------------- SHL : shl eax 2 -----------------------*/ //d1
 
 static int of_shl(const Variable a, const Variable b, const Variable stub){
-    return FLAG_UNMODIFIED;
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val > 1) {
+        return FLAG_NON_DEFINI;
+    }
+    int bit = getbits(a_val, getVarTaille(a) - b_val - 1);
+    int top_bit = getbits(a_val, getVarTaille(a) - 1);
+    if (bit != top_bit) {
+        return FLAG_HAUT;
+    } else {
+        return FLAG_BAS;
+    }
 }
 
 static int cf_shl(const Variable a, const Variable b, const Variable stub){
-    return FLAG_UNMODIFIED;
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val == 0) {
+        return FLAG_UNMODIFIED;
+    }
+    int bit = getbits(a_val, getVarTaille(a) - b_val);
+    if (bit == 1) {
+        return FLAG_HAUT;
+    } else {
+        return FLAG_BAS;
+    }
 }
 static int af_shl(const Variable a, const Variable b, const Variable stub){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val > getVarTaille(a) - getSize(a_val)) {
+        return FLAG_NON_DEFINI;
+    }
     return FLAG_UNMODIFIED;
 }
 
 static Variable f_shl(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
     
-    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE) {
+    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(droite) == CLASSE_NON_DEFINIE) {
         setVarClassRec(droite, CLASSE_NON_DEFINIE);
         return droite;
     }
     
     incr(_RIP, lenInstr);
     uint64_t a = getVarVal(gauche);
-    setVarVal(droite, a);
-    return droite;
+    for (int i = 0; i<getVarVal(droite); i++) {
+        a = a*2;
+    }
+    setVarVal(gauche, a);
+    return gauche;
 }
 
 Instruction* init_shl(){
-    return newInstruction(of_mov, cf_mov, af_mov, LOCKED, LOCKED, LOCKED, f_mov);
+    return newInstruction(of_shl, cf_shl, af_shl, UNLOCKED, UNLOCKED, UNLOCKED, f_shl);
 }
 
 /*----------------------------------------------------------------*/
