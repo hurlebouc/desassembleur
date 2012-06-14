@@ -26,14 +26,18 @@ extern "C" {
 #endif
 #include "loaderElf.h"
     
-    extern int SYS;
+    enum TypeSystem{
+        MACHO_64,
+        ELF_32,
+    };
+    
     /*!
      * Récupère le point d'entrée et met la structure sous la forme approprié pour
      * pouvoir commencer le désassemblage
      * @param[out] desas  Qui va être mis en forme adéquate
      * @param[in] fichier Executable qui a été copié dans un buffer
      */
-    void load(Desasembleur* desas, Fichier* fichier);
+    void load(Desasembleur* desas, Fichier* fichier, int sys);
     
 #ifdef __cplusplus
 }

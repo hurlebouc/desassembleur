@@ -8,18 +8,18 @@
 
 #include "commandes.h"
 
-void afficherCFG(Fichier* binaire){
+void afficherCFG(Fichier* binaire, int sys){
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, sys);
     Graphe*g = ControleFlow_simplifie(desas);
     afficheGraphe(g);
     terminateDesassembleur(desas);
     terminateGraphe(g);
 }
 
-void enregistrerCFG(Fichier* binaire, Fichier* tmp){
+void enregistrerCFG(Fichier* binaire, Fichier* tmp, int sys){
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, sys);
     Graphe*g = ControleFlow_simplifie(desas);
     enregistreGraphe(g, tmp);
     terminateDesassembleur(desas);

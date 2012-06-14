@@ -16,7 +16,6 @@ void optpool_factice(void){
 }
 
 void optpool_recc(void){
-    SYS = DESASSEMBLEUR_MAC;
     Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
     cleanFile(log);
     
@@ -31,7 +30,7 @@ void optpool_recc(void){
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, MACHO_64);
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
@@ -55,7 +54,6 @@ void optpool_recc(void){
 }
 
 void optpool_entropie(void){
-    SYS = DESASSEMBLEUR_MAC;
     Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
     cleanFile(log);
     
@@ -70,7 +68,7 @@ void optpool_entropie(void){
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, MACHO_64);
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
@@ -92,7 +90,6 @@ void optpool_entropie(void){
 }
 
 void optpool_disas(void){
-    SYS = DESASSEMBLEUR_MAC;
     Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
     cleanFile(log);
     
@@ -107,7 +104,7 @@ void optpool_disas(void){
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, MACHO_64);
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
@@ -129,7 +126,6 @@ void optpool_disas(void){
 }
 
 void optpool_handbrake(void){
-    SYS = DESASSEMBLEUR_MAC;
     Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
     cleanFile(log);
     
@@ -144,7 +140,7 @@ void optpool_handbrake(void){
     Fichier* binaire = newFichier(chemin_bin);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, MACHO_64);
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);

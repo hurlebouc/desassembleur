@@ -13,7 +13,6 @@ extern char* TESTS;
 
 void cfg_recc(void){
         
-    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -28,7 +27,7 @@ void cfg_recc(void){
     strcat(chemin_bin, "mac/recc");
     Fichier* binaire = newFichier(chemin_bin);
     
-    enregistrerCFG(binaire, temp);
+    enregistrerCFG(binaire, temp, MACHO_64);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
@@ -42,7 +41,6 @@ void cfg_recc(void){
 
 void cfg_entropie(void){
         
-    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -57,7 +55,7 @@ void cfg_entropie(void){
     strcat(chemin_bin, "mac/entropie");
     Fichier* binaire = newFichier(chemin_bin);
     
-    enregistrerCFG(binaire, temp);
+    enregistrerCFG(binaire, temp, MACHO_64);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
@@ -71,7 +69,6 @@ void cfg_entropie(void){
 
 void cfg_disas(void){
         
-    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -86,7 +83,7 @@ void cfg_disas(void){
     strcat(chemin_bin, "mac/disas");
     Fichier* binaire = newFichier(chemin_bin);
     
-    enregistrerCFG(binaire, temp);
+    enregistrerCFG(binaire, temp, MACHO_64);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
@@ -100,7 +97,6 @@ void cfg_disas(void){
 
 void cfg_handbrake(void){
         
-    SYS = DESASSEMBLEUR_MAC;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -115,7 +111,7 @@ void cfg_handbrake(void){
     strcat(chemin_bin, "mac/handbrake");
     Fichier* binaire = newFichier(chemin_bin);
     
-    enregistrerCFG(binaire, temp);
+    enregistrerCFG(binaire, temp, MACHO_64);
     
     long diff = fequals(temp, modele);
     if (diff == -1) {
@@ -129,7 +125,6 @@ void cfg_handbrake(void){
 
 void cfg_prog_linux(void){
     
-    SYS = DESASSEMBLEUR_LINUX;
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -145,8 +140,7 @@ void cfg_prog_linux(void){
     Fichier* binaire = newFichier(chemin_bin);
     
     
-    enregistrerCFG(binaire, temp);
-    
+    enregistrerCFG(binaire, temp, ELF_32);
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);

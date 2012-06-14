@@ -8,9 +8,9 @@
 
 #include "loader.h"
 
-void load(Desasembleur* desas, Fichier* fichier){
+void load(Desasembleur* desas, Fichier* fichier, int sys){
     
-    if (SYS == DESASSEMBLEUR_MAC) {
+    if (sys == MACHO_64) {
         loaderMach(desas, fichier);
     } else {
         loaderElf(desas, fichier);

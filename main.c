@@ -11,15 +11,13 @@
 
 char* ROOT;
 
-int SYS = DESASSEMBLEUR_LINUX;
-
 int main(int argc, char* argv []) {
         
     ROOT = argv[0];
     
     Fichier* binaire = newFichier("/Users/hubert/Desktop/a.out");
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire);
+    load(desas, binaire, ELF_32);
     Graphe* g = ControleFlow_simplifie(desas);
     enregistreGraphe(g, newFichier("prog.dot"));
     return 0;

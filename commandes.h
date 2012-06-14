@@ -17,8 +17,8 @@ extern "C" {
 #include "loader.h"
 #include "Vide.h"
 
-void afficherCFG(Fichier* binaire);
-void enregistrerCFG(Fichier* binaire, Fichier* dest);
+void afficherCFG(Fichier* binaire, int sys);
+void enregistrerCFG(Fichier* binaire, Fichier* dest, int sys);
 void afficherVide(Desasembleur* desas);
 void enregistrerVide(Desasembleur* desas, Fichier* fichier);
 

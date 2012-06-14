@@ -23,7 +23,6 @@
 
 char* ROOT;
 char* TESTS;
-int SYS = DESASSEMBLEUR_MAC;
 
 #define TRUE 1
 #define FALSE 0
