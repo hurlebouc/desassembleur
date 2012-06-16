@@ -241,10 +241,17 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
                 return NON_INCLUS;
         }
     }
+    
+    /*
+     * Pour le test des piles, on a pas besoin de vérifier le contenu de la pile, 
+     * car il a deja été fait lors de la comparaison des mémoires. Il faut juste 
+     * vérifier la "forme" de la pile et qu'elle pointe bien vers les mêmes 
+     * choses
+     */
 //    
 //	if (p1->stack != PILE_NON_DEFINIE && 
 //        (p2->stack == PILE_NON_DEFINIE ||
-//         compare(p1->stack, p2->stack) != 0)) {
+//         compareLL(p1->stack, p2->stack) != 0)) {
 //            sprintf(temp, "non inclus par pile\n");
 //            pushlog(fichierlog, temp);
 //            return NON_INCLUS;

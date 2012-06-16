@@ -393,22 +393,43 @@ static int af_push(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_push(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
     
-//    if (getVarClassRec(a) == CLASSE_NON_DEFINIE {
-//        setVarClassRec(droite, CLASSE_NON_DEFINIE);
-//        return droite;
-//    }
-//    
-//    incr(_RIP, lenInstr);
-//    uint64_t a = getVarVal(gauche);
-//    for (int i = 0; i<getVarVal(droite); i++) {
-//        a = a/2;
-//    }
-//    setVarVal(gauche, a);
-//    return gauche;
+
+    pushStack(_STACK, a, _RSP);
+    incr(_RIP, lenInstr);
 }
 
 Instruction* init_push(){
     return newInstruction(of_push, cf_push, af_push, LOCKED, LOCKED, LOCKED, f_push);
+}
+
+/* ----------------------- CMP -----------------------*/
+
+/* NON SIGNE */
+
+static int of_cmp(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static int cf_cmp(const Variable a, const Variable b, const Variable stub){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    if (getVarVal(a) <= getVarVal(b)) {
+        return FLAG_BAS;
+    }
+    return FLAG_HAUT;
+}
+static int af_cmp(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_cmp(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+}
+
+Instruction* init_cmp(){
+    return newInstruction(of_cmp, cf_cmp, af_cmp, UNLOCKED, UNLOCKED, UNLOCKED, f_cmp);
 }
 
 /*----------------------------------------------------------------*/
