@@ -15,13 +15,14 @@
 /* une pile contient des segments mémoire */
 typedef struct{
     LinkedList* pile;
-    Memoire* mem;
 }Stack;
 
-Stack* newStack(Memoire*);
+Stack* newStack();
+void terminateStack(Stack*);
 uint64_t getStackVal(Stack*);
 int getStackClass(Stack*);
 void pushStack(Stack*, Variable, Registre* _RSP);
 void popStack(Stack*, Variable, Registre* _RSP);
+Stack* newStackCopy(Stack* src, Memoire*);
 
 #endif

@@ -387,7 +387,7 @@ void afficheLinkedList(LinkedList* liste, short tailleElement) {
     printf("]\n");
 }
 
-unsigned long compare(LinkedList* l1, LinkedList* l2){
+unsigned long compareLL(LinkedList* l1, LinkedList* l2){
     if (sizeLL(l1) != sizeLL(l2)) {
         return -1;
     } 

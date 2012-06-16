@@ -10,11 +10,15 @@
 #include "pile.h"
 
 
-Stack* newStack(Memoire* mem){
+Stack* newStack(){
     Stack* res = malloc(sizeof(Stack));
     res->pile = newLinkedList();
-    res->mem = mem;
     return res;
+}
+
+void terminateStack(Stack* pile){
+    terminateLinkedListTotal(pile->pile);
+    free(pile);
 }
 
 void pushStack(Stack*stack, Variable var, Registre* RSP){
@@ -58,5 +62,20 @@ void popStack(Stack* stack, Variable var, Registre* RSP){
     setVarVal(var, val);
     setVarClassRec(var, getSegClassRec(*seg)[0]);
     removeFirstLL(stack->pile);
-    
+    free(seg);
+}
+
+Stack* newStackCopy(Stack* src, Memoire* mem){
+    if (src == NULL) {
+        return NULL;
+    }
+    Stack* dest = newStack();
+    LinkedList* tete = src->pile;
+    uint64_t taille = sizeLL(tete);
+    for (uint64_t i = 0; i<taille; i++) {
+        Segment* segSrc = tete->valeur;
+        Segment* segDest = newSegment(mem, segSrc->virtualAddr, segSrc->taille);
+        addFirstLL(dest->pile, segDest);
+    }
+    return dest;
 }

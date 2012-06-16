@@ -190,7 +190,7 @@ extern "C" {
      * @param l2
      * @return Retourne 0 si les deux listes sont identiques
      */
-    unsigned long compare(LinkedList* l1, LinkedList* l2);
+    unsigned long compareLL(LinkedList* l1, LinkedList* l2);
     
     /*!
      * @deprecated

@@ -116,7 +116,7 @@ Processeur* newProcesseur(uint64_t MemorySize){
     }
     
     
-    _STACK  =   newLinkedList();
+    _STACK  =   newStack();
     proc->mem = newMemoire(MemorySize);
     
     proc->delta = DELTA_BAISSE;
@@ -132,7 +132,6 @@ Processeur* newProcesseurCopy(const Processeur* p){
 
 void initProcesseurCopy(Processeur* dest, const Processeur* src){
     dest->delta = src->delta;
-    dest->stack = newLinkedListCopy(src->stack);
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         cloneRegTerminaisons(dest->tabRegistre[i], src->tabRegistre[i]);
     }
@@ -140,6 +139,9 @@ void initProcesseurCopy(Processeur* dest, const Processeur* src){
         dest->tabFlags[i] = src->tabFlags[i];
     }
     cloneMem(dest->mem, src->mem);
+    terminateStack(dest->stack);
+    dest->stack = newStackCopy(src->stack, dest->mem);
+//    dest->stack = newLinkedListCopy(src->stack);
 }
 
 void terminateProcesseur(Processeur* proc){
@@ -167,7 +169,7 @@ void terminateProcesseur(Processeur* proc){
     terminateRegistre(_ES);
     terminateRegistre(_FS);
     terminateRegistre(_GS);
-    terminateLinkedList(proc->stack);
+    terminateStack(proc->stack);
     terminateMemoire(proc->mem);
     free(proc);
 }
@@ -310,19 +312,19 @@ void inter(Processeur* p1, const Processeur* p2){
                 sprintf(temp, "\t***INTER*** : byte %llu devient non défini\n", virtualAddr);
                 pushlog(fichierLog, temp);
 #endif
-            }
+        }
     }
     
-    if (p1->stack != PILE_NON_DEFINIE && 
-        (p2->stack == PILE_NON_DEFINIE ||
-         compare(p1->stack, p2->stack) != 0)) {
-            terminateLinkedList(p1->stack);
-            p1->stack = PILE_NON_DEFINIE;
-#ifdef DEBUG_MODE
-            sprintf(temp, "\t***INTER*** : pile devient non définie\n");
-            pushlog(fichierLog, temp);
-#endif
-        }
+//    if (p1->stack != PILE_NON_DEFINIE && 
+//        (p2->stack == PILE_NON_DEFINIE ||
+//         compareLL(p1->stack, p2->stack) != 0)) {
+//            terminateLinkedList(p1->stack);
+//            p1->stack = PILE_NON_DEFINIE;
+//#ifdef DEBUG_MODE
+//            sprintf(temp, "\t***INTER*** : pile devient non définie\n");
+//            pushlog(fichierLog, temp);
+//#endif
+//        }
     
 #ifdef DEBUG_MODE
     terminateFichier(fichierLog);
