@@ -44,6 +44,7 @@ Memoire* newMemoire(uint64_t tailleMax);
 void terminateMemoire(Memoire* mem);
 
 Segment seg(Memoire* mem, uint64_t virtualAddr, int taille);
+Segment* newSegment(Memoire* mem, uint64_t virtualAddr, int taille);
 
 /* ---------------------------------------------------------------------- *
  *                       FONCTIONS ESSENTIELLES                           *

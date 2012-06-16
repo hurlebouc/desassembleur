@@ -57,6 +57,14 @@ Segment seg(Memoire* mem, uint64_t virtualAddr, int taille){
     return seg;
 }
 
+Segment* newSegment(Memoire* mem, uint64_t virtualAddr, int taille){
+    Segment* seg = malloc(sizeof(Segment));
+    seg->mem = mem;
+    seg->taille = taille;
+    seg->virtualAddr = virtualAddr;
+    return seg;
+}
+
 /*!
  * Cette fonction cherche l'index de virtuAddr dans le tableau des 
  * correspondances (qui doit être trié par ordre croissant des virtualAddr).

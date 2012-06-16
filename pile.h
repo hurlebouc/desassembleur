@@ -21,7 +21,7 @@ typedef struct{
 Stack* newStack(Memoire*);
 uint64_t getStackVal(Stack*);
 int getStackClass(Stack*);
-void pushStack(Stack*, Variable*, Registre* _RSP);
-void popStack(Stack*, Variable*, Registre* _RSP);
+void pushStack(Stack*, Variable, Registre* _RSP);
+void popStack(Stack*, Variable, Registre* _RSP);
 
 #endif
