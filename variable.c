@@ -37,7 +37,7 @@ int getVarTaille(Variable var){
     if (var.type == reg_type) {
         return var.reg->taille;
     } else {
-        return var.seg.taille;
+        return var.seg.taille * 8;
     }
 }
 

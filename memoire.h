@@ -37,7 +37,7 @@ typedef  struct _memoire {
 typedef struct _segment{
     Memoire* mem;
     uint64_t virtualAddr;
-    uint8_t taille;
+    uint8_t taille; // en octet
 }Segment;
 
 Memoire* newMemoire(uint64_t tailleMax);

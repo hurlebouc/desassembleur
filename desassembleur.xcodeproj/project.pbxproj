@@ -31,6 +31,8 @@
 		B453216A1506188B001C6689 /* loader.c in Sources */ = {isa = PBXBuildFile; fileRef = B45321691506188B001C6689 /* loader.c */; };
 		B453216B1506188B001C6689 /* loader.c in Sources */ = {isa = PBXBuildFile; fileRef = B45321691506188B001C6689 /* loader.c */; };
 		B479109914FFE5450004216E /* Vide.c in Sources */ = {isa = PBXBuildFile; fileRef = B479109814FFE5450004216E /* Vide.c */; };
+		B47EB393158C8E6C00467C82 /* pile.c in Sources */ = {isa = PBXBuildFile; fileRef = B47EB392158C8E6C00467C82 /* pile.c */; };
+		B47EB394158C8E6C00467C82 /* pile.c in Sources */ = {isa = PBXBuildFile; fileRef = B47EB392158C8E6C00467C82 /* pile.c */; };
 		B4ABD602150174EB00238EC7 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = B4ABD601150174EB00238EC7 /* test.c */; };
 		B4B456AC1505316D001A49E2 /* commandes.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B456AB1505316D001A49E2 /* commandes.c */; };
 		B4B456AD1505316D001A49E2 /* commandes.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B456AB1505316D001A49E2 /* commandes.c */; };
@@ -115,6 +117,8 @@
 		B453216C15061895001C6689 /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
 		B479109614FFE5320004216E /* Vide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vide.h; sourceTree = "<group>"; };
 		B479109814FFE5450004216E /* Vide.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vide.c; sourceTree = "<group>"; };
+		B47EB392158C8E6C00467C82 /* pile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pile.c; sourceTree = "<group>"; };
+		B47EB396158C8E7B00467C82 /* pile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pile.h; sourceTree = "<group>"; };
 		B4ABD601150174EB00238EC7 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = test.c; path = test/test.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		B4ABD6031501753600238EC7 /* runTest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = runTest.sh; path = test/runTest.sh; sourceTree = "<group>"; };
 		B4AF79E51501568800573ABD /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,6 +179,7 @@
 				B4FA7C7F150F3BE00023615C /* registre.h */,
 				B44A8BE81577DFA9004DEF89 /* memoire.h */,
 				B417098715795B74000AA605 /* variable.h */,
+				B47EB396158C8E7B00467C82 /* pile.h */,
 				B4E455A615077C5300D0A41A /* processeur.h */,
 				B43A2EDE151D0907007EB249 /* instruction.h */,
 				B40A6AF0151DD19A00A19FC9 /* liste_instr.h */,
@@ -206,6 +211,7 @@
 				B40F68D9150F3B67006ED6E1 /* registre.c */,
 				B44A8BE41577DF95004DEF89 /* memoire.c */,
 				B417098315795B51000AA605 /* variable.c */,
+				B47EB392158C8E6C00467C82 /* pile.c */,
 				B4E455A215077C4900D0A41A /* processeur.c */,
 				B43A2EE0151D0921007EB249 /* instruction.c */,
 				B40A6AEC151DD18500A19FC9 /* liste_instr.c */,
@@ -413,6 +419,7 @@
 				B40A6AED151DD18500A19FC9 /* liste_instr.c in Sources */,
 				B44A8BE51577DF95004DEF89 /* memoire.c in Sources */,
 				B417098415795B51000AA605 /* variable.c in Sources */,
+				B47EB393158C8E6C00467C82 /* pile.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +448,7 @@
 				B44A8BE61577DF95004DEF89 /* memoire.c in Sources */,
 				AD0035811579366B0046A5FD /* testMemoire.c in Sources */,
 				B417098515795B51000AA605 /* variable.c in Sources */,
+				B47EB394158C8E6C00467C82 /* pile.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

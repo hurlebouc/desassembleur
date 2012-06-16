@@ -298,7 +298,7 @@ Instruction* init_shl(){
     return newInstruction(of_shl, cf_shl, af_shl, UNLOCKED, UNLOCKED, UNLOCKED, f_shl);
 }
 
-/* ----------------------- SHL : shl eax 2 -----------------------*/ //d1
+/* ----------------------- SHR : shr eax 2 -----------------------*/
 
 static int of_shr(const Variable a, const Variable b, const Variable stub){
     if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
@@ -375,7 +375,40 @@ static Variable f_shr(Variable gauche, Variable droite, Variable stub, Processeu
 }
 
 Instruction* init_shr(){
-    return newInstruction(of_shl, cf_shl, af_shl, UNLOCKED, UNLOCKED, UNLOCKED, f_shl);
+    return newInstruction(of_shr, cf_shr, af_shr, UNLOCKED, UNLOCKED, UNLOCKED, f_shr);
+}
+
+/* ----------------------- PUSH -----------------------*/
+
+static int of_push(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static int cf_push(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+static int af_push(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_push(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
+    
+//    if (getVarClassRec(a) == CLASSE_NON_DEFINIE {
+//        setVarClassRec(droite, CLASSE_NON_DEFINIE);
+//        return droite;
+//    }
+//    
+//    incr(_RIP, lenInstr);
+//    uint64_t a = getVarVal(gauche);
+//    for (int i = 0; i<getVarVal(droite); i++) {
+//        a = a/2;
+//    }
+//    setVarVal(gauche, a);
+//    return gauche;
+}
+
+Instruction* init_push(){
+    return newInstruction(of_push, cf_push, af_push, LOCKED, LOCKED, LOCKED, f_push);
 }
 
 /*----------------------------------------------------------------*/

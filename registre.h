@@ -27,7 +27,7 @@ extern "C" {
      * Registre virtuel
      */
     typedef struct _registre{ // 32 bytes
-        int                 taille;/*!<Taille du registre*/
+        int                 taille;/*!<Taille du registre en bits*/
         uint64_t            valeur; // (seulement en cas de feuille)
         int                 classe;/*!<Classe d'appartenance de la méthode de propagation des constantes*/
         struct _registre*   filsl; /*!<registre correspondant aux 16 dernier bytes*/

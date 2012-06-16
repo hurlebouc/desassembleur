@@ -31,6 +31,10 @@ int getVarClassRec(Variable);
 
 uint64_t setVarVal(Variable, uint64_t);
 
+/*!
+ * Donne la taille en bits de la variable.
+ */
+
 int getVarTaille(Variable);
 
 void setVarClassRec(Variable, int classe);
