@@ -44,6 +44,18 @@ static int getSize(uint64_t n){
     return res;
 }
 
+/*!
+ * Donne l'index du bit de poind le plis faible à 1 (commance à 0)
+ */
+static int getminbit(uint64_t n){
+    int res = 0;
+    while (n%2 == 0) {
+        res++;
+        n = n/2;
+    }
+    return res;
+}
+
 /* ----------------------- AND -----------------------*/
 
 static int of_and(const Variable a, const Variable b, const Variable c){
@@ -283,6 +295,86 @@ static Variable f_shl(Variable gauche, Variable droite, Variable stub, Processeu
 }
 
 Instruction* init_shl(){
+    return newInstruction(of_shl, cf_shl, af_shl, UNLOCKED, UNLOCKED, UNLOCKED, f_shl);
+}
+
+/* ----------------------- SHL : shl eax 2 -----------------------*/ //d1
+
+static int of_shr(const Variable a, const Variable b, const Variable stub){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val > 1) {
+        return FLAG_NON_DEFINI;
+    }
+    int top_bit = getbits(a_val, getVarTaille(a) - 1);
+    if (top_bit == 1) {
+        return FLAG_HAUT;
+    } else {
+        return FLAG_BAS;
+    }
+}
+
+static int cf_shr(const Variable a, const Variable b, const Variable stub){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val == 0) {
+        return FLAG_UNMODIFIED;
+    }
+    int bit = getbits(a_val, b_val-1);
+    if (bit == 1) {
+        return FLAG_HAUT;
+    } else {
+        return FLAG_BAS;
+    }
+}
+static int af_shr(const Variable a, const Variable b, const Variable stub){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE || 
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        return FLAG_NON_DEFINI;
+    }
+    uint64_t a_val = getVarVal(a);
+    uint64_t b_val = getVarVal(b);
+    if (b_val > getVarTaille(a)) {
+        return FLAG_NON_DEFINI;
+    }
+    if (b_val > getminbit(a_val)) {
+        return FLAG_NON_DEFINI;
+    }
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_shr(Variable gauche, Variable droite, Variable stub, Processeur* proc, int lenInstr){
+    
+    if (getVarClassRec(gauche) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(droite) == CLASSE_NON_DEFINIE) {
+        setVarClassRec(droite, CLASSE_NON_DEFINIE);
+        return droite;
+    }
+    
+    incr(_RIP, lenInstr);
+    uint64_t a = getVarVal(gauche);
+    for (int i = 0; i<getVarVal(droite); i++) {
+        a = a/2;
+    }
+    setVarVal(gauche, a);
+    return gauche;
+}
+
+Instruction* init_shr(){
     return newInstruction(of_shl, cf_shl, af_shl, UNLOCKED, UNLOCKED, UNLOCKED, f_shl);
 }
 
