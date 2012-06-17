@@ -432,6 +432,26 @@ Instruction* init_cmp(){
     return newInstruction(of_cmp, cf_cmp, af_cmp, UNLOCKED, UNLOCKED, UNLOCKED, f_cmp);
 }
 
+/* ----------------------- JE -----------------------*/
+
+static int of_je(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+static int cf_je(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+static int af_je(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_je(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+}
+
+Instruction* init_je(){
+    return newInstruction(of_je, cf_je, af_je, LOCKED, LOCKED, LOCKED, f_je);
+}
+
 /*----------------------------------------------------------------*/
 
 static int f(int n){
