@@ -45,9 +45,12 @@ static int getSize(uint64_t n){
 }
 
 /*!
- * Donne l'index du bit de poind le plis faible à 1 (commance à 0)
+ * Donne l'index du bit de poind le plus faible à 1 (commance à 0)
  */
 static int getminbit(uint64_t n){
+    if (n==0) {
+        return -1;
+    }
     int res = 0;
     while (n%2 == 0) {
         res++;
@@ -111,10 +114,8 @@ static int of_add(const Variable a, const Variable b, const Variable stub){
         c = c % p;
     }
     if (c<aa) {
-//        return 1;
         return FLAG_HAUT;
     } else {
-//        return 0;
         return FLAG_BAS;
     }
 }
@@ -134,10 +135,8 @@ static int cf_add(const Variable a, const Variable b, const Variable stub){
         c = c % p;
     }
     if (c<aa) {
-//        return 1;
         return FLAG_HAUT;
     } else {
-//        return 0;
         return FLAG_BAS;
     }
 }
@@ -174,7 +173,6 @@ static Variable f_add(Variable destination, Variable masque, Variable stub , Pro
 }
 
 Instruction* init_add(){
-//    return newInstruction(of_add, cf_add, af_add, 1, 1, 1, f_add);
     return newInstruction(of_add, cf_add, af_add, UNLOCKED, UNLOCKED, UNLOCKED, f_add);
 }
 
@@ -425,6 +423,7 @@ static int af_cmp(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_cmp(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
+    return a;
 }
 
 Instruction* init_cmp(){
@@ -467,6 +466,9 @@ static int af_imul(const Variable a, const Variable b, const Variable stub){
 static Variable f_imul(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
     if (b.type == 0) {
+        if (getVarClassRec(a) == CLASSE_NON_DEFINIE) {
+            return a;
+        }
         int taille = getVarTaille(a);
         uint64_t val = getVarVal(a);
         uint64_t rax = getRegVal(_RAX);
@@ -478,10 +480,19 @@ static Variable f_imul(Variable a, Variable b, Variable c, Processeur* proc, int
         return a;
     }
     if (c.type == 0) {
+        if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
+            getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+            return a;
+        }
         uint64_t vala = getVarVal(a);
         uint64_t valb = getVarVal(b);
         uint64_t res = vala * valb;
         setVarVal(a, res);
+        return a;
+    }
+    if (getVarClassRec(c) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(b) == CLASSE_NON_DEFINIE) {
+        setVarClassRec(a, CLASSE_NON_DEFINIE);
         return a;
     }
     uint64_t valc = getVarVal(c);

@@ -131,6 +131,7 @@ Processeur* newProcesseurCopy(const Processeur* p){
 }
 
 void initProcesseurCopy(Processeur* dest, const Processeur* src){
+    dest->archi = src->archi;
     dest->delta = src->delta;
     for (int i = 0; i<NOMBRE_REGISTRES; i++) {
         cloneRegTerminaisons(dest->tabRegistre[i], src->tabRegistre[i]);
@@ -217,7 +218,7 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
     
     Memoire* m1 = p1->mem;
     Memoire* m2 = p2->mem;
-    for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
+    for (uint64_t i = 0; i<m1->sizeAllocatedMemory; i++) {
         
         Byte* b1 = m1->tabBytes[i];
         uint64_t virtualAddr = getVirtualAddr(b1);
@@ -305,7 +306,7 @@ void inter(Processeur* p1, const Processeur* p2){
     
     Memoire* m1 = p1->mem;
     Memoire* m2 = p2->mem;
-    for (uint64_t i = 0; m1->sizeAllocatedMemory; i++) {
+    for (uint64_t i = 0; i<m1->sizeAllocatedMemory; i++) {
         
         Byte* b1 = m1->tabBytes[i];
         uint64_t virtualAddr = getVirtualAddr(b1);

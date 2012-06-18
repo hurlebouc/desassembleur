@@ -191,6 +191,8 @@ extern "C" {
      * @return registre valeur de la constante sous forme de registre
      */
     Registre * getConstant(ARGTYPE arg, DISASM *disasm);
+    
+    Segment getMemory(ARGTYPE arg, /*DISASM* disasm,*/ Processeur* newPool);
 
 #ifdef __cplusplus
 }

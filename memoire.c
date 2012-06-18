@@ -103,6 +103,7 @@ int* getSegClassRec(Segment seg){
     if (i==-1) {
         res[0] = CLASSE_NON_DEFINIE;
         res[1] = SEG_NON_PRESENT;
+        return res;
 //        printf("l'élément 0x%llx est introuvable\n", virtualAddr);
 //        exit(EXIT_FAILURE);
     }
@@ -310,6 +311,9 @@ uint64_t getVirtualAddr(Byte* byte){
 }
 
 int getByteClass(Byte* byte){
+    if (byte == NULL) {
+        return CLASSE_NON_DEFINIE;
+    }
     return byte->classe;
 }
 

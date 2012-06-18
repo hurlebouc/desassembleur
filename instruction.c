@@ -34,13 +34,10 @@ static int sf_aux(Variable var){
     }
     
     uint64_t n = getVarVal(var);
-//    int t = var->taille;
     int t = getVarTaille(var);
     if (getbits(n, t) == 1) {
-//        return 1;
         return FLAG_HAUT;
     } else {
-//        return 0;
         return FLAG_BAS;
     }
 }
@@ -68,10 +65,8 @@ static int zf_aux(Variable a, Variable b){
     }
     
     if (getVarVal(a) == getVarVal(b)) {
-//        return 1;
         return FLAG_HAUT;
     } else {
-//        return 0;
         return FLAG_BAS;
     }
 }

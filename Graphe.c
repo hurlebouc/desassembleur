@@ -188,319 +188,556 @@ Graphe* getNodeWithVirtualAddrUnique(Graphe* g, uintptr_t va) {
 
 /*------------------------ FONCTIONS DE TRAITEMENT --------------------------*/
 
-static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) {
+static char* parseRegistre(ARGTYPE arg){
+    char* res = malloc(sizeof(char)*32);
+    int tailleArg = strlen(arg.ArgMnemonic);
+    for (int i = 0; i<tailleArg; i++) {
+        if (arg.ArgMnemonic[i] == '+' || arg.ArgMnemonic[i] == '-') {
+            return res;
+        }
+        res[i] = arg.ArgMnemonic[i];
+    }
+    return res;
+}
+
+static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) { 
+    // TODO à refaire
+    char* mnemo = parseRegistre(arg);
     uint16_t loword = arg.ArgType;
     int size = arg.ArgSize;
     Registre* res = NULL;
-    switch (loword) {
-        case REG0:
-            switch (size) {
-                case 64:
-                    res = _RAX;
-                    break;
-                case 32:
-                    res = _EAX;
-                    break;
-                case 16:
-                    res = _AX;
-                    break;
-                case 8:
-                    if (arg.ArgPosition == HighPosition) {
-                        res = _AH;
-                    } else {
-                        res = _AL;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG1:
-            switch (size) {
-                case 64:
-                    res = _RCX;
-                    break;
-                case 32:
-                    res = _ECX;
-                    break;
-                case 16:
-                    res = _CX;
-                    break;
-                case 8:
-                    if (arg.ArgPosition == HighPosition) {
-                        res = _CH;
-                    } else {
-                        res = _CL;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG2:
-            switch (size) {
-                case 64:
-                    res = _RDX;
-                    break;
-                case 32:
-                    res = _EDX;
-                    break;
-                case 16:
-                    res = _DX;
-                    break;
-                case 8:
-                    if (arg.ArgPosition == HighPosition) {
-                        res = _DH;
-                    } else {
-                        res = _DL;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG3:
-            switch (size) {
-                case 64:
-                    res = _RBX;
-                    break;
-                case 32:
-                    res = _EBX;
-                    break;
-                case 16:
-                    res = _BX;
-                    break;
-                case 8:
-                    if (arg.ArgPosition == HighPosition) {
-                        res = _BH;
-                    } else {
-                        res = _BL;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG4:
-            switch (size) {
-                case 64:
-                    res = _RSP;
-                    break;
-                case 32:
-                    res = _ESP;
-                    break;
-                case 16:
-                    res = _SP;
-                    break;
-                case 8:
-                    res = _SPL;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG5:
-            switch (size) {
-                case 64:
-                    res = _RBP;
-                    break;
-                case 32:
-                    res = _EBP;
-                    break;
-                case 16:
-                    res = _BP;
-                    break;
-                case 8:
-                    res = _BPL;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG6:
-            switch (size) {
-                case 64:
-                    res = _RSI;
-                    break;
-                case 32:
-                    res = _ESI;
-                    break;
-                case 16:
-                    res = _SI;
-                    break;
-                case 8:
-                    res = _SIL;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG7:
-            switch (size) {
-                case 64:
-                    res = _RDI;
-                    break;
-                case 32:
-                    res = _EDI;
-                    break;
-                case 16:
-                    res = _DI;
-                    break;
-                case 8:
-                    res = _DIL;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG8:
-            switch (size) {
-                case 64:
-                    res = _R8;
-                    break;
-                case 32:
-                    res = _R8D;
-                    break;
-                case 16:
-                    res = _R8W;
-                    break;
-                case 8:
-                    res = _R8B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG9:
-            switch (size) {
-                case 64:
-                    res = _R9;
-                    break;
-                case 32:
-                    res = _R9D;
-                    break;
-                case 16:
-                    res = _R9W;
-                    break;
-                case 8:
-                    res = _R9B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG10:
-            switch (size) {
-                case 64:
-                    res = _R10;
-                    break;
-                case 32:
-                    res = _R10D;
-                    break;
-                case 16:
-                    res = _R10W;
-                    break;
-                case 8:
-                    res = _R10B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG11:
-            switch (size) {
-                case 64:
-                    res = _R11;
-                    break;
-                case 32:
-                    res = _R11D;
-                    break;
-                case 16:
-                    res = _R11W;
-                    break;
-                case 8:
-                    res = _R11B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG12:
-            switch (size) {
-                case 64:
-                    res = _R12;
-                    break;
-                case 32:
-                    res = _R12D;
-                    break;
-                case 16:
-                    res = _R12W;
-                    break;
-                case 8:
-                    res = _R12B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG13:
-            switch (size) {
-                case 64:
-                    res = _R13;
-                    break;
-                case 32:
-                    res = _R13D;
-                    break;
-                case 16:
-                    res = _R13W;
-                    break;
-                case 8:
-                    res = _R13B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG14:
-            switch (size) {
-                case 64:
-                    res = _R14;
-                    break;
-                case 32:
-                    res = _R14D;
-                    break;
-                case 16:
-                    res = _R14W;
-                    break;
-                case 8:
-                    res = _R14B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case REG15:
-            switch (size) {
-                case 64:
-                    res = _R15;
-                    break;
-                case 32:
-                    res = _R15D;
-                    break;
-                case 16:
-                    res = _R15W;
-                    break;
-                case 8:
-                    res = _R15B;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
+    
+    if (strcmp(mnemo, "rax") == 0) {
+        return _RAX;
     }
-    return res;
+    if (strcmp(mnemo, "eax") == 0) {
+        return _EAX;
+    }
+    if (strcmp(mnemo, "ax") == 0) {
+        return _AX;
+    }
+    if (strcmp(mnemo, "ah") == 0) {
+        return _AH;
+    }
+    if (strcmp(mnemo, "al") == 0) {
+        return _AL;
+    }
+    
+    if (strcmp(mnemo, "rbx") == 0) {
+        return _RBX;
+    }
+    if (strcmp(mnemo, "ebx") == 0) {
+        return _EBX;
+    }
+    if (strcmp(mnemo, "bx") == 0) {
+        return _BX;
+    }
+    if (strcmp(mnemo, "bh") == 0) {
+        return _BH;
+    }
+    if (strcmp(mnemo, "bl") == 0) {
+        return _BL;
+    }
+    
+    if (strcmp(mnemo, "rcx") == 0) {
+        return _RCX;
+    }
+    if (strcmp(mnemo, "ecx") == 0) {
+        return _ECX;
+    }
+    if (strcmp(mnemo, "cx") == 0) {
+        return _CX;
+    }
+    if (strcmp(mnemo, "ch") == 0) {
+        return _CH;
+    }
+    if (strcmp(mnemo, "cl") == 0) {
+        return _CL;
+    }
+    
+    if (strcmp(mnemo, "rdx") == 0) {
+        return _RDX;
+    }
+    if (strcmp(mnemo, "edx") == 0) {
+        return _EDX;
+    }
+    if (strcmp(mnemo, "dx") == 0) {
+        return _DX;
+    }
+    if (strcmp(mnemo, "dh") == 0) {
+        return _DH;
+    }
+    if (strcmp(mnemo, "dl") == 0) {
+        return _DL;
+    }
+    
+    if (strcmp(mnemo, "rsp") == 0) {
+        return _RSP;
+    }
+    if (strcmp(mnemo, "esp") == 0) {
+        return _ESP;
+    }
+    if (strcmp(mnemo, "sp") == 0) {
+        return _SP;
+    }
+    if (strcmp(mnemo, "spl") == 0) {
+        return _SPL;
+    }
+    
+    if (strcmp(mnemo, "rbp") == 0) {
+        return _RBP;
+    }
+    if (strcmp(mnemo, "ebp") == 0) {
+        return _EBP;
+    }
+    if (strcmp(mnemo, "bp") == 0) {
+        return _BP;
+    }
+    if (strcmp(mnemo, "bpl") == 0) {
+        return _BPL;
+    }
+    
+    if (strcmp(mnemo, "rsi") == 0) {
+        return _RSI;
+    }
+    if (strcmp(mnemo, "esi") == 0) {
+        return _ESI;
+    }
+    if (strcmp(mnemo, "si") == 0) {
+        return _SI;
+    }
+    if (strcmp(mnemo, "sil") == 0) {
+        return _SIL;
+    }
+    
+    if (strcmp(mnemo, "rdi") == 0) {
+        return _RDI;
+    }
+    if (strcmp(mnemo, "edi") == 0) {
+        return _EDI;
+    }
+    if (strcmp(mnemo, "di") == 0) {
+        return _DI;
+    }
+    if (strcmp(mnemo, "dil") == 0) {
+        return _DIL;
+    }
+    
+    if (strcmp(mnemo, "r8") == 0) {
+        return _R8;
+    }
+    if (strcmp(mnemo, "r8d") == 0) {
+        return _R8D;
+    }
+    if (strcmp(mnemo, "r8w") == 0) {
+        return _R8W;
+    }
+    if (strcmp(mnemo, "r8L") == 0) {
+        return _R8B;
+    }
+    
+    if (strcmp(mnemo, "r9") == 0) {
+        return _R9;
+    }
+    if (strcmp(mnemo, "r9d") == 0) {
+        return _R9D;
+    }
+    if (strcmp(mnemo, "r9w") == 0) {
+        return _R9W;
+    }
+    if (strcmp(mnemo, "r9L") == 0) {
+        return _R9B;
+    }
+    
+    if (strcmp(mnemo, "r10") == 0) {
+        return _R10;
+    }
+    if (strcmp(mnemo, "r10d") == 0) {
+        return _R10D;
+    }
+    if (strcmp(mnemo, "r10w") == 0) {
+        return _R10W;
+    }
+    if (strcmp(mnemo, "r10L") == 0) {
+        return _R10B;
+    }
+    
+    if (strcmp(mnemo, "r11") == 0) {
+        return _R11;
+    }
+    if (strcmp(mnemo, "r11d") == 0) {
+        return _R11D;
+    }
+    if (strcmp(mnemo, "r11w") == 0) {
+        return _R11W;
+    }
+    if (strcmp(mnemo, "r11L") == 0) {
+        return _R11B;
+    }
+    
+    if (strcmp(mnemo, "r12") == 0) {
+        return _R12;
+    }
+    if (strcmp(mnemo, "r12d") == 0) {
+        return _R12D;
+    }
+    if (strcmp(mnemo, "r12w") == 0) {
+        return _R12W;
+    }
+    if (strcmp(mnemo, "r12L") == 0) {
+        return _R12B;
+    }
+    
+    if (strcmp(mnemo, "r13") == 0) {
+        return _R13;
+    }
+    if (strcmp(mnemo, "r13d") == 0) {
+        return _R13D;
+    }
+    if (strcmp(mnemo, "r13w") == 0) {
+        return _R13W;
+    }
+    if (strcmp(mnemo, "r13L") == 0) {
+        return _R13B;
+    }
+    
+    if (strcmp(mnemo, "r14") == 0) {
+        return _R14;
+    }
+    if (strcmp(mnemo, "r14d") == 0) {
+        return _R14D;
+    }
+    if (strcmp(mnemo, "r14w") == 0) {
+        return _R14W;
+    }
+    if (strcmp(mnemo, "r14L") == 0) {
+        return _R14B;
+    }
+    
+    if (strcmp(mnemo, "r15") == 0) {
+        return _R15;
+    }
+    if (strcmp(mnemo, "r15d") == 0) {
+        return _R15D;
+    }
+    if (strcmp(mnemo, "r15w") == 0) {
+        return _R15W;
+    }
+    if (strcmp(mnemo, "r15L") == 0) {
+        return _R15B;
+    }
+    
+    printf("Erreur : registre général inconnu");
+    exit(EXIT_FAILURE);
+//    switch (loword) {
+//        case REG0:
+//            switch (size) {
+//                case 64:
+//                    res = _RAX;
+//                    break;
+//                case 32:
+//                    res = _EAX;
+//                    break;
+//                case 16:
+//                    res = _AX;
+//                    break;
+//                case 8:
+//                    if (arg.ArgPosition == HighPosition) {
+//                        res = _AH;
+//                    } else {
+//                        res = _AL;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG1:
+//            switch (size) {
+//                case 64:
+//                    res = _RCX;
+//                    break;
+//                case 32:
+//                    res = _ECX;
+//                    break;
+//                case 16:
+//                    res = _CX;
+//                    break;
+//                case 8:
+//                    if (arg.ArgPosition == HighPosition) {
+//                        res = _CH;
+//                    } else {
+//                        res = _CL;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG2:
+//            switch (size) {
+//                case 64:
+//                    res = _RDX;
+//                    break;
+//                case 32:
+//                    res = _EDX;
+//                    break;
+//                case 16:
+//                    res = _DX;
+//                    break;
+//                case 8:
+//                    if (arg.ArgPosition == HighPosition) {
+//                        res = _DH;
+//                    } else {
+//                        res = _DL;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG3:
+//            switch (size) {
+//                case 64:
+//                    res = _RBX;
+//                    break;
+//                case 32:
+//                    res = _EBX;
+//                    break;
+//                case 16:
+//                    res = _BX;
+//                    break;
+//                case 8:
+//                    if (arg.ArgPosition == HighPosition) {
+//                        res = _BH;
+//                    } else {
+//                        res = _BL;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG4:
+//            switch (size) {
+//                case 64:
+//                    res = _RSP;
+//                    break;
+//                case 32:
+//                    res = _ESP;
+//                    break;
+//                case 16:
+//                    res = _SP;
+//                    break;
+//                case 8:
+//                    res = _SPL;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG5:
+//            switch (size) {
+//                case 64:
+//                    res = _RBP;
+//                    break;
+//                case 32:
+//                    res = _EBP;
+//                    break;
+//                case 16:
+//                    res = _BP;
+//                    break;
+//                case 8:
+//                    res = _BPL;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG6:
+//            switch (size) {
+//                case 64:
+//                    res = _RSI;
+//                    break;
+//                case 32:
+//                    res = _ESI;
+//                    break;
+//                case 16:
+//                    res = _SI;
+//                    break;
+//                case 8:
+//                    res = _SIL;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG7:
+//            switch (size) {
+//                case 64:
+//                    res = _RDI;
+//                    break;
+//                case 32:
+//                    res = _EDI;
+//                    break;
+//                case 16:
+//                    res = _DI;
+//                    break;
+//                case 8:
+//                    res = _DIL;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG8:
+//            switch (size) {
+//                case 64:
+//                    res = _R8;
+//                    break;
+//                case 32:
+//                    res = _R8D;
+//                    break;
+//                case 16:
+//                    res = _R8W;
+//                    break;
+//                case 8:
+//                    res = _R8B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG9:
+//            switch (size) {
+//                case 64:
+//                    res = _R9;
+//                    break;
+//                case 32:
+//                    res = _R9D;
+//                    break;
+//                case 16:
+//                    res = _R9W;
+//                    break;
+//                case 8:
+//                    res = _R9B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG10:
+//            switch (size) {
+//                case 64:
+//                    res = _R10;
+//                    break;
+//                case 32:
+//                    res = _R10D;
+//                    break;
+//                case 16:
+//                    res = _R10W;
+//                    break;
+//                case 8:
+//                    res = _R10B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG11:
+//            switch (size) {
+//                case 64:
+//                    res = _R11;
+//                    break;
+//                case 32:
+//                    res = _R11D;
+//                    break;
+//                case 16:
+//                    res = _R11W;
+//                    break;
+//                case 8:
+//                    res = _R11B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG12:
+//            switch (size) {
+//                case 64:
+//                    res = _R12;
+//                    break;
+//                case 32:
+//                    res = _R12D;
+//                    break;
+//                case 16:
+//                    res = _R12W;
+//                    break;
+//                case 8:
+//                    res = _R12B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG13:
+//            switch (size) {
+//                case 64:
+//                    res = _R13;
+//                    break;
+//                case 32:
+//                    res = _R13D;
+//                    break;
+//                case 16:
+//                    res = _R13W;
+//                    break;
+//                case 8:
+//                    res = _R13B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG14:
+//            switch (size) {
+//                case 64:
+//                    res = _R14;
+//                    break;
+//                case 32:
+//                    res = _R14D;
+//                    break;
+//                case 16:
+//                    res = _R14W;
+//                    break;
+//                case 8:
+//                    res = _R14B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        case REG15:
+//            switch (size) {
+//                case 64:
+//                    res = _R15;
+//                    break;
+//                case 32:
+//                    res = _R15D;
+//                    break;
+//                case 16:
+//                    res = _R15W;
+//                    break;
+//                case 8:
+//                    res = _R15B;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            break;
+//        default:
+//            break;
+//    }
+//    return res;
 }
 
 /*!
@@ -569,6 +806,21 @@ Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
     return r;
 }
 
+Segment getMemory(ARGTYPE arg, /*DISASM* disasm,*/ Processeur* newPool){
+    char* mnemo = arg.ArgMnemonic; 
+    char prem = *mnemo;
+    if (48 <= prem && prem <= 57) {
+        return seg(newPool->mem, arg.Memory.Displacement, arg.ArgSize/8);
+    }
+    if (arg.Memory.Displacement == 0) {
+        Registre* reg = getGeneralRegistre(arg, newPool);
+        return seg(newPool->mem, getRegVal(reg), arg.ArgSize/8);
+    } else {
+        Registre* reg = getGeneralRegistre(arg, newPool);
+        return seg(newPool->mem, getRegVal(reg) + arg.Memory.Displacement, arg.ArgSize/8);
+    }
+}
+
 /*!
  * Cette fonction lit l'instruction du noeud g à partir du (nouveau) pool de 
  * son père
@@ -577,6 +829,7 @@ Registre * getConstant(ARGTYPE arg, DISASM *disasm) {
 
 static void setPool(const Graphe* g, Processeur* newPool) {
     DISASM* disasm = newDisasm();
+    disasm->Archi = g->pool->archi;
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
     int len = Disasm(disasm);
@@ -587,21 +840,42 @@ static void setPool(const Graphe* g, Processeur* newPool) {
     Variable var[3];
 
     /* initialisation de l'instruction */
-    switch (instr.Opcode) {
-        case 0x00:
-            //instruction = init_add_EbGb();
-            instruction = init_add();
-            break;
-        case 0x01:
-            //instruction = init_add_EbGb();
-            instruction = init_add();
-            break;
-
-        default:
-            //            printf("litInstruction() : opcode inconnu\n");
-            //            exit(EXIT_FAILURE);
-            break;
+    
+    if (strcmp(instr.Mnemonic, "add ") == 0) {
+        instruction = init_add();
+    } else if (strcmp(instr.Mnemonic, "mov ") == 0) {
+        instruction = init_mov();
+    } else if (strcmp(instr.Mnemonic, "shl ") == 0) {
+        instruction = init_shl();
+    } else if (strcmp(instr.Mnemonic, "shr ") == 0) {
+        instruction = init_shr();
+    } else if (strcmp(instr.Mnemonic, "cmp ") == 0) {
+        instruction = init_cmp();
+    } else if (strcmp(instr.Mnemonic, "je ") == 0) {
+        instruction = init_je();
+    } else if (strcmp(instr.Mnemonic, "imul ") == 0) {
+        instruction = init_imul();
+    } else if (strcmp(instr.Mnemonic, "sub ") == 0) {
+        instruction = init_sub();
+    } else if (strcmp(instr.Mnemonic, "inc ") == 0) {
+        instruction = init_inc();
     }
+    
+//    switch (instr.Opcode) {
+//        case 0x00:
+//            //instruction = init_add_EbGb();
+//            instruction = init_add();
+//            break;
+//        case 0x01:
+//            //instruction = init_add_EbGb();
+//            instruction = init_add();
+//            break;
+//
+//        default:
+//            //            printf("litInstruction() : opcode inconnu\n");
+//            //            exit(EXIT_FAILURE);
+//            break;
+//    }
 
     ARGTYPE argument[] = {
         disasm->Argument1,
@@ -635,8 +909,11 @@ static void setPool(const Graphe* g, Processeur* newPool) {
                 break;
 
             case MEMORY_TYPE:
+                if (strcmp(instr.Mnemonic, "push ") == 0) break;
+                if (strcmp(instr.Mnemonic, "pop ") == 0 && i>0) break;
                 res.type = seg_type;
-                ;
+                res.reg = NULL;
+                res.seg = getMemory(arg, newPool);
                 break;
 
             default:
@@ -708,6 +985,7 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
+    g->pool->archi = pere->pool->archi;
     Processeur* copyPool = newProcesseurCopy(pere->pool);
     setPool(pere, copyPool);
     int inc = incluDans(g->pool, copyPool, fichierlog);
@@ -793,6 +1071,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool) {
     sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
+    g->pool->archi = initialPool->archi;
     int inc = incluDans(g->pool, initialPool, fichierlog);
     if (inc != NON_INCLUS) {
         sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);

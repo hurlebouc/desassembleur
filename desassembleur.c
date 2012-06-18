@@ -13,6 +13,7 @@
 PDISASM newDisasm(void){
     PDISASM disas = malloc(sizeof(DISASM));
     (void) memset(disas, 0, sizeof (DISASM));
+    disas->Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     return disas;
 }
 

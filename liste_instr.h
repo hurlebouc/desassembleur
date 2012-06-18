@@ -19,6 +19,15 @@
 Instruction*  init_add(void);
 Instruction*  init_and(void);
 Instruction*  init_mov(void);
+Instruction*  init_shl(void);
+Instruction*  init_shr(void);
+Instruction*  init_push(void);
+Instruction*  init_cmp(void);
+Instruction*  init_je(void);
+Instruction*  init_imul(void);
+Instruction*  init_sub(void);
+Instruction*  init_inc(void);
+Instruction*  init_pop(void);
 
 /* ====================================== opcodes_A_M */
 Instruction*  init_aaa_(void);

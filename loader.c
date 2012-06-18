@@ -9,10 +9,16 @@
 #include "loader.h"
 
 void load(Desasembleur* desas, Fichier* fichier, int sys){
-    
-    if (sys == MACHO_64) {
-        loaderMach(desas, fichier);
-    } else {
-        loaderElf(desas, fichier);
+    switch (sys) {
+        case MACHO_64:
+            desas->proc->archi = 64;
+            loaderMach(desas, fichier);
+            break;
+        case ELF_32:
+            desas->proc->archi = 32;
+            loaderElf(desas, fichier);
+            break;
+        default:
+            break;
     }
 }

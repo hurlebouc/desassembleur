@@ -91,42 +91,42 @@ extern "C" {
 #define _nR8        42
 #define _nR8D       43
 #define _nR8W       44
-#define _nR8B       45
+#define _nR8L       45
     
 #define _nR9        46
 #define _nR9D       47
 #define _nR9W       48
-#define _nR9B       49
+#define _nR9L       49
     
 #define _nR10       50
 #define _nR10D      51
 #define _nR10W      52
-#define _nR10B      53
+#define _nR10L      53
     
 #define _nR11       54
 #define _nR11D      55
 #define _nR11W      56
-#define _nR11B      57
+#define _nR11L      57
     
 #define _nR12       58
 #define _nR12D      59
 #define _nR12W      60
-#define _nR12B      61
+#define _nR12L      61
     
 #define _nR13       62
 #define _nR13D      63
 #define _nR13W      64
-#define _nR13B      65
+#define _nR13L      65
     
 #define _nR14       66
 #define _nR14D      67
 #define _nR14W      68
-#define _nR14B      69
+#define _nR14L      69
     
 #define _nR15       70
 #define _nR15D      71
 #define _nR15W      72
-#define _nR15B      73
+#define _nR15L      73
     
 #define _nCS        74
 #define _nDS        75
@@ -171,6 +171,7 @@ extern "C" {
      * Modélisation du processeur
      */
     typedef struct _Processeur{
+        uint8_t archi;
         Stack* stack;
         Memoire* mem;
         Registre*   tabRegistre[NOMBRE_REGISTRES];
