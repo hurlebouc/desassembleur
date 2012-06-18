@@ -392,10 +392,9 @@ static int af_push(const Variable a, const Variable b, const Variable stub){
 }
 
 static Variable f_push(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
-    
-
     pushStack(_STACK, a, _RSP);
     incr(_RIP, lenInstr);
+    return a;
 }
 
 Instruction* init_push(){
@@ -450,6 +449,122 @@ static Variable f_je(Variable a, Variable stub1, Variable stub2, Processeur* pro
 
 Instruction* init_je(){
     return newInstruction(of_je, cf_je, af_je, LOCKED, LOCKED, LOCKED, f_je);
+}
+
+/* ----------------------- IMUL -----------------------*/
+
+static int of_imul(const Variable a, const Variable b, const Variable stub){
+    return FLAG_BAS; // resultats simplifié 
+    // levé ssi le bit de poids forts est dans la moitiée supérieure du registre final. (de même pour cf)
+}
+static int cf_imul(const Variable a, const Variable b, const Variable stub){
+    return FLAG_BAS;
+}
+static int af_imul(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_imul(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+    if (b.type == 0) {
+        int taille = getVarTaille(a);
+        uint64_t val = getVarVal(a);
+        uint64_t rax = getRegVal(_RAX);
+        if (taille != 64) {
+            rax = rax % ((int) pow(2, taille));
+        }
+        uint64_t res = val*rax;
+        setVarVal(a, res);
+        return a;
+    }
+    if (c.type == 0) {
+        uint64_t vala = getVarVal(a);
+        uint64_t valb = getVarVal(b);
+        uint64_t res = vala * valb;
+        setVarVal(a, res);
+        return a;
+    }
+    uint64_t valc = getVarVal(c);
+    uint64_t valb = getVarVal(b);
+    uint64_t res = valb * valc;
+    setVarVal(a, res);
+    return a;
+}
+
+Instruction* init_imul(){
+    return newInstruction(of_imul, cf_imul, af_imul, LOCKED, LOCKED, LOCKED, f_imul);
+}
+
+/* ----------------------- SUB -----------------------*/
+
+static int of_sub(const Variable a, const Variable b, const Variable stub){
+    return FLAG_BAS; 
+}
+static int cf_sub(const Variable a, const Variable b, const Variable stub){
+    return FLAG_BAS;
+}
+static int af_sub(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_sub(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+    uint64_t vala = getVarVal(a);
+    uint64_t valb = getVarVal(b);
+    uint64_t res = vala - valb;
+    setVarVal(a, res);
+    return a;
+}
+
+Instruction* init_sub(){
+    return newInstruction(of_sub, cf_sub, af_sub, UNLOCKED, UNLOCKED, UNLOCKED, f_sub);
+}
+
+/* ----------------------- INC -----------------------*/
+
+static int of_inc(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED; 
+}
+static int cf_inc(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED; //faux
+}
+static int af_inc(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED; //faux
+}
+
+static Variable f_inc(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+    uint64_t vala = getVarVal(a);
+    vala++;
+    setVarVal(a, vala);
+    return a;
+}
+
+Instruction* init_inc(){
+    return newInstruction(of_inc, cf_inc, af_inc, UNLOCKED, UNLOCKED, UNLOCKED, f_inc);
+}
+
+/* ----------------------- POP -----------------------*/
+
+static int of_pop(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static int cf_pop(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+static int af_pop(const Variable a, const Variable b, const Variable stub){
+    return FLAG_UNMODIFIED;
+}
+
+static Variable f_pop(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
+    popStack(_STACK, a, _RSP);
+    incr(_RIP, lenInstr);
+    return a;
+}
+
+Instruction* init_pop(){
+    return newInstruction(of_pop, cf_pop, af_pop, LOCKED, LOCKED, LOCKED, f_pop);
 }
 
 /*----------------------------------------------------------------*/

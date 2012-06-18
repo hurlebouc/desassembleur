@@ -617,6 +617,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
 
         uint32_t hiword = arg.ArgType & 0xffff0000;
         Variable res;
+        memset(&res, 0, sizeof(Variable));
 
         switch (hiword & 0xf0000000) {
             case NO_ARGUMENT:

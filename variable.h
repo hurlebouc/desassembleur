@@ -13,8 +13,8 @@
 #include "memoire.h"
 
 enum TypeVariable {
-    reg_type,
-    seg_type,
+    reg_type = 1,
+    seg_type = 2,
     };
 
 typedef struct _variable{
