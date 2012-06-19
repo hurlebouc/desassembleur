@@ -542,7 +542,7 @@ static int of_inc(const Variable a, const Variable b, const Variable stub){
     return FLAG_UNMODIFIED; 
 }
 static int cf_inc(const Variable a, const Variable b, const Variable stub){
-    return FLAG_UNMODIFIED; //faux
+    return FLAG_UNMODIFIED; //vrai
 }
 static int af_inc(const Variable a, const Variable b, const Variable stub){
     return FLAG_UNMODIFIED; //faux

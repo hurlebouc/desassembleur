@@ -59,6 +59,17 @@ static int pf_aux(Variable var){
 
 static int zf_aux(Variable a, Variable b){
     
+    if (b.type == ukn_type) {
+        if (getVarClassRec(a) == CLASSE_NON_DEFINIE) {
+            return FLAG_NON_DEFINI;
+        }
+        if (getVarVal(a) == 0) {
+            return FLAG_HAUT;
+        } else {
+            return FLAG_BAS;
+        }
+    }
+    
     if (getVarClassRec(a) == CLASSE_NON_DEFINIE ||
         getVarClassRec(b) == CLASSE_NON_DEFINIE) {
         return FLAG_NON_DEFINI;

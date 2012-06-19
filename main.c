@@ -14,7 +14,13 @@ char* ROOT;
 int main(int argc, char* argv []) {
         
     ROOT = argv[0];
-    char c = '0';
-    printf("ASCII %c : %d\n", c, c);
+    Fichier* binaire = newFichier(argv[1]);
+    
+    Desasembleur* desas = newDesassembleur(NULL);
+    load(desas, binaire, ELF_32);
+    Graphe* g = ControleFlow_entier(desas);
+    g->_immediat = EST_ASSEMBLE;
+    optimizePool2(g, desas->proc);
+    
     return 0;
 }

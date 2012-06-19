@@ -13,6 +13,7 @@
 #include "memoire.h"
 
 enum TypeVariable {
+    ukn_type = 0,
     reg_type = 1,
     seg_type = 2,
     };
