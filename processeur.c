@@ -234,11 +234,17 @@ int incluDans(const Processeur* p1, const Processeur* p2, Fichier* fichierlog){
                         getByteClass(b1), 
                         getByteVal(b1));
                 pushlog(fichierlog, temp);
-                sprintf(temp, "\t le byte %llu du pool 2 vaut (%d, %u)\n",
-                        virtualAddr, 
-                        getByteClass(b2), 
-                        getByteVal(b2));
-                pushlog(fichierlog, temp);
+                if (getByteClass(b2) == CLASSE_NON_DEFINIE) {
+                    sprintf(temp, "\t le byte %llu du pool 2 est INDETERMINE\n",virtualAddr);
+                    pushlog(fichierlog, temp);
+                } else {
+                    sprintf(temp, "\t le byte %llu du pool 2 vaut (%d, %u)\n",
+                            virtualAddr, 
+                            getByteClass(b2), 
+                            getByteVal(b2));
+                    pushlog(fichierlog, temp);
+                }
+                
                 return NON_INCLUS;
         }
     }

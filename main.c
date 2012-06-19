@@ -17,12 +17,16 @@ int main(int argc, char* argv []) {
     Fichier* binaire = newFichier(argv[1]);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire, ELF_32);
+    load(desas, binaire, MACHO_64);
+    printf("cfg\n");
     Graphe* g = ControleFlow_entier(desas);
     enregistreGraphe(g, newFichier("graphe.dot"));
+    printf("optimise\n");
     optimizePool2(g, desas->proc);
+    printf("enregistre propagation\n");
     enregistrePropagation(newFichier("pools.txt"), g);
-    debranchage_fils_aux(g);
+    printf("debranchage\n");
+    debranchage_fils(g);
     enregistreGraphe(g, newFichier("graphe_optimisé.dot"));
     
     return 0;
