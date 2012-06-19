@@ -8,6 +8,7 @@
 
 #include "Graphe.h"
 #include "_macro_Build.h"
+#include <time.h>
 
 Graphe* newGraphe(void) {
     Graphe* g = malloc(sizeof (Graphe));
@@ -203,9 +204,9 @@ static char* parseRegistre(ARGTYPE arg){
 static Registre * getGeneralRegistre(ARGTYPE arg, Processeur *proc) { 
     // TODO à refaire
     char* mnemo = parseRegistre(arg);
-    uint16_t loword = arg.ArgType;
-    int size = arg.ArgSize;
-    Registre* res = NULL;
+//    uint16_t loword = arg.ArgType;
+//    int size = arg.ArgSize;
+//    Registre* res = NULL;
     
     if (strcmp(mnemo, "rax") == 0) {
         return _RAX;
@@ -944,7 +945,7 @@ static void setPool(const Graphe* g, Processeur* newPool) {
  */
 
 static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]) {
-    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "optimise 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
     Processeur* copyPool = newProcesseurCopy(initialPool);
@@ -952,14 +953,14 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
     int inc = incluDans(g->pool, copyPool, fichierlog);
     if (inc != NON_INCLUS) {
         terminateProcesseur(copyPool);
-        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, copyPool); // l'intercection est dans g->pool
     terminateProcesseur(copyPool);
     if (g->listeFils == NULL) {
-        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -969,7 +970,7 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
         optimizePool_aux(tete->valeur, g->pool, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -982,7 +983,7 @@ static void optimizePool_aux(Graphe* g, const Processeur* initialPool, Fichier* 
  */
 
 static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog, char temp[MAX_BUFFER]) {
-    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "optimise 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
     g->pool->archi = pere->pool->archi;
@@ -991,14 +992,14 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
     int inc = incluDans(g->pool, copyPool, fichierlog);
     if (inc != NON_INCLUS) {
         terminateProcesseur(copyPool);
-        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, copyPool); // l'intercection est dans g->pool
     terminateProcesseur(copyPool);
     if (g->listeFils == NULL) {
-        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -1008,7 +1009,7 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
         optimizePool_aux2(tete->valeur, g, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -1018,18 +1019,18 @@ static void optimizePool_aux2(Graphe* g, const Graphe* pere, Fichier* fichierlog
  */
 
 static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, Fichier* fichierlog, char temp[MAX_BUFFER]) {
-    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "optimise 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
     int inc = incluDans(g->pool, initialPool, fichierlog);
     if (inc != NON_INCLUS) {
-        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
     inter(g->pool, initialPool); // l'intercection est dans g->pool
     if (g->listeFils == NULL) {
-        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -1043,7 +1044,7 @@ static void optimizePool_aux_kildall(Graphe* g, const Processeur* initialPool, F
         tete = tete->suiv;
     }
     terminateProcesseur(newPool);
-    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 }
 
@@ -1068,13 +1069,13 @@ void optimizePool2(Graphe* g, const Processeur* initialPool) {
     Fichier* fichierlog = newFichier(CHEMIN_LOG_OPTIMISATION);
     char temp[MAX_BUFFER];
 
-    sprintf(temp, "optimise 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "optimise 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
     g->pool->archi = initialPool->archi;
     int inc = incluDans(g->pool, initialPool, fichierlog);
     if (inc != NON_INCLUS) {
-        sprintf(temp, "fin de 0x%lx par inclusion\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par inclusion\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -1082,7 +1083,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool) {
     inter(g->pool, initialPool); // l'intercection est dans g->pool
 
     if (g->listeFils == NULL) {
-        sprintf(temp, "fin de 0x%lx par manque de fils\n", g->VirtualAddr);
+        sprintf(temp, "fin de 0x%llx par manque de fils\n", g->VirtualAddr);
         pushlog(fichierlog, temp);
         return;
     }
@@ -1093,7 +1094,7 @@ void optimizePool2(Graphe* g, const Processeur* initialPool) {
         optimizePool_aux2(fils, g, fichierlog, temp);
         tete = tete->suiv;
     }
-    sprintf(temp, "fin de 0x%lx\n", g->VirtualAddr);
+    sprintf(temp, "fin de 0x%llx\n", g->VirtualAddr);
     pushlog(fichierlog, temp);
 
     terminateFichier(fichierlog);
@@ -1342,3 +1343,48 @@ int debranchage(Graphe* g) {
     free(disasm);
     return res;
 }
+
+static void enregistrePropagation_aux(Fichier*file, Graphe*g, int8_t marqueur){
+    if (g->_immediat == marqueur) {
+        return;
+    }
+    char temp[1024];
+    g->_immediat = marqueur;
+    sprintf(temp, "\n=====================================================\n**********         Noeud 0x%llx         **********\n=====================================================\n\n", g->VirtualAddr);
+    pushlog(file, temp);
+    enregistrerPool(file, g->pool);
+    LinkedList* listeFils = g->listeFils;
+    if (listeFils == NULL) {
+        return;
+    }
+    LinkedList* tete = listeFils;
+    for (int i = 0; i<sizeLL(listeFils); i++) {
+        enregistrePropagation_aux(file, tete->valeur, marqueur);
+        tete = tete->suiv;
+    }
+}
+
+void enregistrePropagation(Fichier* file , Graphe* g){
+    cleanFile(file);
+    srand (time(NULL));
+    int8_t marqueur = rand();
+    while (marqueur == g->_immediat) {
+        marqueur = rand();
+    }
+    enregistrePropagation_aux(file, g, marqueur);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

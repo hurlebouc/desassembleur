@@ -350,7 +350,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     
 #ifdef DEBUG_MODE
     Disasm(prog);
-    sprintf(temp, "\ng : %lx : %lx (%s), interet : %d\n",g->VirtualAddr, prog->VirtualAddr, prog->Instruction.Mnemonic, g->etat);
+    sprintf(temp, "\ng : %llx : %lx (%s), interet : %d\n",g->VirtualAddr, prog->VirtualAddr, prog->Instruction.Mnemonic, g->etat);
     pushlog(fichierlog, temp);
     
     if (g->VirtualAddr != prog->VirtualAddr) {
@@ -368,7 +368,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
     prog2.Archi = ARCHI_PROC;
     prog2.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
     Disasm(&prog2);
-    sprintf(temp, "%lx \t %s\n",g->VirtualAddr, prog2.CompleteInstr);
+    sprintf(temp, "%llx \t %s\n",g->VirtualAddr, prog2.CompleteInstr);
     pushlog(fichierlog, temp);
         
     if (g->VirtualAddr == 0) {
@@ -605,11 +605,11 @@ Graphe* ControleFlow_simplifie(Desasembleur* desas){
 
 static void afficheGraphe_aux(Graphe* g){
     if (g->_immediat == EST_AFFICHE) {
-        printf("\"%lx\";\n", g->VirtualAddr);
+        printf("\"%llx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
-        printf("\"%lx\"", g->VirtualAddr);
+        printf("\"%llx\"", g->VirtualAddr);
         g->_immediat = EST_AFFICHE;
         if (g->typeLiaison == NOEUD_RET) {
             printf("[style=filled fillcolor=grey]");
@@ -637,18 +637,18 @@ static void afficheGraphe_aux(Graphe* g){
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
-        printf("\"%lx\"->\"%lx\"", g->VirtualAddr, etatCible->VirtualAddr);
+        printf("\"%llx\"->\"%llx\"", g->VirtualAddr, etatCible->VirtualAddr);
         if (g->typeLiaison == NOEUD_CALL) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 printf(" [color=red];\n");
             } else {
                 printf(";\n");
             }
-            printf("\"%lx\" [style=filled fillcolor=red]", g->VirtualAddr);
+            printf("\"%llx\" [style=filled fillcolor=red]", g->VirtualAddr);
         }
         if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             printf(" [color=blue];\n");
-            printf("\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddr);
+            printf("\"%llx\" [style=filled fillcolor=blue]", g->VirtualAddr);
         }
         if (g->typeLiaison == NOEUD_JUMP_COND) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
@@ -656,7 +656,7 @@ static void afficheGraphe_aux(Graphe* g){
             } else {
                 printf(";\n");
             }
-            printf("\"%lx\" [style=filled fillcolor=green]", g->VirtualAddr);
+            printf("\"%llx\" [style=filled fillcolor=green]", g->VirtualAddr);
         }
         printf(";\n");
         afficheGraphe_aux(etatCible);
@@ -666,11 +666,11 @@ static void afficheGraphe_aux(Graphe* g){
 
 static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
     if (g->_immediat == EST_AFFICHE) {
-        fprintf(graveur, "\"%lx\";\n", g->VirtualAddr);
+        fprintf(graveur, "\"%llx\";\n", g->VirtualAddr);
         return;
     }
     if (g->listeFils == NULL) {
-        fprintf(graveur, "\"%lx\"", g->VirtualAddr);
+        fprintf(graveur, "\"%llx\"", g->VirtualAddr);
         g->_immediat = EST_AFFICHE;
         if (g->typeLiaison == NOEUD_RET) {
             fprintf(graveur, "[style=filled fillcolor=grey]");
@@ -701,18 +701,18 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
     int totFils = (int) sizeLL(g->listeFils);
     for (int i = 0; i<totFils; i++) { // on visite tous les fils.
         Graphe* etatCible = tete->valeur;
-        fprintf(graveur, "\"%lx\"->\"%lx\"", g->VirtualAddr, etatCible->VirtualAddr);
+        fprintf(graveur, "\"%llx\"->\"%llx\"", g->VirtualAddr, etatCible->VirtualAddr);
         if (g->typeLiaison == NOEUD_CALL) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
                 fprintf(graveur, " [color=red];\n");
             } else {
                 fprintf(graveur, ";\n");
             }
-            fprintf(graveur, "\"%lx\" [style=filled fillcolor=red]", g->VirtualAddr);
+            fprintf(graveur, "\"%llx\" [style=filled fillcolor=red]", g->VirtualAddr);
         }
         if (g->typeLiaison == NOEUD_JUMP_INCOND) {
             fprintf(graveur, " [color=blue];\n");
-            fprintf(graveur, "\"%lx\" [style=filled fillcolor=blue]", g->VirtualAddr);
+            fprintf(graveur, "\"%llx\" [style=filled fillcolor=blue]", g->VirtualAddr);
         }
         if (g->typeLiaison == NOEUD_JUMP_COND) {
             if (etatCible->VirtualAddr != g->VirtualAddr + g->tailleInstruction) {
@@ -720,7 +720,7 @@ static void enregistreGraphe_aux(Graphe* g, FILE* graveur){
             } else {
                 fprintf(graveur, ";\n");
             }
-            fprintf(graveur, "\"%lx\" [style=filled fillcolor=green]", g->VirtualAddr);
+            fprintf(graveur, "\"%llx\" [style=filled fillcolor=green]", g->VirtualAddr);
         }
         fprintf(graveur, ";\n");
         enregistreGraphe_aux(etatCible,graveur);
@@ -748,7 +748,7 @@ static void afficheListeFils(Graphe* g){
     LinkedList* tete = g->listeFils;
     for (int i = 0; i<g->listeFils->longueur; i++) {
         Graphe* fils = tete->valeur;
-        printf(", %lx", fils->VirtualAddr);
+        printf(", %llx", fils->VirtualAddr);
         tete = tete->suiv;
     }
     
@@ -758,7 +758,7 @@ static void afficheListePere(Graphe* g){
     LinkedList* tete = g->listePeres;
     for (int i = 0; i<g->listePeres->longueur; i++) {
         Graphe* fils = tete->valeur;
-        printf(", %lx", fils->VirtualAddr);
+        printf(", %llx", fils->VirtualAddr);
         tete = tete->suiv;
     }
     
@@ -766,7 +766,7 @@ static void afficheListePere(Graphe* g){
 
 void afficherPI(Graphe* pi, unsigned long taille){
     for (int i = 0; i<taille; i++) {
-        printf("0x%lx\tinteret : %d",pi[i].VirtualAddr, pi[i].etat);
+        printf("0x%llx\tinteret : %d",pi[i].VirtualAddr, pi[i].etat);
         if (pi[i].listeFils != NULL) {
             printf("\tfils : ");
             afficheListeFils(&pi[i]);

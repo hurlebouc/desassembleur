@@ -19,9 +19,8 @@ int main(int argc, char* argv []) {
     Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire, ELF_32);
     Graphe* g = ControleFlow_entier(desas);
-    g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
-    enregistrerPool(newFichier("pool.txt"), g->pool);
+    enregistrePropagation(newFichier("pools.txt"), g);
     
     return 0;
 }

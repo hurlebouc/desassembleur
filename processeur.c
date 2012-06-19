@@ -342,7 +342,17 @@ void inter(Processeur* p1, const Processeur* p2){
 void enregistrerPool(Fichier* fichier, Processeur* proc){
     char temp[1024];
     pushlog(fichier, "=====REGISTRE=====\n");
-    for (int i = 0; i<NOMBRE_REGISTRES; i++) {
+    for (int i = 0; i<10; i++) {
+        Registre* reg = proc->tabRegistre[i];
+        if (getRegClassRec(reg) == CLASSE_NON_DEFINIE) {
+            sprintf(temp, "REG  %d :\t ***UNDEFINIED***\n", i);
+            pushlog(fichier, temp);
+        } else {
+            sprintf(temp, "REG %d :\t 0x%llx\n", i, getRegVal(reg));
+            pushlog(fichier, temp);
+        }
+    }
+    for (int i = 10; i<NOMBRE_REGISTRES; i++) {
         Registre* reg = proc->tabRegistre[i];
         if (getRegClassRec(reg) == CLASSE_NON_DEFINIE) {
             sprintf(temp, "REG %d :\t ***UNDEFINIED***\n", i);

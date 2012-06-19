@@ -78,7 +78,7 @@ extern "C" {
      * de ses père et de ses fils.
      */
     typedef struct _Graphe{         //45 bytes
-        unsigned long VirtualAddr;  /*!<Adresse de l'instruction lu*/
+        uint64_t VirtualAddr;  /*!<Adresse de l'instruction lu*/
         uintptr_t aif;              /*!<Adresse dans le fichier (offset)*/
         int8_t etat;                /*!<valeur de la liaison (erreurs)*/
         int8_t typeLiaison;         /*!<Type de liaison avec les autres noeuds*/
@@ -193,6 +193,8 @@ extern "C" {
     Registre * getConstant(ARGTYPE arg, DISASM *disasm);
     
     Segment getMemory(ARGTYPE arg, /*DISASM* disasm,*/ Processeur* newPool);
+    
+    void enregistrePropagation(Fichier*, Graphe*);
 
 #ifdef __cplusplus
 }

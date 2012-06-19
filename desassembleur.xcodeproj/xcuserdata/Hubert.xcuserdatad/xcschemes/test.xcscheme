@@ -63,7 +63,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "pool"
+            argument = "cfg"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
