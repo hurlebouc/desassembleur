@@ -102,9 +102,9 @@ void setRegClassRec(Registre* reg, int classe){
  * définiftion ou non d'un registre.
  */
 
-int getRegClassRec(Registre* reg){
-    if (reg == NULL) {
-        return CLASSE_DEFINI;
+int getRegClassRec(Registre* reg){    
+    if (reg->filsh == NULL) {
+        return reg->classe;
     }
     
     int ih = getRegClassRec(reg->filsh);

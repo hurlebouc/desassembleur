@@ -338,3 +338,40 @@ void inter(Processeur* p1, const Processeur* p2){
     terminateFichier(fichierLog);
 #endif
 }
+
+void enregistrerPool(Fichier* fichier, Processeur* proc){
+    char temp[1024];
+    pushlog(fichier, "=====REGISTRE=====\n");
+    for (int i = 0; i<NOMBRE_REGISTRES; i++) {
+        Registre* reg = proc->tabRegistre[i];
+        if (getRegClassRec(reg) == CLASSE_NON_DEFINIE) {
+            sprintf(temp, "REG %d :\t ***UNDEFINIED***\n", i);
+            pushlog(fichier, temp);
+        } else {
+            sprintf(temp, "REG %d :\t 0x%llx\n", i, getRegVal(reg));
+            pushlog(fichier, temp);
+        }
+    }
+    pushlog(fichier, "\n=====FLAGS=====\n");
+    for (int i = 0; i<NOMBRE_FLAGS; i++) {
+        int8_t flag = proc->tabFlags[i];
+        if (flag == FLAG_NON_DEFINI) {
+            sprintf(temp, "FLAG %d :\t ***UNDEFINIED***\n", i);
+            pushlog(fichier, temp);
+        } else {
+            sprintf(temp, "FLAG %d :\t %d\n", i, flag);
+            pushlog(fichier, temp);
+        }
+    }
+    pushlog(fichier, "\n=====MEMOIRE=====\n");
+    for (uint64_t i = 0; i<proc->mem->sizeAllocatedMemory; i++) {
+        Byte* byte = proc->mem->tabBytes[i];
+        if (getByteClass(byte) == CLASSE_NON_DEFINIE) {
+            sprintf(temp, "BYTE %llu :\t ***UNDEFINIED***\n", i);
+            pushlog(fichier, temp);
+        } else {
+            sprintf(temp, "BYTE %llu :\t %x\n", i, getByteVal(byte));
+            pushlog(fichier, temp);
+        }
+    }
+}

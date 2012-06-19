@@ -21,6 +21,7 @@ int main(int argc, char* argv []) {
     Graphe* g = ControleFlow_entier(desas);
     g->_immediat = EST_ASSEMBLE;
     optimizePool2(g, desas->proc);
+    enregistrerPool(newFichier("pool.txt"), g->pool);
     
     return 0;
 }

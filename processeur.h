@@ -216,6 +216,8 @@ extern "C" {
      */
     void inter(Processeur*p1, const Processeur*p2);
     
+    void enregistrerPool(Fichier*, Processeur*);
+    
 #ifdef __cplusplus
 }
 #endif
