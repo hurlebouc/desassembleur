@@ -17,7 +17,7 @@ int main(int argc, char* argv []) {
     Fichier* binaire = newFichier(argv[1]);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire, MACHO_64);
+    load(desas, binaire, ELF_32);
     printf("cfg\n");
     Graphe* g = ControleFlow_entier(desas);
     enregistreGraphe(g, newFichier("graphe.dot"));
