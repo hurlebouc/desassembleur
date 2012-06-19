@@ -82,7 +82,7 @@ extern "C" {
         uintptr_t aif;              /*!<Adresse dans le fichier (offset)*/
         int8_t etat;                /*!<valeur de la liaison (erreurs)*/
         int8_t typeLiaison;         /*!<Type de liaison avec les autres noeuds*/
-        int8_t _immediat;           /*!<Champs privée servant lors du traitement 
+        int8_t _immediat;           /*!<Champs privé servant lors du traitement 
                                      des fonction récusives*/
         int8_t tailleInstruction;   /*!<Taille de l'instruction*/
         int8_t recouvert;           /*!<Indique si l'octet fait partie d'une
@@ -165,7 +165,7 @@ extern "C" {
      * propagation des constantes
      * @param g
      */
-    int debranchage(Graphe* g);
+    int debranchage_fils(Graphe* g);
     
     /*!
      * Cette fonction désassemble l'instruction présente dans le noeud n. Elle

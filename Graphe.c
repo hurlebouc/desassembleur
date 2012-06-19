@@ -114,7 +114,7 @@ void terminateGraphe(Graphe* g) {
 void removeLinkRec(Graphe* pere, Graphe* fils) {
     removeLink(pere, fils);
     if (sizeLL(fils->listePeres) == 0) {
-        while (sizeLL(fils->listeFils) != 0) {
+        while (fils->listeFils != NULL && sizeLL(fils->listeFils) != 0) {
             removeLinkRec(fils, getFirstLL(fils->listeFils));
         }
         terminateNoeud(fils);
@@ -1104,11 +1104,18 @@ DISASM* newDisasmFromGraph(Graphe* g) {
     DISASM* disasm = newDisasm();
     disasm->EIP = g->aif;
     disasm->VirtualAddr = g->VirtualAddr;
+    disasm->Archi = g->pool->archi;
     Disasm(disasm);
     return disasm;
 }
 
-static int debranche_fils_direct(Graphe* g) {
+int debranchage_fils_aux(Graphe*, int8_t);
+
+/*
+ * Cette fonction est reccursive car elle rappelle debranchage
+ */
+
+static int debranche_fils_direct(Graphe* g, int8_t marqueur) {
     if (g->listeFils == NULL || sizeLL(g->listeFils) == 0) {
         return 0;
     }
@@ -1121,10 +1128,21 @@ static int debranche_fils_direct(Graphe* g) {
         removeLinkRec(g, getLastLL(g->listeFils));
         res = 1;
     }
-    return res;
+    int l = sizeLL(g->listeFils);
+    if (l>1) {
+        printf("La configuration où un saut conditionnel a strictement plus de deux fils est impossible.\n");
+        exit(EXIT_FAILURE);
+    }
+    Graphe* fils = getFirstLL(g->listeFils);
+    int res2 = debranchage_fils_aux(fils, marqueur);
+    return res | res2;
 }
 
-static int debranche_fils_saut(Graphe* g) {
+/*
+ * Cette fonction est reccursive car elle rappelle debranchage
+ */
+
+static int debranche_fils_saut(Graphe* g, int8_t marqueur) {
     if (g->listeFils == NULL || sizeLL(g->listeFils) == 0) {
         return 0;
     }
@@ -1137,10 +1155,29 @@ static int debranche_fils_saut(Graphe* g) {
         removeLinkRec(g, getLastLL(g->listeFils));
         res = 1;
     }
-    return res;
+    int l = sizeLL(g->listeFils);
+    if (l>1) {
+        printf("La configuration où un saut conditionnel a strictement plus de deux fils est impossible.\n");
+        exit(EXIT_FAILURE);
+    }
+    Graphe* fils = getFirstLL(g->listeFils);
+    int res2 = debranchage_fils_aux(fils, marqueur);
+    return res | res2;
 }
 
-int debranchage(Graphe* g) {
+/*
+ * Cette fonction est recursive dans les appelles des fonctions de debranchage 
+ * des fils.
+ */
+
+int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
+    if (g==NULL) {
+        return 0;
+    }
+    if (g->_immediat == marqueur) {
+        return 0;
+    }
+    g->_immediat = marqueur;
     DISASM* disasm = newDisasmFromGraph(g);
 
     int branch = disasm->Instruction.BranchType;
@@ -1149,25 +1186,25 @@ int debranchage(Graphe* g) {
     switch (branch) {
         case JO:
             if (tabFlags[_nOF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else if (tabFlags[_nOF] == FLAG_BAS) {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
             break;
 
         case JNO:
             if (tabFlags[_nOF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
             break;
 
         case JC:
             if (g->pool->tabFlags[_nCF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1175,25 +1212,25 @@ int debranchage(Graphe* g) {
 
         case JNC:
             if (tabFlags[_nCF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
             break;
 
         case JE:
             if (tabFlags[_nZF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
             break;
 
         case JNE:
             if (tabFlags[_nZF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1201,9 +1238,9 @@ int debranchage(Graphe* g) {
 
         case JA:
             if (tabFlags[_nZF] == FLAG_BAS && tabFlags[_nCF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1211,9 +1248,9 @@ int debranchage(Graphe* g) {
 
         case JNA:
             if (tabFlags[_nZF] == FLAG_HAUT || tabFlags[_nCF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1223,18 +1260,18 @@ int debranchage(Graphe* g) {
 
         case JS:
             if (tabFlags[_nSF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
             ;
             break;
 
         case JNS:
             if (tabFlags[_nSF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1242,9 +1279,9 @@ int debranchage(Graphe* g) {
 
         case JP:
             if (tabFlags[_nPF] == FLAG_HAUT) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1252,9 +1289,9 @@ int debranchage(Graphe* g) {
 
         case JNP:
             if (tabFlags[_nPF] == FLAG_BAS) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1263,9 +1300,9 @@ int debranchage(Graphe* g) {
         case JL:
             if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1274,10 +1311,10 @@ int debranchage(Graphe* g) {
         case JNL:
             if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT)) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
 
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1287,9 +1324,9 @@ int debranchage(Graphe* g) {
             if (tabFlags[_nZF] == FLAG_BAS &&
                     ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT))) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1299,9 +1336,9 @@ int debranchage(Graphe* g) {
             if (tabFlags[_nZF] == FLAG_HAUT ||
                     (tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)) {
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1309,9 +1346,9 @@ int debranchage(Graphe* g) {
 
         case JB:
             if (tabFlags[_nCF] == FLAG_HAUT) {//si CF à 1 saut
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1320,9 +1357,9 @@ int debranchage(Graphe* g) {
 
         case JNB:
             if (tabFlags[_nCF] == FLAG_BAS) {//si CF à 0 saut
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
             }
 
             ;
@@ -1330,19 +1367,41 @@ int debranchage(Graphe* g) {
 
         case JECXZ:
             if (getRegVal(g->pool->tabRegistre[_nECX]) == 0) {//si ECX=0 on saute
-                res = debranche_fils_direct(g);
+                res = debranche_fils_direct(g, marqueur);
             } else {
-                res = debranche_fils_saut(g);
+                res = debranche_fils_saut(g, marqueur);
 
             }
             break;
 
         default:
+            if (g->listeFils == NULL) {
+                return 0;
+            }
+            int l = sizeLL(g->listeFils);
+            LinkedList* tete = g->listeFils;
+            int res2 = 0;
+            for (int i = 0; i<l; i++) {
+                Graphe* fils = tete->valeur;
+                res2 = debranchage_fils_aux(fils, marqueur) | res2;
+            }
+            return res2;
             break;
     }
     free(disasm);
     return res;
 }
+
+int debranchage_fils(Graphe* g){
+    srand (time(NULL));
+    int8_t marqueur = rand();
+    while (marqueur == g->_immediat) {
+        marqueur = rand();
+    }
+    return debranchage_fils_aux(g, marqueur);
+}
+
+
 
 static void enregistrePropagation_aux(Fichier*file, Graphe*g, int8_t marqueur){
     if (g->_immediat == marqueur) {

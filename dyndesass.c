@@ -117,19 +117,6 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                 prog->Argument1.ArgType % 0xFFFF,
                 prog->Argument1.ArgSize);
         pushlog(fichierlog, temp);
-        sprintf(temp, "%d  %d  %d  %d  %d  %d  %d  %d  %d  %d  %d  \n",
-                prog->Instruction.Flags.OF_,
-                prog->Instruction.Flags.SF_, 
-                prog->Instruction.Flags.ZF_, 
-                prog->Instruction.Flags.AF_, 
-                prog->Instruction.Flags.PF_, 
-                prog->Instruction.Flags.CF_, 
-                prog->Instruction.Flags.TF_, 
-                prog->Instruction.Flags.IF_, 
-                prog->Instruction.Flags.DF_, 
-                prog->Instruction.Flags.NT_,
-                prog->Instruction.Flags.RF_);
-        pushlog(fichierlog, temp);
         Graphe* i = initGraph(pi, iniAdress - debut);
         i->VirtualAddr = iniAdress;
         i->tailleInstruction = len;

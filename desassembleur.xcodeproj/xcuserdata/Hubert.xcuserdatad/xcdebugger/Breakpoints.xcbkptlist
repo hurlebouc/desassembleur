@@ -229,25 +229,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Graphe.c"
-         timestampString = "361796091.359645"
+         timestampString = "361821383.284652"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1370"
-         endingLineNumber = "1370"
+         startingLineNumber = "1429"
+         endingLineNumber = "1429"
          landmarkName = "enregistrePropagation()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "main.c"
-         timestampString = "361796299.302081"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "22"
-         endingLineNumber = "22"
-         landmarkName = "main()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -255,11 +242,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Graphe.c"
-         timestampString = "361797354.541968"
+         timestampString = "361821383.284652"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1348"
-         endingLineNumber = "1348"
+         startingLineNumber = "1407"
+         endingLineNumber = "1407"
          landmarkName = "enregistrePropagation_aux()"
          landmarkType = "7">
       </FileBreakpoint>

@@ -19,8 +19,11 @@ int main(int argc, char* argv []) {
     Desasembleur* desas = newDesassembleur(NULL);
     load(desas, binaire, ELF_32);
     Graphe* g = ControleFlow_entier(desas);
+    enregistreGraphe(g, newFichier("graphe.dot"));
     optimizePool2(g, desas->proc);
     enregistrePropagation(newFichier("pools.txt"), g);
+    debranchage_fils_aux(g);
+    enregistreGraphe(g, newFichier("graphe_optimisé.dot"));
     
     return 0;
 }
