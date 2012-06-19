@@ -519,6 +519,11 @@ static int af_sub(const Variable a, const Variable b, const Variable stub){
 }
 
 static Variable f_sub(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
+    if (getVarClassRec(b) == CLASSE_NON_DEFINIE ||
+        getVarClassRec(a) == CLASSE_NON_DEFINIE) {
+        setVarClassRec(a, CLASSE_NON_DEFINIE);
+        return a;
+    }
     incr(_RIP, lenInstr);
     uint64_t vala = getVarVal(a);
     uint64_t valb = getVarVal(b);
@@ -544,6 +549,9 @@ static int af_inc(const Variable a, const Variable b, const Variable stub){
 }
 
 static Variable f_inc(Variable a, Variable b, Variable c, Processeur* proc, int lenInstr){
+    if (getVarClassRec(a) == CLASSE_NON_DEFINIE) {
+        return a;
+    }
     incr(_RIP, lenInstr);
     uint64_t vala = getVarVal(a);
     vala++;

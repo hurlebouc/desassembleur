@@ -79,10 +79,7 @@ static unsigned long tryDeterminise(Graphe* i){
 }
 
 Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
-    char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, ROOT);
-    strcat(chemin_log, CHEMIN_LOG_FERMETURE);
-    Fichier* fichierlog = newFichier(chemin_log);    
+    Fichier* fichierlog = newFichier(CHEMIN_LOG_FERMETURE);    
     char temp[MAX_BUFFER];
     
     if (GRAPHE_RECCOUVERT == NULL) {
@@ -557,10 +554,7 @@ static void simplifieGraphe_aux(DISASM* prog, Graphe* g, Fichier* fichierlog){
  */
 
 Graphe* simplifieGraphe(Desasembleur* desas, Graphe* g){
-    char chemin_log[FILENAME_MAX];
-    strcpy(chemin_log, ROOT);
-    strcat(chemin_log, CHEMIN_LOG_ASSEMBLAGE);
-    Fichier* fichierlog = newFichier(chemin_log);
+    Fichier* fichierlog = newFichier(CHEMIN_LOG_ASSEMBLAGE);
     
     pushlog(fichierlog, "début de l'assemblage\n");
     DISASM* prog = desas->disasm;

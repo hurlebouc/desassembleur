@@ -12,7 +12,9 @@ extern char* TESTS;
 #include <stdio.h>
 
 void cfg_recc(void){
-        
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logSimplifie = newFichier(CHEMIN_LOG_ASSEMBLAGE);
+    
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
     Fichier* temp = newFichier(chemintmp);
@@ -32,14 +34,23 @@ void cfg_recc(void){
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
+        removeFichier(logBuild);
+        removeFichier(logSimplifie);
+    } else {
+        renameFile(logBuild, "recc_build.log");
+        renameFile(logSimplifie, "recc_simplifie.log");
     }
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
+    terminateFichier(logSimplifie);
+    terminateFichier(logBuild);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void cfg_entropie(void){
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logSimplifie = newFichier(CHEMIN_LOG_ASSEMBLAGE);
         
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
@@ -60,14 +71,23 @@ void cfg_entropie(void){
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
+        removeFichier(logBuild);
+        removeFichier(logSimplifie);
+    } else {
+        renameFile(logBuild, "entropie_build.log");
+        renameFile(logSimplifie, "entropie_simplifie.log");
     }
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
+    terminateFichier(logSimplifie);
+    terminateFichier(logBuild);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void cfg_disas(void){
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logSimplifie = newFichier(CHEMIN_LOG_ASSEMBLAGE);
         
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
@@ -88,14 +108,23 @@ void cfg_disas(void){
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
+        removeFichier(logBuild);
+        removeFichier(logSimplifie);
+    } else {
+        renameFile(logBuild, "disas_build.log");
+        renameFile(logSimplifie, "disas_simplifie.log");
     }
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
+    terminateFichier(logSimplifie);
+    terminateFichier(logBuild);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void cfg_handbrake(void){
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logSimplifie = newFichier(CHEMIN_LOG_ASSEMBLAGE);
         
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
@@ -116,14 +145,23 @@ void cfg_handbrake(void){
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
+        removeFichier(logBuild);
+        removeFichier(logSimplifie);
+    } else {
+        renameFile(logBuild, "handbrake_build.log");
+        renameFile(logSimplifie, "handbrake_simplifie.log");
     }
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
+    terminateFichier(logSimplifie);
+    terminateFichier(logBuild);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void cfg_prog_linux(void){
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logSimplifie = newFichier(CHEMIN_LOG_ASSEMBLAGE);
     
     char chemintmp[L_tmpnam];
     tmpnam(chemintmp);
@@ -144,10 +182,17 @@ void cfg_prog_linux(void){
     long diff = fequals(temp, modele);
     if (diff == -1) {
         removeFichier(temp);
+        removeFichier(logBuild);
+        removeFichier(logSimplifie);
+    } else {
+        renameFile(logBuild, "linux_build.log");
+        renameFile(logSimplifie, "linux_simplifie.log");
     }
     terminateFichier(temp);
     terminateFichier(modele);
     terminateFichier(binaire);
+    terminateFichier(logSimplifie);
+    terminateFichier(logBuild);
     CU_ASSERT_EQUAL(diff, -1);
 }
 

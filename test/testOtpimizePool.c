@@ -16,8 +16,9 @@ void optpool_factice(void){
 }
 
 void optpool_recc(void){
-    Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
-    cleanFile(log);
+    Fichier* logOpt = newFichier(CHEMIN_LOG_OPTIMISATION);
+    cleanFile(logOpt);
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
@@ -36,26 +37,29 @@ void optpool_recc(void){
     optimizePool2(g, desas->proc);
        
     
-    long diff = fequals(log, modele);
+    long diff = fequals(logOpt, modele);
     if (diff == -1) {
-        removeFichier(log);
+        removeFichier(logOpt);
+        removeFichier(logBuild);
     } else {
-        renameFile(log, "recc_opt.log");
+        renameFile(logOpt, "recc_opt.log");
         enregistreGraphe(g, newFichier("recc.dot"));
+        renameFile(logBuild, "recc_build.log");
     }
     
     terminateGraphe(g);
     terminateDesassembleur(desas); 
-    
-    terminateFichier(log);
+    terminateFichier(logBuild);
+    terminateFichier(logOpt);
     terminateFichier(modele);
     terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void optpool_entropie(void){
-    Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
-    cleanFile(log);
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logOpt = newFichier(CHEMIN_LOG_OPTIMISATION);
+    cleanFile(logOpt);
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
@@ -74,24 +78,28 @@ void optpool_entropie(void){
     optimizePool2(g, desas->proc);
         terminateDesassembleur(desas);    
     
-    long diff = fequals(log, modele);
+    long diff = fequals(logOpt, modele);
     if (diff == -1) {
-        removeFichier(log);
+        removeFichier(logOpt);
+        removeFichier(logBuild);
     } else {
-        renameFile(log, "entropie_opt.log");
+        renameFile(logOpt, "entropie_opt.log");
         enregistreGraphe(g, newFichier("entropie.dot"));
+        renameFile(logBuild, "entropie_build.log");
     }
     
     terminateGraphe(g);
-    terminateFichier(log);
+    terminateFichier(logOpt);
+    terminateFichier(logBuild);
     terminateFichier(modele);
     terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void optpool_disas(void){
-    Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
-    cleanFile(log);
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logOpt = newFichier(CHEMIN_LOG_OPTIMISATION);
+    cleanFile(logOpt);
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
@@ -111,23 +119,27 @@ void optpool_disas(void){
     
     terminateDesassembleur(desas);    
     
-    long diff = fequals(log, modele);
+    long diff = fequals(logOpt, modele);
     if (diff == -1) {
-        removeFichier(log);
+        removeFichier(logOpt);
+        removeFichier(logBuild);
     } else {
-        renameFile(log, "disas_opt.log");
+        renameFile(logOpt, "disas_opt.log");
         enregistreGraphe(g, newFichier("disas.dot"));
+        renameFile(logBuild, "disas_build.log");
     }
     terminateGraphe(g);
-    terminateFichier(log);
+    terminateFichier(logOpt);
+    terminateFichier(logBuild);
     terminateFichier(modele);
     terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
 }
 
 void optpool_handbrake(void){
-    Fichier* log = newFichier(CHEMIN_LOG_OPTIMISATION);
-    cleanFile(log);
+    Fichier* logBuild = newFichier(CHEMIN_LOG_FERMETURE);
+    Fichier* logOpt = newFichier(CHEMIN_LOG_OPTIMISATION);
+    cleanFile(logOpt);
     
     char chemin_modele[FILENAME_MAX];
     strcpy(chemin_modele, TESTS); 
@@ -147,15 +159,18 @@ void optpool_handbrake(void){
    
     terminateDesassembleur(desas);    
     
-    long diff = fequals(log, modele);
+    long diff = fequals(logOpt, modele);
     if (diff == -1) {
-        removeFichier(log);
+        removeFichier(logOpt);
+        removeFichier(logBuild);
     } else {
-        renameFile(log, "handbrake_opt.log");
+        renameFile(logOpt, "handbrake_opt.log");
         enregistreGraphe(g, newFichier("handbrake.dot"));
+        renameFile(logBuild, "handbrake_build.log");
     }
     terminateGraphe(g);
-    terminateFichier(log);
+    terminateFichier(logOpt);
+    terminateFichier(logBuild);
     terminateFichier(modele);
     terminateFichier(binaire);
     CU_ASSERT_EQUAL(diff, -1);
