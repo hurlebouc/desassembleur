@@ -21,12 +21,12 @@ int main(int argc, char* argv []) {
     printf("cfg\n");
     Graphe* g = ControleFlow_entier(desas);
     enregistreGraphe(g, newFichier("graphe.dot"));
-    printf("optimise\n");
-    optimizePool2(g, desas->proc);
-    printf("enregistre propagation\n");
-    enregistrePropagation(newFichier("pools.txt"), g);
-    printf("debranchage\n");
-    debranchage_fils(g);
+//    printf("optimise\n");
+//    optimizePool2(g, desas->proc);
+//    printf("enregistre propagation\n");
+//    enregistrePropagation(newFichier("pools.txt"), g);
+    printf("elagage\n");
+    elagage(g, desas->proc);
     enregistreGraphe(g, newFichier("graphe_optimisé.dot"));
     
     return 0;

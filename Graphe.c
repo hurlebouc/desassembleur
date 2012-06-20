@@ -23,13 +23,33 @@ Graphe* newGraphe(void) {
     g->listePeres = NULL;
     g->pool = newProcesseur(TAILLE_MEMOIRE);
     g->pool->delta = DELTA_LEVE;
-    //    for (int i = 0; i < NOMBRE_FLAGS; i++) {
-    //        g->pool->tabFlags[i] = FLAG_BAS;
-    //    }
-    //    for (int i = 0; i < NOMBRE_REGISTRES; i++) {
-    //        setRegClassHigher(g->pool->tabRegistre[i], CLASSE_DEFINI);
-    //    }
     return g;
+}
+
+static void reinitPools_aux(Graphe* g, int8_t marqueur){
+    if (g->_immediat == marqueur) {
+        return;
+    }
+    g->_immediat = marqueur;
+    g->pool->delta = DELTA_LEVE;
+    if (g->listeFils == NULL) {
+        return;
+    }
+    int l = sizeLL(g->listeFils);
+    LinkedList* tete = g->listeFils;
+    for (int i = 0; i<l; i++) {
+        reinitPools_aux(tete->valeur, marqueur);
+        tete = tete->suiv;
+    }
+}
+
+static void reinitPools(Graphe* g){
+    srand (time(NULL));
+    int8_t marqueur = rand();
+    while (marqueur == g->_immediat) {
+        marqueur = rand();
+    }
+    reinitPools_aux(g, marqueur);
 }
 
 /*!
@@ -1195,7 +1215,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNO:
             if (tabFlags[_nOF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nOF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
             break;
@@ -1203,7 +1223,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JC:
             if (g->pool->tabFlags[_nCF] == FLAG_HAUT) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (g->pool->tabFlags[_nCF] == FLAG_BAS){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1213,7 +1233,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNC:
             if (tabFlags[_nCF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nCF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
             break;
@@ -1221,7 +1241,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JE:
             if (tabFlags[_nZF] == FLAG_HAUT) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_BAS){
                 res = debranche_fils_saut(g, marqueur);
             }
             break;
@@ -1229,7 +1249,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNE:
             if (tabFlags[_nZF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1239,7 +1259,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JA:
             if (tabFlags[_nZF] == FLAG_BAS && tabFlags[_nCF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_HAUT || tabFlags[_nCF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1249,7 +1269,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNA:
             if (tabFlags[_nZF] == FLAG_HAUT || tabFlags[_nCF] == FLAG_HAUT) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_BAS && tabFlags[_nCF] == FLAG_BAS){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1261,7 +1281,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JS:
             if (tabFlags[_nSF] == FLAG_HAUT) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nSF] == FLAG_BAS){
                 res = debranche_fils_saut(g, marqueur);
             }
             ;
@@ -1270,7 +1290,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNS:
             if (tabFlags[_nSF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nSF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1280,7 +1300,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JP:
             if (tabFlags[_nPF] == FLAG_HAUT) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nPF] == FLAG_BAS) {
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1290,7 +1310,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNP:
             if (tabFlags[_nPF] == FLAG_BAS) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nPF] == FLAG_HAUT){
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1301,10 +1321,10 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
             if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
+                       (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT)){
                 res = debranche_fils_saut(g, marqueur);
             }
-
             ;
             break;
 
@@ -1312,11 +1332,10 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
             if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT)) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
-
+            } else if ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
+                       (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)){
                 res = debranche_fils_saut(g, marqueur);
             }
-
             ;
             break;
 
@@ -1325,10 +1344,11 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
                     ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT))) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_HAUT ||
+                    (tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
+                    (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)) {
                 res = debranche_fils_saut(g, marqueur);
             }
-
             ;
             break;
 
@@ -1337,7 +1357,9 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
                     (tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_HAUT) ||
                     (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_BAS)) {
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nZF] == FLAG_BAS &&
+                       ((tabFlags[_nSF] == FLAG_BAS && tabFlags[_nOF] == FLAG_BAS) ||
+                        (tabFlags[_nSF] == FLAG_HAUT && tabFlags[_nOF] == FLAG_HAUT))) {
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1347,7 +1369,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JB:
             if (tabFlags[_nCF] == FLAG_HAUT) {//si CF à 1 saut
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nCF] == FLAG_BAS) {
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1358,7 +1380,7 @@ int debranchage_fils_aux(Graphe* g, int8_t marqueur) {
         case JNB:
             if (tabFlags[_nCF] == FLAG_BAS) {//si CF à 0 saut
                 res = debranche_fils_direct(g, marqueur);
-            } else {
+            } else if (tabFlags[_nCF] == FLAG_HAUT) {
                 res = debranche_fils_saut(g, marqueur);
             }
 
@@ -1399,6 +1421,17 @@ int debranchage_fils(Graphe* g){
         marqueur = rand();
     }
     return debranchage_fils_aux(g, marqueur);
+}
+
+void elagage(Graphe* g, Processeur* poolInit){
+    reinitPools(g);
+    optimizePool2(g, poolInit);
+    int res = debranchage_fils(g);
+    while (res == 1) {
+        reinitPools(g);
+        optimizePool2(g, poolInit);
+        res = debranchage_fils(g);
+    }
 }
 
 

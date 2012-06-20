@@ -166,6 +166,7 @@ extern "C" {
      * @param g
      */
     int debranchage_fils(Graphe* g);
+    void elagage(Graphe*, Processeur* poolInit);
     
     /*!
      * Cette fonction désassemble l'instruction présente dans le noeud n. Elle
