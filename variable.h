@@ -12,15 +12,10 @@
 
 #ifndef desassembleur_variable_h
 #define desassembleur_variable_h
-#include "stdint.h"
+#include <stdint.h>
+#include "macro.h"
 #include "registre.h"
 #include "memoire.h"
-
-enum TypeVariable {
-    ukn_type = 0,
-    reg_type = 1,
-    seg_type = 2,
-    };
 
 typedef struct _variable{
     uint8_t type;

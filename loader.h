@@ -26,11 +26,6 @@ extern "C" {
 #endif
 #include "loaderElf.h"
     
-    enum TypeSystem{
-        MACHO_64,
-        ELF_32,
-    };
-    
     /*!
      * Récupère le point d'entrée et met la structure sous la forme approprié pour
      * pouvoir commencer le désassemblage

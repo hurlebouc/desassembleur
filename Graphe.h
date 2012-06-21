@@ -20,57 +20,6 @@ extern "C" {
 #include "desassembleur.h"
 #include "variable.h"
 #include "macro.h"
-
-#define EST_RECOUVERT 1
-    
-/*== Valeurs possibles de _immediat (appels reccursifs)==*/
-    
-    enum ValeurImmediat{
-        NEANT,
-        EST_LU,
-        EST_ASSEMBLE,
-        EST_AFFICHE,
-        EST_LIBERE,
-        PASSAGE_GET_NODE_WITH_VIRTUALADDR,
-        PASSAGE_GET_NODE_WITH_VIRTUALADDR_U,
-    };
-
-/*======== Valeurs possibles de type de liaison =======*/
-    
-    enum ValeurLiaison{
-        NOEUD_TERMINAISON,
-        NOEUD_JUMP_COND,
-        NOEUD_JUMP_INCOND,
-        NOEUD_CALL,
-        NOEUD_RET,
-        NOEUD_EXIT,
-    };
-
-/*============ Valeurs possibles d'interet ===========*/
-    
-    enum ValeurEtat{
-        SANS_INTERET,
-        NOEUD_BRANCH,
-        
-        OPCODE_INCONNU,
-        DEPASSEMENT_BLOC,
-        
-        SAUT_INCOND_OUT_OF_BLOCK,
-        SAUT_INCOND_INDEFINI,
-        
-        FIN_BLOC_SANS_POINT_ARRET,
-        
-        CALL_TERMINAL_OOB,
-        CALL_TERMINAL_INDEFINI,
-        CALL_FIN_BLOC,
-        CALL_INDEFINI,
-        CALL_OUT_OF_BLOCK,
-        
-        SAUT_COND_FIN_BLOC,
-        SAUT_COND_INDEFINI,
-        SAUT_COND_OUT_OF_BLOCK,
-        SAUT_COND_TERMINAL,
-    };
     
     extern char* ROOT;
     /*!

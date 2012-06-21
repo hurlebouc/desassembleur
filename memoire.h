@@ -14,13 +14,7 @@
 #define desassembleur_memoire_h
 
 #include <stdint.h>
-#include "definitions.h"
-
-enum casIndeterminisationMemoire {
-    SEG_NON_INITIALISE =    0x1,
-    SEG_INDETERMINEE =      0x2,
-    SEG_NON_PRESENT =       0x4,
-    };
+#include "macro.h"
 
 typedef struct _byte{
     uint64_t virtualAddr;

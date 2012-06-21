@@ -112,7 +112,6 @@
 		B43A2EE0151D0921007EB249 /* instruction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = instruction.c; sourceTree = "<group>"; };
 		B44A8BE41577DF95004DEF89 /* memoire.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memoire.c; sourceTree = "<group>"; };
 		B44A8BE81577DFA9004DEF89 /* memoire.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memoire.h; sourceTree = "<group>"; };
-		B44A8BE91577EA1B004DEF89 /* definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
 		B45321691506188B001C6689 /* loader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = loader.c; sourceTree = "<group>"; };
 		B453216C15061895001C6689 /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
 		B479109614FFE5320004216E /* Vide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vide.h; sourceTree = "<group>"; };
@@ -175,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				B453216F15061AB3001C6689 /* primitives */,
-				B44A8BE91577EA1B004DEF89 /* definitions.h */,
 				B4FA7C7F150F3BE00023615C /* registre.h */,
 				B44A8BE81577DFA9004DEF89 /* memoire.h */,
 				B417098715795B74000AA605 /* variable.h */,

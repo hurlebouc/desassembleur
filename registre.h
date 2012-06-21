@@ -21,7 +21,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
-#include "definitions.h"    
+#include "macro.h"    
     
     /*!
      * Registre virtuel

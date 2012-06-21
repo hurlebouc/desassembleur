@@ -14,14 +14,9 @@
 
 #ifndef desassembleur_instruction_h
 #define desassembleur_instruction_h
-
+#include "macro.h"
 #include "variable.h"
 #include "processeur.h"
-
-enum Permission {
-    LOCKED = 0,
-    UNLOCKED,
-    };
 
 /*!
  * Cette structure donne toutes les informations permettant de réaliser une 

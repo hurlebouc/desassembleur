@@ -19,6 +19,7 @@ extern "C" {
     
 #include <stdio.h>
 #include "LinkedList.h"
+#include "macro.h"
 #include "registre.h"
 #include "memoire.h"
 #include "pile.h"
@@ -148,25 +149,6 @@ extern "C" {
 #define _nOF        8    // overflow flag
     
 #define PILE_NON_DEFINIE NULL
-    
-    enum armement_flag {
-        FLAG_BAS,
-        FLAG_HAUT,
-        FLAG_NON_DEFINI = -1,
-        FLAG_UNMODIFIED,
-    };
-    
-    enum inclusion{
-        INCLU_STRICTEMENT,
-        EGAL,
-        NON_INCLUS = -1,
-    };
-    
-    enum delta{
-        DELTA_BAISSE = 0,
-        DELTA_LEVE,
-        
-    };
     /*!
      * Modélisation du processeur
      */
