@@ -10,9 +10,11 @@
 #include "pile.h"
 
 
-Stack* newStack(){
+Stack* newStack(Memoire* mem, uint8_t taille){
     Stack* res = malloc(sizeof(Stack));
     res->pile = newLinkedList();
+    res->mem = mem;
+    res->taille = taille;
     return res;
 }
 
@@ -22,44 +24,57 @@ void terminateStack(Stack* pile){
 }
 
 void pushStack(Stack*stack, Variable var, Registre* RSP){
-    Segment* seg = getFirstLL(stack->pile);
-    int tailleSegment = seg->taille; // en octets
-    if (getVarTaille(var) > tailleSegment*8) {
-        printf("la pile accueil des entiers de taille %d bits l'entrée est de  %d bits\n", tailleSegment*8, getVarTaille(var));
+    if (getVarTaille(var) > stack->taille) {
+        printf("ERROR : la pile accueil des entiers de taille %d bits l'entrée est de  %d bits\n", stack->taille, getVarTaille(var));
         exit(EXIT_FAILURE);
     }
     
-    if (getRegClassRec(RSP) != CLASSE_NON_DEFINIE) {
-        setRegVal(RSP, getRegVal(RSP) - tailleSegment);
+    Segment* top = NULL;
+    
+    if (sizeLL(stack->pile) == 0) {
+        if (getRegClassRec(RSP) != CLASSE_NON_DEFINIE) {
+            top = newSegment(stack->mem, getRegVal(RSP), stack->taille);
+        } else {
+            return;
+        }
+    } else {
+        Segment* seg = getFirstLL(stack->pile);
+        top = newSegment(stack->mem, seg->virtualAddr - stack->taille, stack->taille);
     }
     
-    uint64_t val = getVarVal(var);
-    Segment* top = newSegment(seg->mem, seg->virtualAddr - tailleSegment, tailleSegment);
     
-    setSegVal(*top, val);
+    if (getRegClassRec(RSP) != CLASSE_NON_DEFINIE) {
+        setRegVal(RSP, getRegVal(RSP) - stack->taille);
+    }
+    setSegVal(*top, getVarVal(var));
     setSegClassRec(*top, getVarClassRec(var));
     addFirstLL(stack->pile, top);
 }
 
 void popStack(Stack* stack, Variable var, Registre* RSP){
-    Segment* seg = getFirstLL(stack->pile);
-    int tailleSegment = seg->taille; // en octets
-    if (getVarTaille(var) > tailleSegment*8) {
-        printf("la pile accueil des entiers de taille %d bits l'entrée est de  %d bits\n", tailleSegment*8, getVarTaille(var));
+    if (sizeLL(stack->pile) == 0) {
+        printf("ERROR : La pile est vide et on ne peut dépiler.");
+        exit(EXIT_FAILURE);
+    }
+    if (getVarTaille(var) > stack->taille) {
+        printf("ERROR : la pile accueil des entiers de taille %d bits l'entrée est de  %d bits\n", stack->taille, getVarTaille(var));
         exit(EXIT_FAILURE);
     }
     
+    Segment* seg = getFirstLL(stack->pile);
+    
     if (getRegClassRec(RSP) != CLASSE_NON_DEFINIE) {
-        setRegVal(RSP, getRegVal(RSP) + tailleSegment);
+        setRegVal(RSP, getRegVal(RSP) + stack->taille);
     }
     
     if (getSegClassRec(*seg)[0] == CLASSE_NON_DEFINIE) {
         setVarClassRec(var, CLASSE_NON_DEFINIE);
+        removeFirstLL(stack->pile);
+        free(seg);
         return;
     }
     
-    uint64_t val = getSegVal(*seg);
-    setVarVal(var, val);
+    setVarVal(var, getSegVal(*seg));
     setVarClassRec(var, getSegClassRec(*seg)[0]);
     removeFirstLL(stack->pile);
     free(seg);
@@ -69,7 +84,7 @@ Stack* newStackCopy(Stack* src, Memoire* mem){
     if (src == NULL) {
         return NULL;
     }
-    Stack* dest = newStack();
+    Stack* dest = newStack(mem, src->taille);
     LinkedList* tete = src->pile;
     uint64_t taille = sizeLL(tete);
     for (uint64_t i = 0; i<taille; i++) {

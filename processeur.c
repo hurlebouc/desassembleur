@@ -115,10 +115,8 @@ Processeur* newProcesseur(uint64_t MemorySize){
         proc->tabFlags[i] = FLAG_NON_DEFINI;
     }
     
-    
-    _STACK  =   newStack();
     proc->mem = newMemoire(MemorySize);
-    
+    _STACK  =   newStack(proc->mem, 64); // Solution passagère
     proc->delta = DELTA_BAISSE;
     
     return proc;

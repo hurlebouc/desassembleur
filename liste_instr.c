@@ -444,6 +444,7 @@ static int af_je(const Variable a, const Variable b, const Variable stub){
 
 static Variable f_je(Variable a, Variable stub1, Variable stub2, Processeur* proc, int lenInstr){
     incr(_RIP, lenInstr);
+    return a;
 }
 
 Instruction* init_je(){
