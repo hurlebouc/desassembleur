@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$struct__registre.html" title="_registre" alt="" coords="5,114,72,141"/>
+<area shape="rect" id="node5" href="$struct__memoire.html" title="_memoire" alt="" coords="147,114,221,141"/>
+<area shape="rect" id="node7" href="$struct__byte.html" title="_byte" alt="" coords="157,14,211,41"/>
+<area shape="rect" id="node9" href="$struct_stack.html" title="Stack" alt="" coords="246,114,300,141"/>
+<area shape="rect" id="node11" href="$struct_linked_list.html" title="LinkedList" alt="" coords="236,14,313,41"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$struct___disasm.html" title="_Disasm" alt="" coords="267,235,340,262"/>
+<area shape="rect" id="node4" href="$struct_a_r_g_t_y_p_e.html" title="ARGTYPE" alt="" coords="23,114,109,141"/>
+<area shape="rect" id="node6" href="$struct_m_e_m_o_r_y_t_y_p_e.html" title="MEMORYTYPE" alt="" coords="5,14,123,41"/>
+<area shape="rect" id="node8" href="$struct_i_n_s_t_r_t_y_p_e.html" title="INSTRTYPE" alt="" coords="135,114,229,141"/>
+<area shape="rect" id="node10" href="$struct_e_f_l_struct.html" title="EFLStruct" alt="" coords="147,14,223,41"/>
+<area shape="rect" id="node12" href="$struct_p_r_e_f_i_x_i_n_f_o.html" title="PREFIXINFO" alt="" coords="255,114,353,141"/>
+<area shape="rect" id="node14" href="$struct_r_e_x___struct.html" title="REX_Struct" alt="" coords="293,14,379,41"/>
+<area shape="rect" id="node16" href="$struct_internal_datas.html" title="InternalDatas" alt="" coords="377,114,476,141"/>
+<area shape="rect" id="node19" href="$struct___processeur.html" title="_Processeur" alt="" coords="561,235,652,262"/>
+<area shape="rect" id="node21" href="$struct__registre.html" title="_registre" alt="" coords="501,114,568,141"/>
+<area shape="rect" id="node24" href="$struct__memoire.html" title="_memoire" alt="" coords="643,114,717,141"/>
+<area shape="rect" id="node26" href="$struct__byte.html" title="_byte" alt="" coords="651,14,705,41"/>
+<area shape="rect" id="node28" href="$struct_stack.html" title="Stack" alt="" coords="742,114,796,141"/>
+<area shape="rect" id="node30" href="$struct_linked_list.html" title="LinkedList" alt="" coords="731,14,808,41"/>
+</map>

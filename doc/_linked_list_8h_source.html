@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<title>Désassembleur statique:  Fichier source de LinkedList.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Désassembleur statique
+   &#160;<span id="projectnumber">0.2</span>
+   </div>
+   <div id="projectbrief">Analyseur statique de programme</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Page&#160;principale</span></a></li>
+      <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Liste&#160;des&#160;fichiers</span></a></li>
+      <li><a href="globals.html"><span>Variables&#160;globale</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fichiers</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">LinkedList.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="_linked_list_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef desassembleur_LinkedList_h</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define desassembleur_LinkedList_h</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span>    </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="code" href="struct_linked_list.html">   21</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_linked_list.html">LinkedList</a></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    {</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="struct_linked_list.html#a3b190b9316f0a7aa1ab123b093545343">   23</a></span>&#160;        <span class="keywordtype">void</span>* <a class="code" href="struct_linked_list.html#a3b190b9316f0a7aa1ab123b093545343">valeur</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="code" href="struct_linked_list.html#a92278c1cae8a076facb5829b06c88918">   24</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="struct_linked_list.html#a92278c1cae8a076facb5829b06c88918">longueur</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="struct_linked_list.html#a5462f384a54387ecc93e6fd9a8d97060">   25</a></span>&#160;        <span class="keyword">struct </span><a class="code" href="struct_linked_list.html">LinkedList</a>* <a class="code" href="struct_linked_list.html#a5462f384a54387ecc93e6fd9a8d97060">prec</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="struct_linked_list.html#ae9e94dd45345d614bd0ccbb22f37fc32">   26</a></span>&#160;        <span class="keyword">struct </span><a class="code" href="struct_linked_list.html">LinkedList</a>* <a class="code" href="struct_linked_list.html#ae9e94dd45345d614bd0ccbb22f37fc32">suiv</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="code" href="struct_linked_list.html#a8dc00c132bff9f435d3c47cd3f017946">   27</a></span>&#160;        <span class="keyword">struct </span><a class="code" href="struct_linked_list.html">LinkedList</a>* <a class="code" href="struct_linked_list.html#a8dc00c132bff9f435d3c47cd3f017946">dernier</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }<a class="code" href="_linked_list_8h.html#a44ddc92df57836b0340ed4213598da2c">LinkedList</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="struct_linked_list.html">LinkedList</a>* newLinkedList(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="struct_linked_list.html">LinkedList</a>* newLinkedListCopy(<a class="code" href="struct_linked_list.html">LinkedList</a>*);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> sizeLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> sizeExtLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> addLastLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">void</span>* element);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> addFirstLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">void</span>* element);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> addLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">void</span>* element, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> addAllLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* recepteur, <a class="code" href="struct_linked_list.html">LinkedList</a>* source);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> addAllLL2(<a class="code" href="struct_linked_list.html">LinkedList</a>* recepteur, <a class="code" href="struct_linked_list.html">LinkedList</a>* source);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> addLastCharLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">char</span> c);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span>* getLastLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span>* getFirstLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span>* getLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">char</span> getCharLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span>* removeLastLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">void</span>* removeFirstLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">void</span>* removeAtIndexLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index);</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> removeElementLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">void</span>* element);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> indexOfLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">void</span>* element);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">long</span> indexOfCharLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">char</span> element);</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    </div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordtype">void</span> terminateLinkedList(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> terminateLinkedListTotal(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordtype">void</span> afficheLinkedList(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste, <span class="keywordtype">short</span> tailleElement);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> compareLL(<a class="code" href="struct_linked_list.html">LinkedList</a>* l1, <a class="code" href="struct_linked_list.html">LinkedList</a>* l2);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="struct_linked_list.html">LinkedList</a>* copieLinkedList(<a class="code" href="struct_linked_list.html">LinkedList</a>* liste);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    </div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor"></span></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré le Jeudi Juin 21 2012 13:04:21 pour Désassembleur statique par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.1
+</small></address>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<title>Désassembleur statique: Variables globale</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Désassembleur statique
+   &#160;<span id="projectnumber">0.2</span>
+   </div>
+   <div id="projectbrief">Analyseur statique de programme</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Page&#160;principale</span></a></li>
+      <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Liste&#160;des&#160;fichiers</span></a></li>
+      <li class="current"><a href="globals.html"><span>Variables&#160;globale</span></a></li>
+    </ul>
+  </div>
+  <div id="navrow3" class="tabs2">
+    <ul class="tablist">
+      <li class="current"><a href="globals.html"><span>Tout</span></a></li>
+      <li><a href="globals_func.html"><span>Fonctions</span></a></li>
+      <li><a href="globals_type.html"><span>Définitions&#160;de&#160;type</span></a></li>
+    </ul>
+  </div>
+  <div id="navrow4" class="tabs3">
+    <ul class="tablist">
+      <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_d"><span>d</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_g"><span>g</span></a></li>
+      <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
+      <li><a href="#index_o"><span>o</span></a></li>
+      <li><a href="#index_p"><span>p</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
+      <li><a href="#index_s"><span>s</span></a></li>
+      <li><a href="#index_t"><span>t</span></a></li>
+      <li><a href="#index_w"><span>w</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fichiers</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="contents">
+<div class="textblock">Liste de toutes les fonctions, variables, macros, enumérations, et définitions de type documentés avec des liens vers la documentation :</div>
+
+<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>addFirstLL()
+: <a class="el" href="_linked_list_8h.html#a774041424ef23c7ebd9be9a3d5f67aaa">LinkedList.h</a>
+</li>
+<li>addLastCharLL()
+: <a class="el" href="_linked_list_8h.html#a3917417bae45b4d44898ddecf43582a2">LinkedList.h</a>
+</li>
+<li>addLastLL()
+: <a class="el" href="_linked_list_8h.html#acb93e72061efa29af0891b9cf0848101">LinkedList.h</a>
+</li>
+<li>addLink()
+: <a class="el" href="_graphe_8h.html#a4d93aed7af6b79de313d058e3e0afa89">Graphe.h</a>
+</li>
+<li>addLL()
+: <a class="el" href="_linked_list_8h.html#ab097ac7bb282e2d4eaa88cfbf09b5f02">LinkedList.h</a>
+</li>
+<li>afficheLinkedList()
+: <a class="el" href="_linked_list_8h.html#a3243af7fd9e5010b8c414aa0b6e68f05">LinkedList.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
+<li>cloneRegTerminaisons()
+: <a class="el" href="registre_8h.html#ad9cca77ab0fe531553868128ae4c973d">registre.h</a>
+</li>
+<li>compareLL()
+: <a class="el" href="_linked_list_8h.html#a9583e51dc905ca933b0d8417f87ffba1">LinkedList.h</a>
+</li>
+<li>copieLinkedList()
+: <a class="el" href="_linked_list_8h.html#aa02956948a7bfc70e6f1613ef2774cb0">LinkedList.h</a>
+</li>
+<li>copieRegAto()
+: <a class="el" href="registre_8h.html#a3336af58405e00d6a343fd759af96165">registre.h</a>
+</li>
+<li>copieValReg()
+: <a class="el" href="registre_8h.html#a47d3e4ff776f83a8404657ad8c3417f9">registre.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>debranchage_fils()
+: <a class="el" href="_graphe_8h.html#a3e99c7c6674208f5db34f45cd2a6db66">Graphe.h</a>
+</li>
+<li>Desasembleur
+: <a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">desassembleur.h</a>
+</li>
+<li>do_instr()
+: <a class="el" href="instruction_8h.html#a79c8c581aeae31b5971cb9372a6dbcc0">instruction.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
+<li>estRegFeuille()
+: <a class="el" href="registre_8h.html#a82b40dacdcbbf8455bf471a7370fdd68">registre.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>fequals()
+: <a class="el" href="_fichier_8h.html#a9e3e2d29e84c9b2ee2482349dc352dcb">Fichier.h</a>
+</li>
+<li>Fichier
+: <a class="el" href="_fichier_8h.html#afcea2cd464afa26ff742dbcbf96f7892">Fichier.h</a>
+</li>
+<li>fsize()
+: <a class="el" href="_fichier_8h.html#a2d8132d7a4d566108e424ffe7f3a47ea">Fichier.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
+<li>getCharLL()
+: <a class="el" href="_linked_list_8h.html#a73b4fbeeeda45dcbf0e2eedfc606db96">LinkedList.h</a>
+</li>
+<li>getConstant()
+: <a class="el" href="_graphe_8h.html#a6ea4218c89375794fba8e536725a11a1">Graphe.h</a>
+</li>
+<li>getFirstLL()
+: <a class="el" href="_linked_list_8h.html#a8caf9cdb1a47e63d1cf665b8f0627f07">LinkedList.h</a>
+</li>
+<li>getLastLL()
+: <a class="el" href="_linked_list_8h.html#af06d9c580b7d4e9db4bb0fcedf9fda95">LinkedList.h</a>
+</li>
+<li>getLL()
+: <a class="el" href="_linked_list_8h.html#a5f25d77c6247d8b446c87016b2dcebba">LinkedList.h</a>
+</li>
+<li>getNodeWithVirtualAddr()
+: <a class="el" href="_graphe_8h.html#a7d3432a16524064f3f949c4a8f496e47">Graphe.h</a>
+</li>
+<li>getNodeWithVirtualAddrUnique()
+: <a class="el" href="_graphe_8h.html#a9722252f38cabf4015825e936e363e7e">Graphe.h</a>
+</li>
+<li>getRegistre()
+: <a class="el" href="_graphe_8h.html#a87a2d9a4452387c43820cc7999e40144">Graphe.h</a>
+</li>
+<li>getRegVal()
+: <a class="el" href="registre_8h.html#afb86967fe7205d60f3c9fdc611972f6e">registre.h</a>
+</li>
+<li>getSegClassRec()
+: <a class="el" href="memoire_8h.html#a1b47d5444dbef4e775e00dfa6183037c">memoire.h</a>
+</li>
+<li>getSegVal()
+: <a class="el" href="memoire_8h.html#a855aab496ce13e0c490c71134a493733">memoire.h</a>
+</li>
+<li>getVarTaille()
+: <a class="el" href="variable_8h.html#a950e9fe559cc2a3a5b304333524ee004">variable.h</a>
+</li>
+<li>Graphe
+: <a class="el" href="_graphe_8h.html#a8d388eb9f15dbfb216e9156024ef315d">Graphe.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
+<li>incr()
+: <a class="el" href="registre_8h.html#aece0c02d56261d0935deb3e92eef2441">registre.h</a>
+</li>
+<li>indexOfCharLL()
+: <a class="el" href="_linked_list_8h.html#ac243d9c04083fbeddd4fe14dc16f76a1">LinkedList.h</a>
+</li>
+<li>indexOfLL()
+: <a class="el" href="_linked_list_8h.html#aa63f1253e70b06364d902f783b157c06">LinkedList.h</a>
+</li>
+<li>Instruction
+: <a class="el" href="instruction_8h.html#a46f2e1daa13587f1b0c73a8245e5e371">instruction.h</a>
+</li>
+<li>inter()
+: <a class="el" href="processeur_8h.html#afb2742e958765a4f2f4bcfb0da0c877c">processeur.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
+<li>LinkedList
+: <a class="el" href="_linked_list_8h.html#a44ddc92df57836b0340ed4213598da2c">LinkedList.h</a>
+</li>
+<li>load()
+: <a class="el" href="loader_8h.html#a38f6702514dcf09dbc0ab4aff3e05cc3">loader.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>newDesassembleur()
+: <a class="el" href="desassembleur_8h.html#ac60978f47475ed0f707f4e2da7a144a3">desassembleur.h</a>
+</li>
+<li>newDisasm()
+: <a class="el" href="desassembleur_8h.html#a0db14f72aa6399321a978298874034d0">desassembleur.h</a>
+</li>
+<li>newDisasmFromGraph()
+: <a class="el" href="_graphe_8h.html#a646e29a4ab322a53b5f16d42965b6e41">Graphe.h</a>
+</li>
+<li>newFichier()
+: <a class="el" href="_fichier_8h.html#abbe6045aeed434589d039061a2e31881">Fichier.h</a>
+</li>
+<li>newGraphe()
+: <a class="el" href="_graphe_8h.html#ad4a979924b01a98f11a726bd60b2d801">Graphe.h</a>
+</li>
+<li>newInstruction()
+: <a class="el" href="instruction_8h.html#ae0b426419e629d04a060dd2b59e73052">instruction.h</a>
+</li>
+<li>newLinkedList()
+: <a class="el" href="_linked_list_8h.html#a0577123959293e0a8a6d54fc601df1c8">LinkedList.h</a>
+</li>
+<li>newLinkedListCopy()
+: <a class="el" href="_linked_list_8h.html#a3bd7079d05f7eed22ee90ae2da9d463d">LinkedList.h</a>
+</li>
+<li>newProcesseur()
+: <a class="el" href="processeur_8h.html#a718b6e7136158d43395ebdd585eec848">processeur.h</a>
+</li>
+<li>newProcesseurCopy()
+: <a class="el" href="processeur_8h.html#a6137670f807d679f604e3990cf59274f">processeur.h</a>
+</li>
+<li>newRegistreDeuxFils()
+: <a class="el" href="registre_8h.html#a1036bbf9e2f1bb243386e512afdea579">registre.h</a>
+</li>
+<li>newRegistreFeuille()
+: <a class="el" href="registre_8h.html#aeea11b44588490dc26af9a8961a57a30">registre.h</a>
+</li>
+<li>newRegistreFilsUnique()
+: <a class="el" href="registre_8h.html#aee48cc382a80b97dc45cbd6934df13f7">registre.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>optimizePool()
+: <a class="el" href="_graphe_8h.html#ae8f6a8d078872e2d944da98e335ca48d">Graphe.h</a>
+</li>
+<li>optimizePool2()
+: <a class="el" href="_graphe_8h.html#a7d6af6780733ab3a2f71b14c8f11040a">Graphe.h</a>
+</li>
+<li>ouvrirEcriture()
+: <a class="el" href="_fichier_8h.html#a6ee8efcd53e643fe931b273bee833ab9">Fichier.h</a>
+</li>
+<li>ouvrirLecture()
+: <a class="el" href="_fichier_8h.html#ab490406294a94893f9fd208b25804759">Fichier.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>Processeur
+: <a class="el" href="processeur_8h.html#a3cccfcde525ce7169ed22c2878e70784">processeur.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>readFlux()
+: <a class="el" href="_fichier_8h.html#a4521cae13f145b5f9b6e4558cc9eb2e1">Fichier.h</a>
+</li>
+<li>Registre
+: <a class="el" href="registre_8h.html#a6eacf6ad15b92e5128b028df03e4e73a">registre.h</a>
+</li>
+<li>removeAtIndexLL()
+: <a class="el" href="_linked_list_8h.html#a144005a31794d9d52ad71cd6d3ced452">LinkedList.h</a>
+</li>
+<li>removeElementLL()
+: <a class="el" href="_linked_list_8h.html#adb196444598d5b5da43cad45876922fc">LinkedList.h</a>
+</li>
+<li>removeFichier()
+: <a class="el" href="_fichier_8h.html#a0c5581595e9cef9a6a8440a1a79a7635">Fichier.h</a>
+</li>
+<li>removeFirstLL()
+: <a class="el" href="_linked_list_8h.html#a8181a4457c3917b30e5dc90257ca51af">LinkedList.h</a>
+</li>
+<li>removeLastLL()
+: <a class="el" href="_linked_list_8h.html#afa1e180ddc6b6664870a15db43e19d58">LinkedList.h</a>
+</li>
+<li>removeLinkRec()
+: <a class="el" href="_graphe_8h.html#a9816e8a4e1164fffff5cb191c864cda5">Graphe.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>setRegVal()
+: <a class="el" href="registre_8h.html#a385ccd4ac990739726a1815bd1ed9a49">registre.h</a>
+</li>
+<li>setSegVal()
+: <a class="el" href="memoire_8h.html#a303ee0483c0ba33c9222c17ba2315ed8">memoire.h</a>
+</li>
+<li>simplifieGraphe()
+: <a class="el" href="dyndesass_8h.html#ac359f8b60ab593168cdb101f068a480f">dyndesass.h</a>
+</li>
+<li>sizeExtLL()
+: <a class="el" href="_linked_list_8h.html#a68568fdbfddd9eb6404967cfa07cfe04">LinkedList.h</a>
+</li>
+<li>sizeLL()
+: <a class="el" href="_linked_list_8h.html#a0e704e524dd681d1261f788595e9d579">LinkedList.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
+<li>terminateDesassembleur()
+: <a class="el" href="desassembleur_8h.html#a4b2c3c329ed96b1e65a77b06c1edf2a5">desassembleur.h</a>
+</li>
+<li>terminateFichier()
+: <a class="el" href="_fichier_8h.html#aca1eb0e944adc724965176f1f8a44561">Fichier.h</a>
+</li>
+<li>terminateGraphe()
+: <a class="el" href="_graphe_8h.html#a36ab0a659bd172ce96c39d45572b4e16">Graphe.h</a>
+</li>
+<li>terminateInstruction()
+: <a class="el" href="instruction_8h.html#af0f45e43a22c8de50395253282cacfe0">instruction.h</a>
+</li>
+<li>terminateLinkedList()
+: <a class="el" href="_linked_list_8h.html#a6143b7aca94b5dc6aa380fc2f7fc93e1">LinkedList.h</a>
+</li>
+<li>terminateLinkedListTotal()
+: <a class="el" href="_linked_list_8h.html#a87980f9c5cdbf6169eac27e8cfb7c70f">LinkedList.h</a>
+</li>
+<li>terminateProcesseur()
+: <a class="el" href="processeur_8h.html#ae72d2dc882ce5738a3e428c1ebedd8e5">processeur.h</a>
+</li>
+<li>terminateRegistre()
+: <a class="el" href="registre_8h.html#ac9b3f3a689f3b2417b1f9886f5b2f368">registre.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
+<li>writeFlux()
+: <a class="el" href="_fichier_8h.html#ab06bf56a02db8bc08e0e743fa9e798e3">Fichier.h</a>
+</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré le Jeudi Juin 21 2012 13:04:22 pour Désassembleur statique par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.1
+</small></address>
+</body>
+</html>

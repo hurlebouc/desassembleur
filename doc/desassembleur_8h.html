@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<title>Désassembleur statique: Référence du fichier desassembleur.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Désassembleur statique
+   &#160;<span id="projectnumber">0.2</span>
+   </div>
+   <div id="projectbrief">Analyseur statique de programme</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Page&#160;principale</span></a></li>
+      <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Liste&#160;des&#160;fichiers</span></a></li>
+      <li><a href="globals.html"><span>Variables&#160;globale</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fichiers</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Structures de données</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Définitions de type</a> &#124;
+<a href="#func-members">Fonctions</a>  </div>
+  <div class="headertitle">
+<div class="title">Référence du fichier desassembleur.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;string.h&gt;</code><br/>
+<code>#include &lt;stdlib.h&gt;</code><br/>
+<code>#include &lt;fcntl.h&gt;</code><br/>
+<code>#include &lt;unistd.h&gt;</code><br/>
+<code>#include &lt;sys/mman.h&gt;</code><br/>
+<code>#include &lt;sys/stat.h&gt;</code><br/>
+<code>#include &quot;<a class="el" href="_fichier_8h_source.html">Fichier.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="_linked_list_8h_source.html">LinkedList.h</a>&quot;</code><br/>
+<code>#include &quot;BeaEngine.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="processeur_8h_source.html">processeur.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="liste__instr_8h_source.html">liste_instr.h</a>&quot;</code><br/>
+</div><div class="textblock"><div class="dynheader">
+Graphe des dépendances par inclusion de desassembleur.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="desassembleur_8h__incl.png" border="0" usemap="#desassembleur_8h" alt=""/></div>
+<map name="desassembleur_8h" id="desassembleur_8h">
+<area shape="rect" id="node17" href="_fichier_8h.html" title="Fichier.h" alt="" coords="344,453,411,480"/><area shape="rect" id="node25" href="_linked_list_8h.html" title="LinkedList.h" alt="" coords="551,379,637,405"/><area shape="rect" id="node30" href="_bea_engine_8h_source.html" title="BeaEngine.h" alt="" coords="722,80,816,107"/><area shape="rect" id="node40" href="processeur_8h.html" title="processeur.h" alt="" coords="774,229,868,256"/><area shape="rect" id="node67" href="liste__instr_8h.html" title="liste_instr.h" alt="" coords="1148,80,1231,107"/><area shape="rect" id="node23" href="macro_8h_source.html" title="macro.h" alt="" coords="344,528,411,555"/><area shape="rect" id="node32" href="macros_8h_source.html" title="beaengine/macros.h" alt="" coords="587,155,724,181"/><area shape="rect" id="node34" href="export_8h.html" title="This file sets things up for C dynamic library function definitions and static inlined functions..." alt="" coords="749,155,880,181"/><area shape="rect" id="node36" href="basic__types_8h.html" title="Definitions of fixed&#45;size integer types for various platforms." alt="" coords="905,155,1071,181"/><area shape="rect" id="node44" href="registre_8h.html" title="registre.h" alt="" coords="723,453,793,480"/><area shape="rect" id="node53" href="memoire_8h.html" title="memoire.h" alt="" coords="818,453,896,480"/><area shape="rect" id="node57" href="pile_8h.html" title="pile.h" alt="" coords="865,304,916,331"/><area shape="rect" id="node51" href="definitions_8h_source.html" title="definitions.h" alt="" coords="734,528,820,555"/><area shape="rect" id="node61" href="variable_8h.html" title="variable.h" alt="" coords="859,379,936,405"/><area shape="rect" id="node69" href="instruction_8h.html" title="instruction.h" alt="" coords="1147,155,1233,181"/></map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+Ce graphe montre quels fichiers incluent directement ou indirectement ce fichier :</div>
+<div class="dyncontent">
+<div class="center"><img src="desassembleur_8h__dep__incl.png" border="0" usemap="#desassembleur_8hdep" alt=""/></div>
+<map name="desassembleur_8hdep" id="desassembleur_8hdep">
+<area shape="rect" id="node3" href="_graphe_8h.html" title="Graphe.h" alt="" coords="126,80,201,107"/><area shape="rect" id="node5" href="dyndesass_8h.html" title="dyndesass.h" alt="" coords="57,155,153,181"/><area shape="rect" id="node9" href="test_dyndesass_8h_source.html" title="test/testDyndesass.h" alt="" coords="306,304,448,331"/><area shape="rect" id="node19" href="loader_8h.html" title="loader.h" alt="" coords="285,155,352,181"/><area shape="rect" id="node23" href="loader_elf_8h_source.html" title="loaderElf.h" alt="" coords="227,80,307,107"/><area shape="rect" id="node26" href="_loader_mach_8h_source.html" title="LoaderMach.h" alt="" coords="433,80,535,107"/><area shape="rect" id="node15" href="_vide_8h_source.html" title="Vide.h" alt="" coords="178,155,235,181"/><area shape="rect" id="node7" href="commandes_8h_source.html" title="commandes.h" alt="" coords="156,229,257,256"/><area shape="rect" id="node11" href="test_vide_8h_source.html" title="test/testVide.h" alt="" coords="5,304,107,331"/><area shape="rect" id="node13" href="test_otpimize_pool_8h_source.html" title="test/testOtpimizePool.h" alt="" coords="131,304,281,331"/></map>
+</div>
+</div>
+<p><a href="desassembleur_8h_source.html">Aller au code source de ce fichier.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="nested-classes"></a>
+Structures de données</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__desassembleur.html">_desassembleur</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a0ae53061b952647bdce165060c19d109"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ae53061b952647bdce165060c19d109"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BEA_ENGINE_STATIC</b>&#160;&#160;&#160;/* specify the usage of a static version of BeaEngine */</td></tr>
+<tr class="memitem:a2221e6c5be354b3a85b0f57ef013209e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2221e6c5be354b3a85b0f57ef013209e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BEA_USE_STDCALL</b>&#160;&#160;&#160;/* specify the usage of a stdcall version of BeaEngine */</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="typedef-members"></a>
+Définitions de type</h2></td></tr>
+<tr class="memitem:a296d6918afba3cb03aeefaa6ce52008f"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct__desassembleur.html">_desassembleur</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:a0db14f72aa6399321a978298874034d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct___disasm.html">PDISASM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desassembleur_8h.html#a0db14f72aa6399321a978298874034d0">newDisasm</a> (void)</td></tr>
+<tr class="memitem:ac60978f47475ed0f707f4e2da7a144a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desassembleur_8h.html#ac60978f47475ed0f707f4e2da7a144a3">newDesassembleur</a> (<a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *)</td></tr>
+<tr class="memitem:a4b2c3c329ed96b1e65a77b06c1edf2a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desassembleur_8h.html#a4b2c3c329ed96b1e65a77b06c1edf2a5">terminateDesassembleur</a> (<a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *)</td></tr>
+<tr class="memitem:a16838719c6888ec968c9244a2c44fffc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16838719c6888ec968c9244a2c44fffc"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>desassemble</b> (<a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *)</td></tr>
+</table>
+<hr/><a name="details" id="details"></a><h2>Description détaillée</h2>
+<div class="textblock"></div><hr/><h2>Documentation des définitions de type</h2>
+<a class="anchor" id="a296d6918afba3cb03aeefaa6ce52008f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="struct__desassembleur.html">_desassembleur</a> <a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Structure qui va être utilisé à chaque étape du désassemblage. </p>
+
+</div>
+</div>
+<hr/><h2>Documentation des fonctions</h2>
+<a class="anchor" id="ac60978f47475ed0f707f4e2da7a144a3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a>* newDesassembleur </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Crée un nouveau déassembleur </p>
+<dl class="params"><dt>Paramètres:</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Désassembleur</td><td>vide à doter d'un disasm entre autres </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie:</dt><dd>Le désassembleur </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0db14f72aa6399321a978298874034d0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct___disasm.html">PDISASM</a> newDisasm </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Créer une structure Disasm utilisé par BeaEngine </p>
+<dl class="section return"><dt>Renvoie:</dt><dd>La structure disasm </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4b2c3c329ed96b1e65a77b06c1edf2a5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void terminateDesassembleur </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="desassembleur_8h.html#a296d6918afba3cb03aeefaa6ce52008f">Desasembleur</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Efface de la mémoire un Desassembleur </p>
+<dl class="params"><dt>Paramètres:</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Désassembleur</td><td>à éffacer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré le Jeudi Juin 21 2012 13:04:21 pour Désassembleur statique par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.1
+</small></address>
+</body>
+</html>

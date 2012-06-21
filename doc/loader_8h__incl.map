@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$macro_8h_source.html" title="macro.h" alt="" coords="48,528,115,555"/>
+<area shape="rect" id="node5" href="$_fichier_8h.html" title="Fichier.h" alt="" coords="187,453,253,480"/>
+<area shape="rect" id="node14" href="$desassembleur_8h.html" title="desassembleur.h" alt="" coords="615,155,733,181"/>
+<area shape="rect" id="node77" href="$loader_elf_8h_source.html" title="loaderElf.h" alt="" coords="1039,80,1119,107"/>
+<area shape="rect" id="node29" href="$_linked_list_8h.html" title="LinkedList.h" alt="" coords="1002,528,1088,555"/>
+<area shape="rect" id="node34" href="$_bea_engine_8h_source.html" title="BeaEngine.h" alt="" coords="585,229,679,256"/>
+<area shape="rect" id="node44" href="$processeur_8h.html" title="processeur.h" alt="" coords="713,379,807,405"/>
+<area shape="rect" id="node71" href="$liste__instr_8h.html" title="liste_instr.h" alt="" coords="855,229,937,256"/>
+<area shape="rect" id="node36" href="$macros_8h_source.html" title="beaengine/macros.h" alt="" coords="542,304,679,331"/>
+<area shape="rect" id="node38" href="$export_8h.html" title="This file sets things up for C dynamic library function definitions and static inlined functions..." alt="" coords="387,304,517,331"/>
+<area shape="rect" id="node40" href="$basic__types_8h.html" title="Definitions of fixed&#45;size integer types for various platforms." alt="" coords="195,304,361,331"/>
+<area shape="rect" id="node48" href="$registre_8h.html" title="registre.h" alt="" coords="651,603,721,629"/>
+<area shape="rect" id="node57" href="$memoire_8h.html" title="memoire.h" alt="" coords="746,603,824,629"/>
+<area shape="rect" id="node61" href="$pile_8h.html" title="pile.h" alt="" coords="880,453,931,480"/>
+<area shape="rect" id="node55" href="$definitions_8h_source.html" title="definitions.h" alt="" coords="662,677,748,704"/>
+<area shape="rect" id="node65" href="$variable_8h.html" title="variable.h" alt="" coords="799,528,876,555"/>
+<area shape="rect" id="node73" href="$instruction_8h.html" title="instruction.h" alt="" coords="857,304,943,331"/>
+</map>
