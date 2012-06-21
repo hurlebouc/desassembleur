@@ -104,7 +104,7 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
         unsigned long iniAdress = prog->VirtualAddr;
         unsigned long cibleAdress = prog->Instruction.AddrValue;
         unsigned long IP = iniAdress + len;
-        sprintf(temp,  "0x%lx \t %s \t (0x%lx) \t(dis:%lx, base:%d, index:%d, scale:%d) (arg:%x) (mnemo arg:%s) (lo arg : %x) (size:%d)\n", 
+        sprintf(temp,  "0x%lx \t %s \t (0x%lx) \t(dis:%lx, base:%d, index:%d, scale:%d) (%s : ArgType:%x, ArgSize:%d) ((%s : ArgType:%x, ArgSize:%d))\n", 
                 iniAdress, 
                 prog->CompleteInstr, 
                 cibleAdress, 
@@ -112,10 +112,12 @@ Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]){
                 prog->Argument1.Memory.BaseRegister, 
                 prog->Argument1.Memory.IndexRegister, 
                 prog->Argument1.Memory.Scale,
-                prog->Argument1.ArgType & 0xFFFF0000,
                 prog->Argument1.ArgMnemonic,
-                prog->Argument1.ArgType % 0xFFFF,
-                prog->Argument1.ArgSize);
+                prog->Argument1.ArgType,
+                prog->Argument1.ArgSize,
+                prog->Argument2.ArgMnemonic,
+                prog->Argument2.ArgType,
+                prog->Argument2.ArgSize);
         pushlog(fichierlog, temp);
         Graphe* i = initGraph(pi, iniAdress - debut);
         i->VirtualAddr = iniAdress;

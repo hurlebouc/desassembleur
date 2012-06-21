@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/*! 
+ * @file pile.h
+ */
+
 #ifndef desassembleur_pile_h
 #define desassembleur_pile_h
 #include <stdint.h>

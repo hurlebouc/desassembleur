@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Mines de Nancy. All rights reserved.
 //
 
+/*! 
+ * @file variable.h
+ */
+
 #ifndef desassembleur_variable_h
 #define desassembleur_variable_h
 #include "stdint.h"
