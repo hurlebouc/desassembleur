@@ -21,6 +21,9 @@ extern "C" {
     
     extern char* ROOT;
     
+    /*!
+     * @deprecated
+     */
     void desassemblage_inconditionnel(DISASM* prog);
     
     Graphe* buildGraphe(Desasembleur* desas, Graphe* pi[]);

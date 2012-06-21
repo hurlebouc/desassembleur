@@ -136,6 +136,7 @@ extern "C" {
     /*!
      * Trouve un noeud du graphe en compléxité linaire. Cependant cette fonction
      * ne peut être utilisé qu'une seule fois par graphe.
+     * @deprecated
      * @param Graphe à parcourir
      * @param Virtuel addresse du noeuf à trouver
      * @return Pointeur vers le noeud recherché si trouvé, NULL sinon.
@@ -146,6 +147,7 @@ extern "C" {
      * Cette fonction propage les constantes dans un graph à partir du pool 
      * initial. Chaque noeud contient les constantes APRÈS application de 
      * l'instruction
+     * @deprecated
      * @param Graphe que l'on souhaite étudier
      * @param initialPool
      */
