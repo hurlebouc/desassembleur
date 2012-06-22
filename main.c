@@ -13,10 +13,17 @@ char* ROOT;
 int main(int argc, char* argv []) {
         
     ROOT = argv[0];
+    char* chemin = argv[2];
+    int type;
+    if (strcmp(chemin, "mac") == 0) {
+        type = MACHO_64;
+    } else {
+        type = ELF_32;
+    }
     Fichier* binaire = newFichier(argv[1]);
     
     Desasembleur* desas = newDesassembleur(NULL);
-    load(desas, binaire, ELF_32);
+    load(desas, binaire, type);
     printf("cfg\n");
     Graphe* g = ControleFlow_entier(desas);
     enregistreGraphe(g, newFichier("graphe.dot"));
