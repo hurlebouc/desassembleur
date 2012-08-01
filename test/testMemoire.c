@@ -11,7 +11,7 @@ extern char* ROOT;
 
 #include <stdio.h>
 #include "testMemoire.h"
-#include "../macro.h"
+#include "../src/macro.h"
 
 void mem_recc(void){
     Memoire* mem = newMemoire(1000);

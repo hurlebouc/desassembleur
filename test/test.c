@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#include "../macro.h"
+#include "../src/macro.h"
 
 #include "CUnit/Basic.h"
 #include "CUnit/Console.h"

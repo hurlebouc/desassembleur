@@ -59,7 +59,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/hubert/Dropbox/personnel/developpeur/projet/desassembleur/tests/linux/obf2"
+            argument = "/Users/hubert/Desktop/desassembleur-git/test/material/mac/recc"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "mac"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

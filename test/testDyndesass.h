@@ -10,10 +10,10 @@
 #define desassembleur_testDyndesass_h
 
 #include "CUnit/Basic.h"
-#include "../Fichier.h"
-#include "../desassembleur.h"
-#include "../loader.h"
-#include "../commandes.h"
+#include "../src/Fichier.h"
+#include "../src/desassembleur.h"
+#include "../src/loader.h"
+#include "../src/commandes.h"
 
 void cfg_recc(void);
 void cfg_entropie(void);

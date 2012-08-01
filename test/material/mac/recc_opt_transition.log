@@ -1,0 +1,245 @@
+optimise 0x100000e20
+premiere non inclusion
+optimise 0x100000e22
+premiere non inclusion
+optimise 0x100000e25
+premiere non inclusion
+optimise 0x100000e29
+premiere non inclusion
+optimise 0x100000e2d
+premiere non inclusion
+optimise 0x100000e31
+premiere non inclusion
+optimise 0x100000e33
+premiere non inclusion
+optimise 0x100000e36
+premiere non inclusion
+optimise 0x100000e39
+premiere non inclusion
+optimise 0x100000e3c
+premiere non inclusion
+optimise 0x100000e3f
+premiere non inclusion
+optimise 0x100000e45
+premiere non inclusion
+optimise 0x100000e49
+premiere non inclusion
+optimise 0x100000e4b
+premiere non inclusion
+optimise 0x100000e4f
+premiere non inclusion
+optimise 0x100000e54
+premiere non inclusion
+optimise 0x100000e56
+premiere non inclusion
+optimise 0x100000e5b
+premiere non inclusion
+fin de 0x100000e5b par manque de fils
+fin de 0x100000e56
+fin de 0x100000e54
+optimise 0x100000ed0
+premiere non inclusion
+optimise 0x100000ed1
+premiere non inclusion
+optimise 0x100000ed4
+premiere non inclusion
+optimise 0x100000ed8
+premiere non inclusion
+optimise 0x100000edd
+premiere non inclusion
+optimise 0x100000edf
+premiere non inclusion
+optimise 0x100000ee4
+premiere non inclusion
+optimise 0x100000ee6
+premiere non inclusion
+optimise 0x100000ee8
+premiere non inclusion
+optimise 0x100000eef
+premiere non inclusion
+optimise 0x100000ef1
+premiere non inclusion
+optimise 0x100000ef3
+premiere non inclusion
+optimise 0x100000ef8
+premiere non inclusion
+optimise 0x100000efb
+premiere non inclusion
+optimise 0x100000eff
+premiere non inclusion
+optimise 0x100000f00
+premiere non inclusion
+fin de 0x100000f00 par manque de fils
+fin de 0x100000eff
+fin de 0x100000efb
+fin de 0x100000ef8
+fin de 0x100000ef3
+fin de 0x100000ef1
+fin de 0x100000eef
+fin de 0x100000ee8
+fin de 0x100000ee6
+fin de 0x100000ee4
+optimise 0x100000e60
+premiere non inclusion
+optimise 0x100000e61
+premiere non inclusion
+optimise 0x100000e64
+premiere non inclusion
+optimise 0x100000e68
+premiere non inclusion
+optimise 0x100000e6b
+premiere non inclusion
+optimise 0x100000e6e
+premiere non inclusion
+optimise 0x100000e71
+premiere non inclusion
+optimise 0x100000e73
+premiere non inclusion
+optimise 0x100000e7a
+premiere non inclusion
+optimise 0x100000eb6
+premiere non inclusion
+optimise 0x100000eb9
+premiere non inclusion
+optimise 0x100000ebc
+premiere non inclusion
+optimise 0x100000ebf
+premiere non inclusion
+optimise 0x100000ec3
+premiere non inclusion
+optimise 0x100000ec4
+premiere non inclusion
+fin de 0x100000ec4 par manque de fils
+fin de 0x100000ec3
+fin de 0x100000ebf
+fin de 0x100000ebc
+fin de 0x100000eb9
+fin de 0x100000eb6
+fin de 0x100000e7a
+fin de 0x100000e73
+optimise 0x100000e7c
+premiere non inclusion
+optimise 0x100000e7f
+premiere non inclusion
+optimise 0x100000e82
+premiere non inclusion
+optimise 0x100000e84
+premiere non inclusion
+optimise 0x100000e8b
+premiere non inclusion
+optimise 0x100000eb6
+fin de 0x100000eb6 par inclusion
+fin de 0x100000e8b
+fin de 0x100000e84
+optimise 0x100000e8d
+premiere non inclusion
+optimise 0x100000e90
+premiere non inclusion
+optimise 0x100000e93
+premiere non inclusion
+optimise 0x100000e95
+premiere non inclusion
+optimise 0x100000e9a
+premiere non inclusion
+optimise 0x100000e9c
+premiere non inclusion
+optimise 0x100000e9f
+premiere non inclusion
+optimise 0x100000ea2
+premiere non inclusion
+optimise 0x100000ea4
+premiere non inclusion
+optimise 0x100000ea7
+premiere non inclusion
+optimise 0x100000eac
+premiere non inclusion
+optimise 0x100000eae
+premiere non inclusion
+optimise 0x100000eb1
+premiere non inclusion
+optimise 0x100000eb3
+premiere non inclusion
+optimise 0x100000eb6
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+optimise 0x100000eb9
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+optimise 0x100000ebc
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+optimise 0x100000ebf
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+optimise 0x100000ec3
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+optimise 0x100000ec4
+non inclus par registre
+	 r1 : 17 = (1, 0)
+	 r2 : 17 = (0, 0)
+fin de 0x100000ec4 par manque de fils
+fin de 0x100000ec3
+fin de 0x100000ebf
+fin de 0x100000ebc
+fin de 0x100000eb9
+fin de 0x100000eb6
+fin de 0x100000eb3
+fin de 0x100000eb1
+fin de 0x100000eae
+fin de 0x100000eac
+optimise 0x100000e60
+fin de 0x100000e60 par inclusion
+fin de 0x100000ea7
+fin de 0x100000ea4
+fin de 0x100000ea2
+fin de 0x100000e9f
+fin de 0x100000e9c
+fin de 0x100000e9a
+optimise 0x100000e60
+fin de 0x100000e60 par inclusion
+fin de 0x100000e95
+fin de 0x100000e93
+fin de 0x100000e90
+fin de 0x100000e8d
+fin de 0x100000e82
+fin de 0x100000e7f
+fin de 0x100000e7c
+fin de 0x100000e71
+fin de 0x100000e6e
+fin de 0x100000e6b
+fin de 0x100000e68
+fin de 0x100000e64
+fin de 0x100000e61
+fin de 0x100000e60
+fin de 0x100000edf
+fin de 0x100000edd
+fin de 0x100000ed8
+fin de 0x100000ed4
+fin de 0x100000ed1
+fin de 0x100000ed0
+fin de 0x100000e4f
+fin de 0x100000e4b
+optimise 0x100000e41
+premiere non inclusion
+optimise 0x100000e45
+fin de 0x100000e45 par inclusion
+fin de 0x100000e41
+fin de 0x100000e49
+fin de 0x100000e45
+fin de 0x100000e3f
+fin de 0x100000e3c
+fin de 0x100000e39
+fin de 0x100000e36
+fin de 0x100000e33
+fin de 0x100000e31
+fin de 0x100000e2d
+fin de 0x100000e29
+fin de 0x100000e25
+fin de 0x100000e22
+fin de 0x100000e20

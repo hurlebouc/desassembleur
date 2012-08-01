@@ -1,0 +1,149 @@
+0x1000433 	 push       ebp 	 (0x0) (op : 55)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000434 	 mov        ebp, esp 	 (0x0) (op : 89)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000436 	 cmp        dword [ss:ebp+0x08], 0x02 	 (0x0) (op : 83)
+2  2  2  2  2  2  0  0  0  0  0  
+0x100043a 	 jne        0x010004D9 	 (0x10004d9) (op : f85)
+1  1  1  0  1  1  0  0  0  0  0  
+0x10004d9 	 pop        ebp 	 (0x0) (op : 5d)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004da 	 mov        eax, 0x00000001 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004df 	 ret         	 (0x0) (op : c3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000440 	 mov        ebx, dword [ss:ebp+0x0C] 	 (0x0) (op : 8b)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000443 	 mov        eax, dword [ds:ebx+0x04] 	 (0x0) (op : 8b)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000446 	 call       0x01000410 	 (0x1000410) (op : e8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000410 	 push       ebx 	 (0x0) (op : 53)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000411 	 push       ecx 	 (0x0) (op : 51)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000412 	 mov        ebx, eax 	 (0x0) (op : 89)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000414 	 mov        eax, 0x00000000 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000419 	 mov        ecx, 0x00000000 	 (0x0) (op : b9)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100041e 	 cmp        byte [ds:ebx], 0x00000000 	 (0x0) (op : 80)
+2  2  2  2  2  2  0  0  0  0  0  
+0x1000421 	 je         0x01000430 	 (0x1000430) (op : 74)
+1  1  1  0  1  1  0  0  0  0  0  
+0x1000430 	 pop        ecx 	 (0x0) (op : 59)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000431 	 pop        ebx 	 (0x0) (op : 5b)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000432 	 ret         	 (0x0) (op : c3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000423 	 imul       eax, eax, 0x0A 	 (0x0) (op : 6b)
+2  16  16  16  16  2  0  0  0  0  0  
+0x1000426 	 mov        cl, byte [ds:ebx] 	 (0x0) (op : 8a)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000428 	 sub        cl, 0x00000030 	 (0x0) (op : 80)
+2  2  2  2  2  2  0  0  0  0  0  
+0x100042b 	 add        eax, ecx 	 (0x0) (op : 1)
+2  2  2  2  2  2  0  0  0  0  0  
+0x100042d 	 inc        ebx 	 (0x0) (op : 43)
+2  2  2  2  2  0  0  0  0  0  0  
+0x100042e 	 jmp        0x0100041E 	 (0x100041e) (op : eb)
+1  1  1  0  1  1  0  0  0  0  0  
+0x100041e 	 cmp        byte [ds:ebx], 0x00000000 	 (0x0) (op : 80)
+2  2  2  2  2  2  0  0  0  0  0  
+0x100044b 	 mov        dword [ds:0x08049700], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000450 	 mov        eax, 0x00000000 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000455 	 mov        dword [ds:0x08049704], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100045a 	 mov        eax, dword [ds:0x08049700] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100045f 	 cmp        eax, 0x00000000 	 (0x0) (op : 83)
+2  2  2  2  2  2  0  0  0  0  0  
+0x1000462 	 je         0x010004BD 	 (0x10004bd) (op : 74)
+1  1  1  0  1  1  0  0  0  0  0  
+0x10004bd 	 mov        eax, dword [ds:0x08049704] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004c2 	 push       eax 	 (0x0) (op : 50)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004c3 	 push       0x080496FC 	 (0x0) (op : 68)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004c8 	 call       0x01000320 	 (0x1000320) (op : e8)
+0  0  0  0  0  0  0  0  0  0  0  
+WARNING : un call fait appel à une fonction hors du bloc
+0x10004cd 	 add        esp, 0x08 	 (0x0) (op : 83)
+2  2  2  2  2  2  0  0  0  0  0  
+0x10004d0 	 mov        esp, ebp 	 (0x0) (op : 89)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004d2 	 pop        ebp 	 (0x0) (op : 5d)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004d3 	 mov        eax, 0x00000000 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004d8 	 ret         	 (0x0) (op : c3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000464 	 mov        eax, dword [ds:0x08049700] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000469 	 and        eax, 0x01 	 (0x0) (op : 83)
+4  2  2  16  2  4  0  0  0  0  0  
+0x100046c 	 mov        dword [ds:0x08049708], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000471 	 mov        eax, dword [ds:0x08049708] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000476 	 mov        ebx, eax 	 (0x0) (op : 89)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000478 	 mov        eax, 0x00000000 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100047d 	 shl        eax, 1  	 (0x0) (op : d1)
+2  2  2  0  2  2  0  0  0  0  0  
+0x100047f 	 cmp        eax, ebx 	 (0x0) (op : 39)
+2  2  2  2  2  2  0  0  0  0  0  
+0x1000481 	 jne        0x0100048F 	 (0x100048f) (op : 75)
+1  1  1  0  1  1  0  0  0  0  0  
+0x100048f 	 mov        eax, dword [ds:0x08049708] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000494 	 mov        ebx, eax 	 (0x0) (op : 89)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000496 	 mov        eax, 0x00000000 	 (0x0) (op : b8)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100049b 	 shl        eax, 1  	 (0x0) (op : d1)
+2  2  2  0  2  2  0  0  0  0  0  
+0x100049d 	 inc        eax 	 (0x0) (op : 40)
+2  2  2  2  2  0  0  0  0  0  0  
+0x100049e 	 cmp        eax, ebx 	 (0x0) (op : 39)
+2  2  2  2  2  2  0  0  0  0  0  
+0x10004a0 	 jne        0x010004AF 	 (0x10004af) (op : 75)
+1  1  1  0  1  1  0  0  0  0  0  
+0x10004af 	 mov        eax, dword [ds:0x08049700] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004b4 	 shr        eax, 1  	 (0x0) (op : d1)
+2  2  2  0  2  2  0  0  0  0  0  
+0x10004b6 	 mov        dword [ds:0x08049700], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004bb 	 jmp        0x0100045A 	 (0x100045a) (op : eb)
+1  1  1  0  1  1  0  0  0  0  0  
+0x100045a 	 mov        eax, dword [ds:0x08049700] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004a2 	 mov        eax, dword [ds:0x08049704] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004a7 	 shl        eax, 1  	 (0x0) (op : d1)
+2  2  2  0  2  2  0  0  0  0  0  
+0x10004a9 	 inc        eax 	 (0x0) (op : 40)
+2  2  2  2  2  0  0  0  0  0  0  
+0x10004aa 	 mov        dword [ds:0x08049704], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x10004af 	 mov        eax, dword [ds:0x08049700] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000483 	 mov        eax, dword [ds:0x08049704] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+0x1000488 	 shl        eax, 1  	 (0x0) (op : d1)
+2  2  2  0  2  2  0  0  0  0  0  
+0x100048a 	 mov        dword [ds:0x08049704], eax 	 (0x0) (op : a3)
+0  0  0  0  0  0  0  0  0  0  0  
+0x100048f 	 mov        eax, dword [ds:0x08049708] 	 (0x0) (op : a1)
+0  0  0  0  0  0  0  0  0  0  0  
+
+Arret du désassembleur par dépilage d'une pile vide
+
+fin de la lecture
