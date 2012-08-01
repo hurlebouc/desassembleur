@@ -1,0 +1,77 @@
+% !TEX root =  ../main_final.tex
+
+\noind L'assembleur joue un rôle central dans les processus de compilation. Il est alors primordial lorsque l'on souhaite décompiler un code (reverse engineering) de s'assurer que l'on est au moins capable de le désassembler: c'est à dire, récupérer un code assembleur correspondant au code machine. 
+Bien que l'assembleur soit en théorie en bijection avec le code machine, il y a un manque d'informations logique pour que cela soit fait de façon sûre et immédiate\footnote{Il manque les commentaires, les noms des variables par exemple.}.
+Nous allons donc dans cette partie voir le fonctionnement d'un désassembleur et identifier quelles sont les difficultés rencontrées lors de la conception d'un désassembleur.
+Dans un deuxième temps, nous allons mettre en évidence certaines méthodes d'obfuscations de niveau assembleur qui reposent sur les particularités de ces langages et des différents types de désassembleurs.
+
+\begin{figure}[htb]
+\centering
+\input{input/grapheEtape.tex}
+\caption{La place de l'assembleur dans le cycle Compilation/Décompilation}
+\end{figure}
+
+\subsection{Fonctionnement d'un désassembleur.}
+
+\subsubsection{Que doit faire un désassembleur?}
+
+\noind Le désassembleur doit pouvoir, une fois qu'il connaît le set d'instructions utilisé par le processeur et le point d'entrée du fichier exécutable, décrypter le code machine pour donner son équivalent en un langage assembleur. C'est à dire, le programme que l'on doit obtenir en recompilant le code machine désassemblé doit avoir exactement le même comportement.
+
+\noind Pour cela il faut d'abord récupérer le point d'entrée du programme, c'est-à-dire l'endroit où, une fois que le fichier exécutable a été chargé en mémoire, le contrôle est cédé par l'OS au programme qui va s'exécuter. 
+Pour cela, il est nécessaire de regarder les en-têtes (header) des différents types de fichiers exécutables (Ils sont plus ou moins conçus de la même manière et ceux qui sont principalement utilisés sont les formats Mach-o, ELF et PE).
+
+\begin{figure}[htb]
+\centering
+\input{input/grapheStruct.tex}
+\caption{Structure d'un fichier exécutable}
+\end{figure}
+
+\noind Une fois le point d'entrée extrait, on peut démarrer le désassemblage. Cela consiste à identifier :
+\begin{itemize}
+\item les opcodes : c'est la partie d'une instruction en langage machine qui définit l'opération à effectuer.
+\item la taille de l'instruction (jusqu'où on considère que les bits constituent une instruction)
+\item les arguments
+\end{itemize} 
+On peut en déduire, connaissant le set d'instructions utilisé par le processeur la taille complète de l'instruction et des arguments, et donc reconstituer la ligne assembleur correspondant à cette opération.
+Le désassembleur agit donc comme un dictionnaire entre le langage machine et l'assembleur, compréhensible par les humains.
+Une fois l'opération décodée, il faut continuer le désassemblage jusqu'à arriver au \texttt{ret} (return) final.
+Cependant, il y a plusieurs façons de faire pour suivre le déroulement d'un programme et atteindre la fin.
+
+
+\subsubsection{Différentes manières d'effectuer le désassemblage.}
+
+Afin de désassembler un programme il y a deux manières de procéder: statiquement et dynamiquement. 
+\noindent Dynamiquement signifie que l'on exécute le programme et qu'on analyse chaque action du programme (un peu comme ce que fait un debbuger).\\
+
+\noindent Statiquement, plusieurs façons sont possibles:\\
+ 
+\begin{itemize}
+\item \textbf{Balayage linéaire:} il effectue la traduction de toutes les instructions de la section \texttt{.text} depuis le point d'entrée, les unes après les autres. Cela correspond au premier programme présenté dans la partie BeaEngine. %linear sweep a faire le liens avec la partie BeaEngine
+C'est ce type de désassemblage qui est le plus utilisé (l'outil Objdump de GNU par exemple).\\
+
+\item \textbf{ Balayage récursif transversal:} On procède de la même manière que précédemment mais au lieu de continuer systématiquement à décoder, on essaye de reconnaitre les appels de fonctions, les \texttt{jump} et de poursuivre le désassemblage à l'adresse ciblée par ces instructions.\\
+
+%faire le lien avec la partie BeaEngine
+\end{itemize}
+\noindent Nous n'avons travaillé qu'avec les désassembleurs statiques et c'est pour cela que l'on va décrire plus en détails leurs spécificités (ou défauts).
+
+\subsubsection{Quels sont les problèmes rencontrés?}
+
+\noind Bien que l'on n'ait pas encore mis en place de désassembleur dynamique on s'aperçoit d'ors et déjà que l'on va rencontrer un problème singulier: l'intégralité du programme ne sera pas traduit. En effet seul le code appelé durant l'exécution précise va être parcouru (donc désassemblé). Or l'origine des paramètres pris en compte par le programme à désassembler est totalement inconnue. Ces paramètres peuvent être les valeurs prises par certains registres, sur la pile d'appels ou encore situées à un emplacement mémoire précis. Il est donc difficile de trouver les paramètres nécessaires à la décompilation totale du programme. 
+De plus, cette façon de procéder peut-être sensiblement plus longue (souvent de plusieurs facteurs) car il est très courant que lors de l'exécution, des bouts de code soient exécutés plusieurs fois. \\
+
+\noind Les désassembleurs statiques ne sont pas dépourvus de problème d'implémentation, bien au contraire.
+
+\noind Le balayage linéaire n'interprète jamais ce qu'il lit et peut par conséquent tomber sur des données dans la section \texttt{.text} sans savoir que ce ne sont pas des instructions et tenter de les traduire. Cela va donner des interprétations fausses, sauf si le désassembleur ne peut pas trouver d'opcodes équivalents aux bits machines lues: on aura dans ce cas une erreur.
+De plus, cette technique ne désassemble pas non plus l'intégralité du programme puisque celui-ci peut à l'aide d'instructions comme \texttt{jump Addr} aller exécuter une partie de code n'étant pas comprise au sein de la partie \texttt{.text}.\\
+
+
+\noind C'est dans l'optique de corriger ce dernier défaut que l'on préfère utiliser le balayage récursif transversal.
+
+\noindent Cependant, l'implémentation d'un désassembleur de ce type soulève un nouveau problème: est-on capable de déterminer l'adresse de destination de n'importe quel type d'appels?
+En effet, si lors du processus de désassemblage on tombe sur une instruction comme \texttt{jump eax} (où \texttt{eax} est un registre); il faut être capable de connaitre le contenu de \texttt{eax} pour pouvoir continuer le désassemblage à l'emplacement désigné.\\
+
+
+\noind Ce sont les lacunes de chacun des désassembleurs que l'on va pouvoir utiliser pour obfusquer le code et rendre le résultat du désassemblage complètement erroné.
+
+

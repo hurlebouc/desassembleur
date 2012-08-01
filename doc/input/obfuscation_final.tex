@@ -1,0 +1,145 @@
+% !TEX root = ../main_final.tex
+\noind Nous avons utilisé les articles \cite{disasm-resist} et \cite{metamorphic} pour cette partie. 
+
+\subsection{Techniques d'obfuscations}
+
+\noind Nous avons pu voir dans la partie précédente quels étaient les enjeux et les limites d'une méthode de désassemblage de qualité. On appelle techniques d'obfuscation les procédés dont le but est de rendre aussi inintelligible que possible le code binaire d'un exécutable. Nous allons dans cette partie étudier, au regard des limites des méthodes de désassemblage, les différentes méthodes qui permettent d'empêcher la bonne traduction du code binaire d'un exécutable en langage assembleur. Ces méthodes peuvent par exemple servir à la construction de virus capables d'obfusquer eux même leur propre code, ils sont appelés virus métamorphiques. Nous distinguerons dans cette partie 2 types d'obfuscation : la première engloble les méthodes qui s'attachent à modifier les données du code d'un fichier (Data Flow Control). La deuxième concerne les méthodes permettant de jouer sur l'ordre d'enchainement des différentes instructions (Control Flow Obfuscation).
+
+\subsubsection{Data flow obfuscation}
+
+\subsubsection*{Instruction substitution}
+
+\noind Cette méthode consiste simplement à substituer un bloc d'instructions par un autre sans pour autant modifier le comportement du programme. Cette méthode se base sur le fait qu'il est possible d'écrire une multitude de programmes différents effectuant la même opération.
+\begin{lstlisting}[caption=Exemple de substitution d'instructions]
+int i = 0 ;
+For(int k = 0 ; k < 10 ;k++){
+i = i +k ;
+}
+\end{lstlisting}
+\noind Peut aussi s'écrire:
+\begin{lstlisting}
+int i = 0 ;
+int k = 0 ;
+while(k < 10){
+i = i +k ;
+k++
+}
+\end{lstlisting}
+
+\noindent Il est clair que les deux portions de code présentées effectuent la même opération, cependant elles ne sont pas représentées par le même code.
+
+\subsubsection*{Permutation d'instructions}
+
+\noind Cette méthode consiste simplement à échanger 2 blocs d'instructions tout en prenant garde de ne pas modifier le comportement du programme.
+Exemple :
+ 
+\begin{itemize}
+\item si on prend l'exemple d'une multiplication, il est clair que l'on peut inverser les lignes \texttt{ a = a * 2; et a = a*4;} sans pour autant modifier l'état final de a.
+\item On ne peut par contre évidemment par inverser les lignes \texttt{a = a + 1 ; et a = a*2; }.
+\end{itemize} 
+
+\subsubsection*{Substitution de variables et insertion de dead code}
+\noind La méthode élémentaire de substitution des variables consiste tout simplement à changer le nom des variables dans un programme. Cela permet notamment d'enlever tous les noms usuels ou cohérents des différentes variables.\\
+
+\noind Un dead code est un enchainement d'instructions dont le résultat est nul. On peut donc l'insérer à presque tout endroit du code sans que cela change le résultat du programme.
+Un exemple évident de dead code serait \texttt{a = a} ou encore \texttt{a = a +1 ; a = a - 1 ;}. Bien que ces exemples soient élémentaires, il existe des éxemples bien plus complexes dans lesquels il est difficile de déterminer si les instructions sont ou ne sont pas inutiles.
+
+\subsubsection*{Insertion de junk bytes}
+
+\noind Comme nous le verrons cette méthode de désassemblage est principalement utilisée pour contrecarrer un désassemblage linéaire du byte code. Lors du passage du code assembleur vers le code binaire d'un programme, chaque instruction assembleur est représentée par un certain nombre de bytes. L'insertion de junk bytes consiste à ajouter dans le fichier binaire un certain nombre de bytes représentant une instruction assembleur non complète. On crée ainsi un décalage qui empêche la bonne traduction en assembleur. Cependant, il faut s'assurer que ces portions d'instructions ne soient jamais atteintes lors de l'exécution de programme. Ainsi il est impératif que l'instruction précédent directement un junk bytes soit un saut inconditionnel.
+
+\subsubsection{Control flow obfuscation}
+
+\noind Le but principal de l'obfuscation par modification du control flow consiste à diviser un programme en un certains nombres de blocs d'instructions et de faire un sorte que l'exécution du programme ne soit pas linéaire en faisant appel à des sauts conditionnels ou inconditionnels ou encore à des appels de fonctions.
+
+\begin{figure}[hbtp]
+\begin{center}
+\includegraphics[scale=0.25]{input/GrapheJean1.eps}
+\end{center}
+\caption{Illustration de l'altération du Control flow}
+\end{figure}
+
+\subsubsection*{Jump Table}
+
+\noind Le but principal de l'utilisation des sauts est de faire en sorte que le désassembleur ne sache pas suivre le chemin d'un saut. Pour cela, on utilise très généralement des sauts conditionnels dont la réalisation dépend de l'état d'un flag lors de l'exécution. On divise ainsi le programme en une succession de blocs d'instructions se terminant tous par un saut conditionnel. On construit alors une Jump Table qui détermine l'état des variables booléennes qui définissent quels sauts doivent être suivis lors de l'exécution de manière à conserver le même enchainement des instructions bien qu'un saut inconditionnel soit fait à la fin de chaque bloc.\\
+
+\noind Imaginons que l'on sépare le programme en \textit{k} blocs. On construit alors \textit{k} variables booléennes Si tel que pour tout \textit{i} , si $K_{i}=\mathtt{True}$, alors le saut à la fin du \textit{i}ème bloc d'instructions est emprunté. Si $K_{i}=\mathtt{False}$ on prend la branche par défaut qui va envoyer le désassembleur vers un bloc qui n'est pas celui emprunté normalement. \\
+
+\noindent De la même manière, on peut utiliser les propriétés d'une suite pour calculer les valeurs prises par le flag. On peut imaginer que $K_{n}$ est la suite de syracuse ($K_{n+1}= K_{n/2}$ si paire et $3K_{n}+1$ sinon). Et incrémenter dans chaque bloc la suite et utiliser la conjecture (qu'au bout d'un certain rang \textit{n}, pour $K_{0}$ choisi on ait le cycle 4,2,1) afin de faire les tests appropriés à la fin de chaque bloc pour que le saut choisi soit le bon. Si lors du désassemblage on ne trouve pas le bon $K_{0}$ pour lequel les $K_{n}$ vont prendre les valeurs attendues, l'ordre de désassemblage va être complètement faux\footnote{Ces suites sont ce qu'on appelle des clefs de désassemblage.}.\\
+
+\noind Ces méthodes ont pour but de rendre le plus obscure possible la destination des sauts de chaque bloc pour une personne qui cherche à désassembler. Cependant l'évolution de \textit{K} est bien connue de son créateur et va déterminer l'unique chemin valide que le programme doit suivre pour fonctionner.\\
+
+\begin{figure}[hbtp]
+\begin{center}
+\includegraphics[scale=0.5]{input/GrapheJean2.eps}
+\end{center}
+\caption{Exemple d'obfuscation à l'aide d'une Jump Table}
+\end{figure}
+\subsubsection*{Opaque predicates}
+
+\noind Le but consiste ensuite à rendre aussi incompréhensible que possible le tableau de variables. On utilise alors des Opaque predicates qui permettent de faire en sorte qu'une variable booléenne soit tout le temps vraie ou fausse tout en s'efforçant de rendre aussi difficile que possible la connaissance de son état par un programme de désassemblage.
+
+\noind Exemple : On sait que pour que l'exécution se passe correctement, il faut que la variable Sk soit vraie. On peut alors utiliser les instructions suivantes.
+
+\begin{center}
+\texttt{If(a*(a+1)\%2 == 0){ $S_{k}$ = true}
+Else{ $S_{k}$ = false}}
+\end{center}
+
+\noindent Où \texttt{a} représente un entier. Il est alors clair que la condition \texttt{a*(a+1)\%2 == 0} est toujours vraie cependant il est difficile pour un algorithme de désassemblage statique de déterminer l'état de cette condition.
+
+\subsubsection{Différences entre data flow Obfuscation et control flow
+Obfuscation}
+
+\subsubsection*{Niveau d'abstraction}
+\noind La différence majeure entre ces deux classes de méthodes d'obfuscation est qu'elles ne jouent pas sur le même niveau d'abstraction d'un programme. En effet, on pourrait dire que les méthodes de modification de données sont des méthodes superficielles qui ne modifient pas l'essence du programme alors que les méthodes de flow control sont des méthodes qui modifient directement le graphe de flow d'un programme.
+\subsubsection*{Différents impacts sur les méthodes de désassemblage}
+
+\noind Nous avons vu en première partie qu'il existait globalement 2 méthodes de désassemblage : la méthode Linear Sweep qui permet de suivre la progression du code de manière linéaire sans prendre en compte les sauts et la méthode Recursive Transerval qui permet de suivre les branches du graphe de flow et de désassembler le programme dans son ensemble en prenant en compte les sauts.
+
+\noind Ainsi la méthode d'insertion de junk instructions est utile pour contrecarrer la méthode de désassamblage Linear Sweep. Les méthodes de changement du flow control sont quant à elles utiles pour contrecarrer le désassemblage Recursive Traversal car son but est d'empêcher les désassembleurs de pouvoir suivre les différents sauts.
+
+\subsection{Exemple d'obfuscateur}
+
+\noind Dans cette partie nous allons présenter un exemple d'obfuscateur réalisé par l'université d'Arizona et nous baser sur leurs résultats expérimentaux pour montrer l'efficacité des méthodes d'obfuscations.
+
+\subsubsection{Présentation de l'obfuscateur utilisé}
+
+\noind La méthode d'obfuscation utilisée est la suivante : On divise le programme en un certain nombre de blocs. On fait terminer chacun de ces blocs par un saut conditionnel dont la condition est toujours soit vraie soit fausse de manière à conserver l'ordre d'exécution des instructions initial (Utilisation d'opaque predicates). 
+
+\noind On remplace ensuite les sauts conditionnels suivant les blocs qui sont exécutés un grand nombre de fois par des appels de fonctions (call en assembleur) ce qui permet une exécution plus rapide du programme. La distinction entre les blocs souvent exécutés (qu'on appelle "hot") et les autres est effectuée à l'aide d'un paramètre $\theta$ qui définit le pourcentage des blocs du programme qui seront considérés comme exécutés un grand nombre de fois.
+
+\noind On effectue ensuite la comparaison entre le code assembleur obtenu par le désassemblage et le code assembleur qui correspond au programme initial (sans obfuscations) afin d'obtenir un facteur de confusion (pourcentage des instructions mal traduites).
+
+\subsubsection{Présentation des résultats}
+
+\subsubsection*{Temps d'exécution}
+
+\noind La première constatation qui peut être faite est que le programme obfusqué a un temps d'exécution plus grand que le programme initial. Cette différence de temps d'exécution dépend du paramètre $\theta$. En effet, $\theta$ grandit avec le nombre d'instruction "hot" et donc plus il y a d'appels de fonctions et donc plus le temps d'exécution est faible. Cela est du au fait qu'un \texttt{call} est plus rapide à exécuter qu'un \texttt{jne} en assembleur.
+
+\noind Le tableau suivant représente le quotient T1/T0, T1 étant le temps d'exécution du programme obfusqué et T0 celui du programme original. Les tests ont été réalisés sur plusieurs programmes et avec des paramètres $\theta$ différents.
+
+\begin{figure}[hbtp]
+
+\begin{center}
+
+\includegraphics[scale=0.4]{input/GrapheJean3.eps}
+
+\end{center}
+
+\caption{Ralentissement après obfuscation selon les compilateurs}
+
+\end{figure} 
+
+\subsubsection*{Taux d'erreur} 
+
+\noind Le deuxième paramètre qu'il est important d'observer est le taux d'erreur du désassemblage. On distingue le taux d'erreur sur les blocs, le taux d'erreur sur les fonctions et le taux d'erreur sur les instructions. La différence entre ces taux d'erreur est la suivante : On considère qu'un bloc ou une fonction est mal désassemblé si seulement une de ses instructions est mal désassemblée. Le taux de confusion est ensuite donné comme le pourcentage d'élément mal désassemblé. Les tests sont effectués en utilisant les 2 méthodes de désassemblage c'est à dire la méthode récursive et la méthode linéaire.
+
+\begin{figure}[hbtp]
+\begin{center}
+\includegraphics[scale=0.5]{input/GrapheJean4.eps}
+\end{center}
+\end{figure} 
+
+\noind La première constatation importante à faire est que le pourcentage d'erreur reste très élevé dans les 2 cas. On peut ensuite faire la constatation que la méthode de désassemblage récursive est plus efficace et cela est du au fait comme nous l'avons déjà vu que cette méthode est bien plus robuste aux obfuscations qui jouent sur le graphe de Flow.
+

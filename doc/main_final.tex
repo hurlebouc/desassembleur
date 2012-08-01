@@ -1,0 +1,250 @@
+% !TEX TS-program = latex
+\documentclass[11pt]{article}
+
+%Fourier for math | Utopia (scaled) for rm | Helvetica for ss | Latin Modern for tt
+\usepackage[upright]{fourier} % math & rm
+\usepackage[scaled=0.875]{helvet} % ss
+\renewcommand{\ttdefault}{lmtt} %tt
+
+% Latin Modern (similar to CM with more characters)
+%\usepackage{lmodern} % math, rm, ss, tt
+
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage{amsmath}
+\usepackage{stmaryrd}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{amsfonts,amssymb,verbatim}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{pstricks,pst-plot,pstricks-add,pst-math,pst-node}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage[T1]{fontenc}
+\usepackage{lastpage}
+\usepackage[francais]{babel}
+\usepackage{fancyhdr}
+\usepackage{calc}
+\newcommand{\noind}{\noindent}
+\usepackage[bookmarks,colorlinks,breaklinks]{hyperref}  % PDF hyperlinks, with coloured links
+\definecolor{dullmagenta}{rgb}{0.4,0,0.4}   % #660066
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\hypersetup{linkcolor=blue,citecolor=blue,filecolor=dullmagenta,urlcolor=darkblue} % coloured links
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+
+\newcommand{\imp}[1]{\textit{\textbf{#1}} }
+
+ 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\texttt{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\K}{\mathbb{K}}
+\renewcommand{\P}{\mathfrak{P}}
+\newcommand{\pere}{\mathtt{pere}}
+\newcommand{\pool}{\mathtt{pool}}
+\newcommand{\num}{\mathtt{num}}
+\newcommand{\pop}{\mathtt{pop}}
+\newcommand{\push}{\mathtt{push}}
+\newcommand{\n}{\mathfrak{N}}
+\newcommand{\T}{\mathfrak{T}}
+\newcommand{\classendef}{\texttt{CLASSE\_NON\_DEFINIE} }
+\newcommand{\classedef}{\texttt{CLASSE\_DEFINIE} }
+
+
+
+
+
+
+
+
+
+
+
+\newcommand{\ssi}{si et seulement si }
+\newcommand{\re}{\mbox{Re} }
+\newcommand{\im}{\mbox{Im} }
+\newcommand{\vect}{\mbox{vect} }
+\newcommand{\rg}{\mbox{rg} }
+\newcommand{\Ker}{\mbox{Ker} }
+\newcommand{\tr}{\mbox{tr} }
+\newcommand{\Sp}{\mbox{S}_{p} }
+\newcommand{\Quad}{\mbox{Quad} }
+\newcommand{\grad}{\overrightarrow{\mbox{grad}} }
+\newcommand{\rot}{\overrightarrow{\mbox{rot}} }
+
+\newcommand{\bea}{\texttt{Beaengine} }
+\newcommand{\dis}{\texttt{DISASM} }
+\newcommand{\out}{\textit{out} }
+\newcommand{\fdis}{\texttt{int:Disasm(*DISASM)} }
+\newcommand{\jb}{\textit{junk byte} }
+\newcommand{\jbs}{\textit{junk bytes} }
+\newcommand{\noeud}{n\oe ud }
+\newcommand{\noeuds}{n\oe uds }
+\newcommand{\algo}{algorithme }
+\newcommand{\algos}{algorithmes }
+
+
+\newcommand{\IN}{\textit{in} }
+
+
+
+\definecolor{gris}{rgb}{0.9,0.9,0.9} 
+\definecolor{bleuclair}{rgb}{0.7,0.7,1}
+\lstset{ basicstyle={\ttfamily \small}, language=c, keywordstyle=\color{blue}, frame=lines, backgroundcolor=\color{gris}, breaklines = true, showstringspaces=false} 
+
+
+
+\newcommand{\afaire}{\begin{center}
+\vspace{1cm}
+{\Large \# \textit{IMAGE}}
+\vspace{1cm}
+\end{center}}
+
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\norme}[1]{\left\Vert #1 \right\Vert}
+%\newcommand{\tribarre}[1]{\left\Vert \! \! \: \left| #1 \right| \! \!  \: \right\Vert}
+%\newcommand{\dint}[1]{\displaystyle{\int} \! \!  \! \! \displaystyle{\int_{ #1}} }
+%\newcommand{\tint}[1]{\displaystyle{\int} \! \!  \! \! \displaystyle{\int} \! \!  \! \! \displaystyle{\int_{#1}} }
+\newcommand{\tribarre}[1]{\left\VERT #1 \right\VERT} % avec le pakage fourier
+\newcommand{\dint}[1]{\displaystyle{\iint_{#1}}} % avec le pakage fourier
+\newcommand{\tint}[1]{\displaystyle{\iiint_{#1}}} % avec le pakage fourier
+\newcommand{\scal}[1]{\left\langle #1 \right\rangle}
+\newcommand{\ent}[1]{\left\llbracket#1\right\rrbracket}
+\newcommand{\somme}[2]{\displaystyle{\sum_{#1}^{#2}}}
+\newcommand{\integrale}[2]{\displaystyle{\int_{#1}^{#2}}}
+\newcommand{\e}{\mathrm{e}}
+\def\jfrac#1#2{\raisebox{2pt}{$#1$}/\raisebox{-2pt}{$#2$}}   %%%%  jolie fraction
+
+
+\pagestyle{fancy}
+%\lhead{ } 
+  %\chead{ }
+% \rhead{ } 
+%\fancyfoot{\cfoot{\thepage}}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\headrule}{{\color{gray}%
+ \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
+
+
+\author{Philippe \textsc{Bechtel} \and Hubert \textsc{Godfroy} \and Jean \textsc{Millot}}
+
+
+\theoremstyle{plain} 
+\newtheorem{theo}{Théorème } 
+\newtheorem{rappel}{Rappel du théorème }
+\newtheorem{lemme}{Lemme }
+
+\begin{document}
+
+\renewcommand{\labelitemi}{$\bullet$}
+
+
+
+\makeatletter
+\def\clap#1{\hbox to 0pt{\hss #1\hss}}%
+\def\ligne#1{%
+\hbox to \hsize{%
+\vbox{\centering #1}}}%
+\def\haut#1#2#3{%
+\hbox to \hsize{%
+\rlap{\vtop{\raggedright #1}}%
+\hss
+\clap{\vtop{\centering #2}}%
+\hss
+\llap{\vtop{\raggedleft #3}}}}%
+\def\bas#1#2#3{%
+\hbox to \hsize{%
+\rlap{\vbox{\raggedright #1}}%
+\hss
+\clap{\vbox{\centering #2}}%
+\hss
+\llap{\vbox{\raggedleft #3}}}}%
+\def\maketitle{%
+\thispagestyle{empty}\vbox to \vsize{%
+\haut{}{\@blurb}{}
+\vfill
+\vspace{1cm}
+\begin{flushleft}
+\usefont{OT1}{ptm}{m}{n}
+\huge \@title
+\end{flushleft}
+\par
+\hrule height 4pt
+\par
+\begin{flushright}
+\usefont{OT1}{phv}{m}{n}
+\Large \@author
+\par
+\end{flushright}
+\vspace{1cm}
+\vfill
+\vfill
+\bas{}{\@location, le \@date}{}
+}%
+\cleardoublepage
+}
+\def\date#1{\def\@date{#1}}
+\def\author#1{\def\@author{#1}}
+\def\title#1{\def\@title{#1}}
+\def\location#1{\def\@location{#1}}
+\def\blurb#1{\def\@blurb{#1}}
+\date{\today}
+\author{Philippe \textsc{Bechtel}\\Hubert \textsc{Godfroy}\\Jean \textsc{Millot}}
+\title{}
+\location{Nancy}\blurb{}
+\makeatother
+\title{Analyse de codes exécutables}
+\location{Nancy}
+\blurb{%
+École des Mines de Nancy\\
+Département Information et Système\\
+\textbf{Rapport de projet 2A}\\[1em]
+Encadrant : Jean-Yves \textsc{Marion}
+}% 
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section*{Introduction}\input{input/intro_final.tex}
+
+\section{État de l'art}
+	\input{input/desassemblage_final.tex}
+	\input{input/obfuscation_final.tex}
+
+\section{Conventions du désassemblage}
+	\input{input/principe_desassemblage_final.tex}
+	
+\section{Utilisation du désassembleur}
+	\input{input/utilisation_final.tex}
+
+
+\section*{Annexes}
+\addcontentsline{toc}{section}{Annexes}
+	\input{input/theorie_final.tex}
+
+\subsection*{Correction de l'\algo récursif de propagation des constantes}
+	\input{input/demo_pc_recc_final.tex}
+\subsection*{Bibliothèque \bea}
+	\input{input/beaengine_final.tex}
+
+\subsection*{Programme exemple}
+	\input{input/exemple_final.tex}
+
+
+
+\bibliographystyle{plain} 
+\bibliography{biblio.bib}
+
+
+
+
+%\section*{Conclusion}\input{input/ccl.tex}
+
+
+\end{document}
+	

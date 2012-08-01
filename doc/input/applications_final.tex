@@ -1,0 +1,124 @@
+% !TEX root = ../main.tex
+
+\noind La construction du graphe de flow est une première étape dans le travail de  désassemblage au sens large. L'étude va porter à présent sur la sémantique des instructions en s'appuyant sur ce graphe. Le but sera de mettre en évidence le maximum d'informations possible, soit en simplifiant le graphe, soit en l'étendant aux branches indéfinies en déterminant les sauts.
+
+\subsection{Détection des \jbs}
+
+\noind Un \jb est le recouvrement d'une instruction par une autre : une instruction s'écrit en général sur plus d'un octet. Si tel est le cas, un saut permet très facilement de placer le registre IP entre deux instructions, adresse normalement inaccessible en cas de lecture linéaire. La figure \ref{junk} donne une illustration d'une telle manipulation.
+
+\begin{figure}[htb]
+\centering 
+\includegraphics[width=9cm]{input/junk.eps}
+\caption{Principe du \textit{junk byte}}
+\label{junk}
+\end{figure}
+
+\noind La détection des \jbs est permise par la représentation de chaque instruction par le n\oe ud associé à son premier octet et par le marquage des n\oe uds suivants comme "recouverts". En effet, s'il existe un n\oe ud du graphe qui possède la qualité d'être recouvert, ce n\oe ud est par conséquent issue d'un \jb\!. Cette méthode nous permet de localiser tous les \jbs issus de la première passe de désassemblage.
+
+\begin{center}
+\begin{pspicture}(0,-2.4715624)(10.22,2.4715624)
+\definecolor{color693b}{rgb}{0.9333333333333333,0.06666666666666667,0.06666666666666667}
+\psframe[linewidth=0.004,dimen=outer,fillstyle=solid,fillcolor=color693b](8.0,-0.226875)(4.4,-0.426875)
+\psframe[linewidth=0.004,dimen=outer,fillstyle=solid,fillcolor=color693b](3.8,-0.226875)(1.4,-0.426875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(0.6,-0.426875)(10.2,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dashed,dash=0.16cm 0.16cm](0.0,-0.426875)(0.6,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dotted,dotsep=0.16cm](0.2,-0.426875)(0.0,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dotted,dotsep=0.16cm](0.2,-0.426875)(0.0,-0.426875)
+\psline[linewidth=0.04cm](0.8,-0.426875)(0.8,-0.226875)
+\psline[linewidth=0.04cm](1.4,-0.226875)(1.4,-0.426875)
+\psline[linewidth=0.04cm](2.0,-0.226875)(2.0,-0.426875)
+\psline[linewidth=0.04cm](2.6,-0.226875)(2.6,-0.426875)
+\psline[linewidth=0.04cm](3.2,-0.226875)(3.2,-0.426875)
+\psline[linewidth=0.04cm](3.8,-0.226875)(3.8,-0.426875)
+\psline[linewidth=0.04cm](4.4,-0.226875)(4.4,-0.426875)
+\psline[linewidth=0.04cm](5.0,-0.226875)(5.0,-0.426875)
+\psline[linewidth=0.04cm](5.6,-0.226875)(5.6,-0.426875)
+\psline[linewidth=0.04cm](6.2,-0.226875)(6.2,-0.426875)
+\psline[linewidth=0.04cm](6.8,-0.226875)(6.8,-0.426875)
+\psline[linewidth=0.04cm](7.4,-0.226875)(7.4,-0.426875)
+\psline[linewidth=0.04cm](8.0,-0.226875)(8.0,-0.426875)
+\psline[linewidth=0.04cm](8.6,-0.226875)(8.6,-0.426875)
+\psline[linewidth=0.04cm](9.2,-0.226875)(9.2,-0.426875)
+\psbezier[linewidth=0.04](0.8,-0.626875)(0.8,-1.426875)(3.8,-1.426875)(3.8,-0.626875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(2.2,-1.226875)(2.2,-1.826875)
+\usefont{T1}{ppl}{m}{n}
+\rput(2.0035937,-2.326875){\small Add eax ebx}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.0,1.973125)(1.0,-0.226875)
+\usefont{T1}{ppl}{m}{n}
+\rput(2.3978126,2.273125){\small premier octet de l'instruction}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(1.6,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(2.4,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(3.0,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(3.6,-0.226875)
+\usefont{T1}{ppl}{m}{n}
+\rput(5.500781,1.473125){\small Octets marqués comme recouverts}
+\psbezier[linewidth=0.04](3.8,-0.626875)(3.8,-1.426875)(8.0,-1.426875)(8.0,-0.626875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.0,-1.226875)(6.0,-1.826875)
+\usefont{T1}{ppl}{m}{n}
+\rput(5.894375,-2.326875){\small Mov ebx 0x7830432}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(4.8,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(5.4,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(5.8,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(6.6,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(7.2,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(7.8,-0.226875)
+\end{pspicture}
+\end{center}
+
+\subsection{Propagation des constantes}
+
+\noind Cette méthode a pour but d'expliciter les constantes pour chaque \noeud du graphe. Ayant une meilleur connaissance de ces constantes, l'interprétation du graphe sera plus facile.
+
+\paragraph{Adaptation de la méthode}
+
+\noind L'\algo donné par \textsc{Kildall} \cite{kildall} utilise une structure de liste afin de comptabiliser l'ensemble des \noeuds dont les constantes doivent être mises à jour. Nous avons préféré utiliser le programme récursif suivant en pseudo-code
+
+\begin{lstlisting}[caption=propagation des variables, label=prop,numbers=left, numberstyle=\tiny]
+static void optimizePool_aux(Noeud* n, Noeud* pere){
+	Pool* copyPool = newPoolCopy(pere->pool);
+	f(pere, copyPool);
+	// f modifie copyPool et y stock le nouveau pool
+	int inc = incluDans(n->pool, copyPool);
+	if (inc != NON_INCLUS){
+		delete(copyPool);
+		return;
+	}
+	inter(n->pool, copyPool); // intercection dans n->pool
+	delete(copyPool);
+	List* list = n->listeFils;
+	if (list == NULL) {
+		return;
+	}
+	for (Noeud* N in list) {
+		optimizePool_aux(N, n);
+	}
+}
+void optimizePool(Noeud* n, const Processeur* initialPool){
+	int inc = incluDans(g->pool, initialPool);
+	if (inc != NON_INCLUS){
+		return;
+	}
+	inter(n->pool, initialPool); // intercection dans n->pool
+	if (n->listeFils == NULL) {
+		return;
+	}
+	List* list = n->listeFils;
+	for (Noeud* N in list) {
+		optimizePool_aux(N, n);
+	}
+}
+\end{lstlisting}
+
+\noind Il est relativement simple de constater que cette algorithme est équivalant à celui donné précédemment, excepté l'appel récursif des lignes 17 et 31. En effet, cet appel pouvant modifier le pool $n$, l'ensemble des appels sur les fils de $n$ n'est pas consistant. Cependant, on démontrera en annexe (page \pageref{demo_pc_rec}) que le résultat est inchangé. 
+
+\noind Cette implémentation a plusieurs avantages dont celui d'optimiser l'utilisation mémoire. En effet, chaque pool peut prendre beaucoup de place en mémoire (de l'ordre du Ko pour un seul \noeud\!). Alors que l'\algo initial demande la création d'un nouveau pool pour chaque appel récursif, notre \algo se déroule en taille mémoire constante.
+
+\paragraph{Allègement du graphe}
+
+\noind L'\algo de propagation des constantes permet de connaître l'état des registres à chaque \noeud\!, en particulier pour le registre de flags. Ce registre déterminant le déroulement du programme, la connaissance d'un drapeau pourra éventuellement permettre de supprimer des branches du graphe original. Si tel est le cas, on appliquera une nouvelle fois l'algorithme de propagation des constantes pour tenir compte de ce "débranchement".
+
+\paragraph{Détermination des sauts indéfinis} De même, il sera éventuellement possible de créer de nouvelles branches si des sauts dont l'adresse cible est \textit{a priori} inconnue sont déterminés par la propagation des constantes. \textbf{Cependant}, il convient de remarquer que cette nouvelle branche peut diminuer la détermination du graphe. En effet, si elle rejoint un \noeud nu graphe déjà existant, elle peut induire des modifications sur les variables déterminisées avant branchement.
+
+
+%\subsection{Étude formelle des variables}
+

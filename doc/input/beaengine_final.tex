@@ -1,0 +1,306 @@
+% !TEX root =  ../main_final.tex
+
+\noindent Toutes les informations ont été tirées du site du créateur de la librairie\cite{bea}. Nous ne présenterons ici que les outils que nous avons utilisés.
+
+\subsubsection*{Objet \dis}
+
+\noindent Le logiciel utilise une structure \texttt{C} qui réunit toutes les informations nécessaires au désassemblage (données \IN\!). Elle permet également au programme de renvoyer des informations (données \out\!).
+
+\paragraph{Utilisation}
+
+\noindent Cet objet est relativement simple d'utilisation. Une fois le programme que l'on veut désassembler chargé en mémoire, on renseigne l'objet \dis avec l'adresse mémoire du premier octet du programme chargé, puis on applique à \dis la fonction \fdis qui désassemble la première instruction du programme. Il faut donc appliquer la fonction autant de fois qu'il y a d'instructions.
+
+\paragraph{Structure de \dis}
+
+\noindent Ici on va voir comment utiliser un objet \dis\!.  Le listing \ref{disasm} donne sa définition en \C\!.
+
+\begin{lstlisting}[caption=Structure \texttt{DISASM}, label=disasm]
+typedef struct _Disasm {
+   UIntPtr EIP;
+   UInt64 VirtualAddr;
+   UIntPtr SecurityBlock;
+   char CompleteInstr[INSTRUCT_LENGTH];
+   UInt32 Archi;
+   UInt64 Options;
+   INSTRTYPE Instruction;
+   ARGTYPE Argument1;
+   ARGTYPE Argument2;
+   ARGTYPE Argument3;
+   PREFIXINFO Prefix;
+   UInt32 Reserved_[40];
+}DISASM;
+\end{lstlisting}
+
+\noindent On va maintenant décrire tous les champs et leur utilité. Dans un premier temps regardons les champs d'entrée.
+
+\paragraph{\texttt{[in] EIP}} est l'adresse en mémoire vive du programme chargé.
+\paragraph{\texttt{[in] VirtualAddr}} est l'adresse où l'on souhaiterait voir l'instruction. Elle permet de rendre le désassemblage indépendant de son chargement en mémoire. Il ne s'agit ni plus ni moins que d'une translation du repère : si $e$ est le point d'entrée réel et $e'$ l'entrée virtuelle, on a $e - e'$ reste constant pendant tout le long du désassemblage du l'ensemble du programme. De plus, lorsque \bea donnera les adresses des sauts ou des \texttt{call} par exemple, il les affichera dans le repère virtuel \og translaté \fg.\\
+Ce champ est facultatif. S'il n'est pas spécifié, il est égal à \texttt{EIP}.
+
+\paragraph{\texttt{[in] SecurityBlock}} donne le nombre maximal d'octets que le \bea est autorisé à lire. Nous nous en sommes servi pour limiter les plages d'instructions que \bea pouvait désassembler. Par exemple, pour empêcher \bea de dépasser l'espace mémoire dans lequel est stocké le programme à désassembler, \texttt{SecurityBlock} contient le nombre d'octets du programme.
+
+\paragraph{\texttt{[in] Archi}} spécifie l'architecture du processeur (32-bits par defaut).
+
+\paragraph{\texttt{[in] Options}} permet de paramétrer la sortie du désassemblage comme le langage assembleur souhaité (nasm, gas, etc.). Les constantes sont les suivantes :\\
+\begin{itemize}
+\item \texttt{NoTabulation = 0x0}
+\item  \texttt{Tabulation = 0x1}
+\item  \texttt{MasmSyntax = 0x000}
+\item  \texttt{GoAsmSyntax = 0x100}
+\item  \texttt{NasmSyntax = 0x200}
+\item  \texttt{ATSyntax = 0x400}
+\item  \texttt{PrefixedNumeral = 0x10000}
+\item  \texttt{SuffixedNumeral = 0x00000}
+\item \texttt{ShowSegmentRegs = 0x01000000}\\
+\end{itemize}
+
+\noindent La structure fournit également des champs permettant de lire les résultats du désassemblage.
+
+\paragraph{\texttt{[out] CompleteInstr}} renvoie l'instruction complète en assembleur. Elle dépend des options passées à \dis.
+
+\paragraph{\texttt{[out] Instruction}} donne des informations sur l'instruction lue. Elle est du type \texttt{INSTRTYPE} (voir le listing \ref{instrtype} et le détail des champs).
+
+%\begin{lstlisting}[caption=Structure \texttt{INSTRTYPE}, label=instrtype]
+%typedef struct INSTRTYPE {
+ %   Int32 Category;
+  %  Int32 Opcode;
+   % char Mnemonic[16];
+    %Int32 BranchType;
+    %EFLStruct Flags;
+%    UInt64 AddrValue;
+ %   Int64 Immediat;
+  %  UInt32 ImplicitModifiedRegs;
+ %}INSTRTYPE;
+%\end{lstlisting}
+
+
+%\noindent Nous ne nous attarderons pas plus longtemps sur cette structure. Les exemples d'utilisation seront assez parlants pour comprendre les champs utilisés. Si toutefois le lecteur veut plus de détails, il pourra se reporter au site de l'auteur \cite{bea}.
+
+\paragraph{\texttt{[out] Argument1}, \texttt{Argument2}, \texttt{Argument3}} donnent des informations sur les registres utilisés dans les instructions. Ils sont du type \texttt{ARGTYPE} (listing \ref{argtype}) que nous détaillerons plus loin.
+
+\paragraph{Structures annexes}
+
+
+\noindent On va maintenant voir le détail des champs de la structure qui contient les informations que l'on récupère d'une instruction. 
+
+\begin{lstlisting}[caption=Structure \texttt{INSTRTYPE}, label=instrtype]
+typedef struct INSTRTYPE {
+    Int32 Category;
+    Int32 Opcode;
+    char Mnemonic[16];
+    Int32 BranchType;
+    EFLStruct Flags;
+    UInt64 AddrValue;
+    Int64 Immediat;
+    UInt32 ImplicitModifiedRegs;
+ }INSTRTYPE;
+\end{lstlisting}
+
+\paragraph{\texttt{[out] Category}} indique si l'instruction est une instruction logique, arithmétique, de transfert de données etc...
+
+\paragraph{\texttt{[out] Opcode}} contient l'opcode sur 1,2 ou 3 octets.
+
+\paragraph{\texttt{[out] Mnemonic}} renvoie le mnémonique de l'instruction en format ASCII suivi d'un espace.
+
+\paragraph{\texttt{[out] BranchType}} indique, si l'instruction décodée est une instruction de saut, quel est le type de saut rencontré.
+
+\paragraph{\texttt{[out] Flags}} renvoie une structure qui rassemble les informations sur les registres EFLAGS. Pour chacun, cela permet de savoir si le registre a été modifié, testé, remis à zéro, etc.
+
+\paragraph{\texttt{[out] AddrValue}} indique dans le cas où l'instruction décodée est un saut l'adresse du saut quand elle est facilement déterminable. Sinon, la valeur par défaut est 0.
+
+\paragraph{\texttt{[out] Immediat}} contient la constante utilisée par l'instruction si elle en a utilisé une.
+
+\paragraph{\texttt{[out] ImplicitModifiedRegs}} donne des informations lorsque des instructions (comme push 0 qui va modifier ESP) modifient de façon implicite un registre.
+
+\begin{lstlisting}[caption=Structure \texttt{ARGTYPE}, label=argtype]
+typedef struct ARGTYPE {
+    char ArgMnemonic[32];
+    Int32 ArgType;
+    Int32 ArgSize;
+    Int32 ArgPosition;
+    UInt32 AccessMode;
+    MEMORYTYPE Memory;
+    UInt32 SegmentReg;
+}ARGTYPE;
+\end{lstlisting}
+
+\paragraph{\texttt{[out] ArgMnemonic}} renvoie un mnemonique en format ASCII lorsque cela est possible (pour désigner un registre usuel par exemple).
+
+\paragraph{\texttt{[out] ArgType}} renseigne sur le type de l'argument. C'est-à-dire, indique si il s'agit d'un registre, d'un emplacement mémoire ou d'une constante.
+
+\paragraph{\texttt{[out] ArgSize}} renvoie la taille de l'argument.
+
+\paragraph{\texttt{[out] ArgPosition}} renvoie la position du mode utilisé du registre utilisé en 8 bits: 1 si le registre est utilisé en position haute (ie: ah,ch etc...) et 0 sinon.
+
+\paragraph{\texttt{[out] AccessMode}} indique si l'argument a été modifié ou pas.
+
+\paragraph{\texttt{[out] Memory}} renvoie une structure dans le cas de l'utilisation d'un espace mémoire. Cette structure contient les informations permettant d'utiliser la formule:
+\texttt{BaseRegister + IndexRegister*Scale + Displacement} (ie: BaseRegister, IndexRegister, Scale et displacement).
+ 
+\paragraph{\texttt{[out] SegmentReg}} contient, dans le cas de l'accés mémoire, le registre de segment utilisé. 
+
+%\paragraph{\texttt{Reserved\_}} est un champ utilisé par \bea pour rendre la fonction \fdis re-entrant.
+
+
+\subsubsection*{Exemples d'utilisation}
+
+%\paragraph{Exemple simple}
+
+\noindent Le listing \ref{ex1} est un exemple dans lequel le programme va se désassembler lui-même sur 20 instructions. On a ici un désassemblage linéaire (linear sweep).
+
+\begin{lstlisting}[caption=Premier exemple, label=ex1]
+#include <stdio.h>
+#include <string.h>
+#include "BeaEngine.h"
+int main(int argc, char* argv []){
+    /* ======== cree un DISASM */
+    DISASM MyDisasm;
+    /* ======== met tous les champs a 0*/
+    memset (&MyDisasm, 0, sizeof(DISASM));
+    /* ======== donne le point d entree */
+    MyDisasm.EIP = &main;
+    /* ======== donne les options d affichage*/
+    MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    /* ======== specifie l architecture*/
+    MyDisasm.Archi = ARCHI_PROC;
+    /* ======== desassemble sur 20 instructions */
+    int len, i, Error = 0; 
+    while ((!Error) && (i<20)){
+       	len = Disasm(&MyDisasm); // recupere la taille de l instruction
+	if (len != UNKNOWN_OPCODE) {
+            printf("%\ns",MyDisasm.CompleteInstr);
+            MyDisasm.EIP = MyDisasm.EIP + len;
+            i++;
+        }
+	else {
+            Error = 1;
+        }
+    }
+    return 0; 
+}
+\end{lstlisting} 
+
+\noindent On peut aussi, au lieu de se limiter à 20 instructions, ne vouloir désassembler qu'une certaine quantité d'octets. On peut pour cela utiliser le champ \texttt{SecurityBlock} qui contiendra la taille de la suite d'octets que l'on souhaite décompiler. Dans ce cas la boucle de désassemblage sera
+
+\begin{lstlisting}
+while(!Error){
+    MyDisasm.SecurityBlock = finProg - MyDisasm.EIP;
+    len = Disasm(&MyDisasm); 
+    if (len != UNKNOWN_OPCODE) {
+        printf("%\ns",MyDisasm.CompleteInstr);
+        MyDisasm.EIP = MyDisasm.EIP + len;
+        if(MyDisasm.EIP>=finProg){
+            printf("fin du programme");
+            Error = 1;
+        }
+    }
+    else if(len = OUT_OF_BLOCK){
+       printf("beanengine n est pas autorisé à aller plus loin\n");
+       Error = 1;
+    } else {
+       printf("opcode inconnu");
+    }
+}
+\end{lstlisting}
+
+\noindent Il est important de noter que \texttt{len} n'est égal à \texttt{OUT\_OF\_BLOCK} que lorsque \texttt{MyDisasm}.\texttt{SecurityBlock} passe de positif strictement à négatif strictement. C'est pour cela qu'on utilise la condition \texttt{MyDisasm.EIP>=finProg}.\\
+
+\noindent Si l'on souhaite que les adresses mémoire affichées par \bea ne dépendent pas de l'endroit où a été chargé le programme, on peut utiliser les adresses virtuelles \texttt{VirtualAddr}. Un exemple d'un tel programme est donné dans le listing suivant.
+
+\begin{lstlisting}[caption=Utilisation des adresses virtuelles, label=virtual]
+#include <stdio.h>
+#include <string.h>
+#include "BeaEngine.h"
+int main(int argc, char* argv []){
+    DISASM MyDisasm;
+    memset (&MyDisasm, 0, sizeof(DISASM));
+
+    /* ======== donne le point d entree reel et virtuel*/
+    MyDisasm.EIP = &main;
+    MyDisasm.VirtualAddr = 0x1000000;
+    MyDisasm.Options = Tabulation + NasmSyntax + PrefixedNumeral + ShowSegmentRegs;
+    MyDisasm.Archi = ARCHI_PROC;
+    int len, i, Error = 0; 
+    while ((!Error) && (i<20)){
+       	len = Disasm(&MyDisasm); // recupere la taille de l instruction
+	if (len != UNKNOWN_OPCODE) {
+            printf("%\ns",MyDisasm.CompleteInstr);
+            MyDisasm.EIP += len;
+            MyDisasm.VirtualAddr += len;
+            i++;
+        }
+	else {
+            Error = 1;
+        }
+    }
+    return 0; 
+}
+\end{lstlisting} 
+
+\noindent On peut également utiliser le champ \texttt{Instruction} pour étudier plus en détails les instructions à chaque ligne. Par exemple, voila une fonction désassemblant en suivant les sauts inconditionnels. On utilise les champs \texttt{AddrValue} et \texttt{BranchType} de \texttt{Instruction}. On notera que \texttt{AddrValue} est dans le repère translaté (celui des adresses virtuelles ).
+
+\begin{lstlisting}[caption=Suivi des sauts inconditionnels, label=saut]
+void desassemblage_saut(DISASM* prog) {
+
+   int erreur = 0;
+   unsigned long finProg = prog->EIP + prog->SecurityBlock;
+   int len;
+
+   while (!erreur) {
+      prog->SecurityBlock = finProg - prog->EIP;
+      len = Disasm(prog);
+      if (len == UNKNOWN_OPCODE) {
+         erreur = 1;
+         printf("Code inconnu\n");
+      } else if (len == OUT_OF_BLOCK) {
+         erreur = 1;
+         printf("Fin du bloc\n");
+      } else {
+         unsigned long adresseIni = prog->VirtualAddr;
+         printf("(0x%lx) \t 0x%lx \t %s \t (0x%lx)\n", prog->EIP, adresseIni, prog->CompleteInstr, prog->Instruction.AddrValue);
+         unsigned long IP = adresseIni + len;
+         switch (prog->Instruction.BranchType) {
+
+            case JmpType:// un type de branche
+               prog->VirtualAddr = prog->Instruction.AddrValue;
+               prog->EIP += prog->VirtualAddr - (long) adresseIni;
+               break;
+
+            default:
+               prog->VirtualAddr += len;
+               prog->EIP += len;
+         }
+         if (prog->EIP >= finProg) {
+            printf("fin de la lecture");
+            erreur = 1;
+         }
+      }
+   }
+}
+\end{lstlisting}
+
+\subsubsection*{Remarques pratiques}
+
+\noind L'utilisation de \bea nous a permis de mettre en évidence certains comportements étranges de la bibliothèque. Ces apparentes anomalies apparaissent majoritairement lorsque l'on veut connaître des informations sur les arguments des instructions ne prenant en paramètre qu'un seul argument. Dans ce cas, la valeur du premier (et unique) argument se trouve dans le deuxième argument de \bea\! (\texttt{disas.Argument2}).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

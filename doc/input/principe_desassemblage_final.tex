@@ -1,0 +1,200 @@
+% !TEX root = ../main_final.tex
+
+\noind Nous allons présenter ici comment s'effectue l'acquisition des données, et comment les informations sont extraites du fichier exécutable.
+
+\subsection{Construction du graphe de flow}
+
+\noind Un désassemblage est défini par 3 paramètres : 
+
+\begin{itemize}
+\item L'adresse mémoire du point d'entrée de l'exécutable chargé en mémoire
+\item L'adresse virtuelle de ce point d'entrée (c'est à dire l'adresse affichée par le désassembleur)
+\item La taille du bloc à désassembler.\\
+\end{itemize}
+
+\noind Après lecture de ces données (cf annexes), le désassembleur lit les instructions à partir de la première et suit toutes les branches de manière récursive. Ainsi seules les branches atteignables par le programme sont désassemblées\footnote{On verra par la suite que cette méthode nous permettra de détecter les états inaccessibles, et surtout les \textit{junk bytes}, qui sont des instructions dont le début commence au milieu d'une autre.}. Le graphe de flow peut alors être extrait.
+
+\noind Il est intéressant de noter que lors du désassemblage on essaie autant que possible 
+d'éviter les erreurs : en effet, toutes les instructions ne sont pas compréhensibles à première lecture. Par exemple, un \texttt{jmp rax} ne peut être compris à ce stade de l'étude car on ignore la valeur contenue dans le registre \texttt{rax}. Afin de désassembler le maximum d'instructions possible, tout en s'arrangeant pour que le désassemblage garde un sens, nous avons adopté des conventions d'arrêt ou de passage. Cependant, toutes les erreurs sont retenues dans le graphe. Dans de telles conditions, le désassemblage global ne stoppe jamais, mais l'étude d'une branche s'arrête prématurément si l'instruction suivante est indéterminée. L'ensemble des types d'erreurs est enregistré dans une énumération (voir le listing \ref{erreurs}) décrivant l'état de chaque n\oe ud du graphe\footnote{Elle contient également deux autres constantes permettant d'annoncer qu'un n\oe ud a plusieurs fils ou pas}.
+
+\begin{lstlisting}[caption=états possibles d'un n\oe ud, label=erreurs, float=htb]
+enum ValeurEtat{
+    SANS_INTERET,
+    GO_AND_LEAVE,
+    OPCODE_INCONNU,
+    DEPASSEMENT_BLOC,    
+    SAUT_INCOND_OUT_OF_BLOCK,
+    SAUT_INCOND_INDEFINI,
+    FIN_BLOC_SANS_POINT_ARRET,
+    CALL_TERMINAL_OOB,
+    CALL_TERMINAL_INDEFINI,
+    CALL_FIN_BLOC,
+    CALL_INDEFINI,
+    CALL_OUT_OF_BLOCK,
+    SAUT_COND_FIN_BLOC,
+    SAUT_COND_INDEFINI,
+    SAUT_COND_OUT_OF_BLOCK,
+    SAUT_COND_TERMINAL,
+};
+\end{lstlisting}
+
+\paragraph{Les sauts hors du bloc} sont souvent dus à des appels de fonctions dynamiquement liées. Ces cas de passage sont reperés par les constantes 
+\begin{itemize}
+\item\texttt{CALL\_OUT\_OF\_BLOCK},
+\item \texttt{CALL\_TERMINAL\_OOB},
+\item \texttt{SAUT\_INCOND\_OUT\_OF\_BLOCK},
+\item \texttt{SAUT\_COND\_OUT\_OF\_BLOCK}.
+\end{itemize}
+
+\paragraph{Les erreurs de lecture} sont dues à un problème lors du désassemblage d'une instruction. Elles peuvent être provoquées par la lecture d'un opcode inconnu (\texttt{OPCODE\_INCONNU}) ou d'un dépassement du bloc lors de la lecture de cette instruction(\texttt{DEPASSEMENT\_BLOC}).
+
+\paragraph{Les sauts indéfinis} sont provoqués par l'utilisation de la valeur d'un registre ou d'un emplacement mémoire comme adresse de saut (par exemple \texttt{jmp rax}). Ils sont repérés par les constantes
+\begin{itemize}
+\item \texttt{SAUT\_INCOND\_INDEFINI},
+\item \texttt{SAUT\_COND\_INDEFINI},
+\item \texttt{CALL\_INDEFINI}, 
+\item \texttt{CALL\_TERMINAL\_INDEFINI}.
+\end{itemize}
+
+\paragraph{Les opérations en fin de blocs} différentes d'un \texttt{ret}, d'un \texttt{jmp} ou d'un \texttt{hlt} lèvent une erreur car il existe une branche dont le chemin est indéterminé. Les constantes utilisées pour ce type d'erreur sont 
+\begin{itemize}
+\item \texttt{CALL\_TERMINAL\_OOB},
+\item \texttt{CALL\_TERMINAL\_INDEFINI},
+\item \texttt{CALL\_FIN\_BLOC},
+\item \texttt{SAUT\_COND\_FIN\_BLOC}.
+\end{itemize}
+
+\subsection{Méthode de représentation}
+
+\subsubsection{Dans le programme}
+
+\noind Lors du chargement du programme en mémoire, à chaque octet est associé un n\oe ud. D'autre part, chaque instruction est représentée par le n\oe ud associé à son premier octet. Les autres n\oe uds sont alors marqués comme recouverts\footnote{Pour économiser de la place, chacun de ses n\oe uds pointe vers le même n\oe ud}. Puis, lors du désassemblage en suivant les branchements, ces n\oe uds sont reliés entre eux pour former le graphe.
+
+\subsubsection{Représentation persistante}
+
+\noind Nous utilisons la structure des fichiers \texttt{.dot} couplé au logiciel \texttt{graphviz} pour avoir une représentation graphique de graphe que nous avons construit. On s'interresse ici à la structure du graphe et pas à une étude qualitative de chaque n\oe ud. C'est pourquoi le graphe obtenu dans l'étape de construction est traité au préalable par une fonction de simplification qui supprime les n\oe uds ayant un unique fils et étant lui-même fils d'un n\oe ud à fils unique. 
+
+\noind La figure \ref{CFGfibo} page \pageref{CFGfibo} donne le graphe de flow pour le programme \texttt{fibo} (listing \ref{fiboasm}) : Les n\oe uds rouges représentent les \texttt{call}, les bleus les \texttt{jmp}, les verts les sauts conditionnels et les gris les \texttt{ret} et \texttt{hlt}. Les flèches rouges désignent la nouvelle fonction appelée et les vertes le chemin si le saut est valide.
+
+\noind La construction du graphe de flow est une première étape dans le travail de  désassemblage au sens large. L'étude va porter à présent sur la sémantique des instructions en s'appuyant sur ce graphe. Le but sera de mettre en évidence le maximum d'informations possible, soit en simplifiant le graphe, soit en l'étendant aux branches indéfinies en déterminant les sauts.
+
+\subsubsection{Application : détection des \jbs}
+
+\noind Un \jb est le recouvrement d'une instruction par une autre : une instruction s'écrit en général sur plus d'un octet. Si tel est le cas, un saut permet très facilement de placer le registre IP entre deux instructions, adresse normalement inaccessible en cas de lecture linéaire. La figure \ref{junk} donne une illustration d'une telle manipulation.
+
+\begin{figure}[htb]
+\centering 
+\includegraphics[width=9cm]{input/junk.eps}
+\caption{Principe du \textit{junk byte}}
+\label{junk}
+\end{figure}
+
+\noind La détection des \jbs est permise par la représentation de chaque instruction par le n\oe ud associé à son premier octet et par le marquage des n\oe uds suivants comme "recouverts". En effet, s'il existe un n\oe ud du graphe qui possède la qualité d'être recouvert, ce n\oe ud est par conséquent issue d'un \jb\!. Cette méthode nous permet de localiser tous les \jbs issus de la première passe de désassemblage.
+
+\begin{center}
+\begin{pspicture}(0,-2.4715624)(10.22,2.4715624)
+\definecolor{color693b}{rgb}{0.9333333333333333,0.06666666666666667,0.06666666666666667}
+\psframe[linewidth=0.004,dimen=outer,fillstyle=solid,fillcolor=color693b](8.0,-0.226875)(4.4,-0.426875)
+\psframe[linewidth=0.004,dimen=outer,fillstyle=solid,fillcolor=color693b](3.8,-0.226875)(1.4,-0.426875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(0.6,-0.426875)(10.2,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dashed,dash=0.16cm 0.16cm](0.0,-0.426875)(0.6,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dotted,dotsep=0.16cm](0.2,-0.426875)(0.0,-0.426875)
+\psline[linewidth=0.04cm,linestyle=dotted,dotsep=0.16cm](0.2,-0.426875)(0.0,-0.426875)
+\psline[linewidth=0.04cm](0.8,-0.426875)(0.8,-0.226875)
+\psline[linewidth=0.04cm](1.4,-0.226875)(1.4,-0.426875)
+\psline[linewidth=0.04cm](2.0,-0.226875)(2.0,-0.426875)
+\psline[linewidth=0.04cm](2.6,-0.226875)(2.6,-0.426875)
+\psline[linewidth=0.04cm](3.2,-0.226875)(3.2,-0.426875)
+\psline[linewidth=0.04cm](3.8,-0.226875)(3.8,-0.426875)
+\psline[linewidth=0.04cm](4.4,-0.226875)(4.4,-0.426875)
+\psline[linewidth=0.04cm](5.0,-0.226875)(5.0,-0.426875)
+\psline[linewidth=0.04cm](5.6,-0.226875)(5.6,-0.426875)
+\psline[linewidth=0.04cm](6.2,-0.226875)(6.2,-0.426875)
+\psline[linewidth=0.04cm](6.8,-0.226875)(6.8,-0.426875)
+\psline[linewidth=0.04cm](7.4,-0.226875)(7.4,-0.426875)
+\psline[linewidth=0.04cm](8.0,-0.226875)(8.0,-0.426875)
+\psline[linewidth=0.04cm](8.6,-0.226875)(8.6,-0.426875)
+\psline[linewidth=0.04cm](9.2,-0.226875)(9.2,-0.426875)
+\psbezier[linewidth=0.04](0.8,-0.626875)(0.8,-1.426875)(3.8,-1.426875)(3.8,-0.626875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(2.2,-1.226875)(2.2,-1.826875)
+\usefont{T1}{ppl}{m}{n}
+\rput(2.0035937,-2.326875){\small Add eax ebx}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.0,1.973125)(1.0,-0.226875)
+\usefont{T1}{ppl}{m}{n}
+\rput(2.3978126,2.273125){\small premier octet de l'instruction}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(1.6,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(2.4,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(3.0,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.0,1.173125)(3.6,-0.226875)
+\usefont{T1}{ppl}{m}{n}
+\rput(5.500781,1.473125){\small Octets marqués comme recouverts}
+\psbezier[linewidth=0.04](3.8,-0.626875)(3.8,-1.426875)(8.0,-1.426875)(8.0,-0.626875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.0,-1.226875)(6.0,-1.826875)
+\usefont{T1}{ppl}{m}{n}
+\rput(5.894375,-2.326875){\small Mov ebx 0x7830432}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(4.8,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(5.4,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(5.8,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(6.6,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(7.2,-0.226875)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(6.2,1.173125)(7.8,-0.226875)
+\end{pspicture}
+\end{center}
+
+\subsection{Propagation des constantes}
+
+\noind Cette méthode a pour but d'expliciter les constantes pour chaque \noeud du graphe. Ayant une meilleure connaissance de ces constantes, l'interprétation du graphe sera plus facile.
+
+\subsubsection{Adaptation de la méthode}
+
+\noind L'\algo donné par \textsc{Kildall} \cite{kildall} utilise une structure de liste afin de comptabiliser l'ensemble des \noeuds dont les constantes doivent être mises à jour. Nous avons préféré utiliser le programme récursif suivant en pseudo-code
+
+\begin{lstlisting}[caption=propagation des variables, label=prop,numbers=left, numberstyle=\tiny]
+static void optimizePool_aux(Noeud* n, Noeud* pere){
+	Pool* copyPool = newPoolCopy(pere->pool);
+	f(pere, copyPool);
+	// f modifie copyPool et y stock le nouveau pool
+	int inc = incluDans(n->pool, copyPool);
+	if (inc != NON_INCLUS){
+		delete(copyPool);
+		return;
+	}
+	inter(n->pool, copyPool); // intercection dans n->pool
+	delete(copyPool);
+	List* list = n->listeFils;
+	if (list == NULL) {
+		return;
+	}
+	for (Noeud* N in list) {
+		optimizePool_aux(N, n);
+	}
+}
+void optimizePool(Noeud* n, const Processeur* initialPool){
+	int inc = incluDans(g->pool, initialPool);
+	if (inc != NON_INCLUS){
+		return;
+	}
+	inter(n->pool, initialPool); // intercection dans n->pool
+	if (n->listeFils == NULL) {
+		return;
+	}
+	List* list = n->listeFils;
+	for (Noeud* N in list) {
+		optimizePool_aux(N, n);
+	}
+}
+\end{lstlisting}
+
+\noind Il est relativement simple de constater que cet algorithme est équivalent à celui donné précédemment, excepté l'appel récursif des lignes 17 et 31. En effet, cet appel pouvant modifier le pool $n$, l'ensemble des appels sur les fils de $n$ n'est pas consistant. Cependant, on démontrera en annexe (page \pageref{demo_pc_rec}) que le résultat est inchangé. 
+
+\noind Cette implémentation a plusieurs avantages dont celui d'optimiser l'utilisation mémoire. En effet, chaque pool peut prendre beaucoup de place en mémoire (de l'ordre du Ko pour un seul \noeud\!). Alors que l'\algo initial demande la création d'un nouveau pool pour chaque appel récursif, notre \algo se déroule en taille mémoire constante.
+
+\subsubsection{Allègement du graphe}
+
+\noind L'\algo de propagation des constantes permet de connaître l'état des registres à chaque \noeud\!, en particulier pour le registre de flags. Ce registre déterminant le déroulement du programme, la connaissance d'un drapeau pourra éventuellement permettre de supprimer des branches du graphe original. Si tel est le cas, on appliquera une nouvelle fois l'algorithme de propagation des constantes pour tenir compte de ce "débranchement".
+
+\subsubsection{Détermination des sauts indéfinis} De même, il sera éventuellement possible de créer de nouvelles branches si des sauts dont l'adresse cible est \textit{a priori} inconnue sont déterminés par la propagation des constantes. \textbf{Cependant}, il convient de remarquer que cette nouvelle branche peut diminuer la détermination du graphe. En effet, si elle rejoint un \noeud du graphe déjà existant, elle peut induire des modifications sur les variables déterminisées avant branchement.
+
+
+%\subsection{Étude formelle des variables}
+

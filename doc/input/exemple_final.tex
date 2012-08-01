@@ -1,0 +1,72 @@
+% !TEX root = ../main_final.tex
+
+\noind Nos exemples s'articulent autour du désassemblage du programme \ref{prog_original} qui a été obfusqué en modifiant son graphe de flow (programme \ref{prog_obf_cfg}) et en indéterminant ses branches (programme \ref{prog_obf_saut_cond})
+
+%\input{input/recc_asm.tex}
+
+
+\begin{lstlisting}[caption=Programme non obfusqué,  language={[x86masm]Assembler}, label=prog_original]
+main:
+	mov eax, 3
+	mov ebx, 36
+	add eax, ebx
+	imul ecx, ebx, 2
+	sub eax, ebx
+	hlt
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Obfuscation par modification du graphe de flow,  language={[x86masm]Assembler}, label=prog_obf_cfg]
+main:
+	mov eax, 3
+	jmp a    
+b:
+	add eax, ebx
+	jmp c
+e:
+	mov eax, ecx
+	and esp, ebp
+d:
+	sub eax, ebx
+	hlt
+a:
+	mov ebx, 36
+	jmp b
+c:
+	imul ecx, ebx, 2
+	jmp d
+\end{lstlisting}
+
+
+\begin{lstlisting}[caption=Obfuscation par indétermination des branches,  language={[x86masm]Assembler}, label=prog_obf_saut_cond]
+main:
+	mov eax, 3
+	cmp eax, 3
+	je a
+b:
+	add eax, ebx
+	cmp eax, 39
+	je c
+e:
+	mov eax, ecx
+	and esp, ebp
+d:
+	sub eax, ebx
+	cmp eax, 3
+	jne e
+	hlt
+a:
+	mov ebx, 36
+	cmp ebx, 36
+	je b
+c:
+	imul ecx, ebx, 2
+	cmp ecx, 72
+	je d
+\end{lstlisting}
+
+%\begin{figure}[p]
+%\centering
+%\includegraphics[width=7.4cm]{input/recc.eps}
+%\caption{Graphe de flow de \texttt{fibo}}
+%\label{CFGfibo}
+%\end{figure}

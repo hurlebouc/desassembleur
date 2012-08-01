@@ -1,0 +1,139 @@
+% !TEX root = ../main_final.tex
+
+\label{demo_pc_rec}
+
+
+
+
+
+\noind Nous allons démontrer ici que l'\algo présenté par \textsc{Kildall} est équivalent à notre implémentation. Rappelons que le point délicat concerne la consistance des appels récursifs dans notre \algo\ : $f(n,p_n)$ n'est effectivement calculé que lors du choix de l'étape 3. Or $p_n$ ayant pu être modifié par le traitement d'autres \noeuds, $f(n,p_n)$ est comme "inconstant" à l'étape 6 lors de l'ajout à $L$ des fils de $n$ associés à $f(n,p_n)$. \\
+
+\noind Pour commencer, on peut réduire le problème au cas où on n'a qu'un seul \noeud d'entrée. Cette réduction est assez intuitive et utilise la notion de \noeud \textit{muet}, c'est à dire un \noeud $n$ tel que $\forall p \in \P, f(n,p) = p$. On pourra se reporter à l'article de \textsc{Kildall}\cite{kildall} pour une démonstration propre de la réduction.\\
+
+\noind On notera $\T \subset \N$ l'ensemble des valeurs de temps, c'est à dire l'ensemble des étapes de l'algorithme et, $\forall (t, n)\in \T\times\n$, on notera $p_n^t$ la valeur du pool du \noeud $n$ au temps $t$. Pour faciliter la démonstration, nous allons modifier l'\algo pour que chaque élément de la liste $L$ retienne le \noeud père qui l'a appelé ainsi que le temps auquel il a été créé. On se convaincra facilement que le déroulement de l'\algo n'est en rien modifié.\\
+
+\noind \fbox{\begin{minipage}{14.5cm}
+
+\noind On pose $L$ le "front de propagation" du programme, c'est à dire la liste des couples $(n,\pool, \pere, t) \in N\times \P \times N \times \T $ à évaluer. Le pool $p_n^0$ est initialisé à $U$ pour tout \noeud $n$.\\
+
+	\begin{tabular}[14.5cm]{ll}
+		1. Initialisation 		& $L$ contient le \noeud d'entrée avec son pool 										   initial.\\
+								& Le troisième membre est ici un \noeud muet père du\\ 								& \noeud d'entrée.\\
+		2. Fin 					& Si $L$ est vide, on s'arrête.\\
+								& On incrémente $t$\\
+		3. Sélection d'un \noeud & Sinon on choisi $(n, p, \_, \_) \in L$ et on pose $ 								  L \overset{\mathrm{def}}= L \setminus (n,p, \_, \_) 								  $ \\
+		4. Test d'inclusion 		& Si $p_n^{t-1} \subset p$, alors $\forall i \in \n, 								  p_i^t \overset{\mathrm{def}} = p_i^{t-1} $ et on 								  retourne en 2. \\
+		5. Mise à jour du Pool 	& Sinon $p_n^t \overset{\mathrm{def}}= p_n^{t-1} \cap 								  p$ et $\forall i \in \n \setminus \{n\}, \; p_i^t 								  \overset{\mathrm{def}} = p_i^{t-1}$ \\
+		6. Appel récursif 		& On pose $L \overset{\mathrm{def}}= L \cup 										  \left\{ (n',f(n,p^t_n), n, t | n' 										  		  \mbox{ est fils de } n\right\}$. \\
+								& On retourne en 2.
+	\end{tabular}
+
+\end{minipage}}\\
+
+%
+%
+%\noind Il apparait alors que l'ordre d'exécution du programme va influer sur $A_n$. Réécrivons l'\algo de \textsc{Kildall} en tenant compte de cet ordre\footnote{On sait que le résultat final n'est pas dépendant du choix de l'étape 2}.\\
+%
+%
+%\noind \fbox{\begin{minipage}{14.5cm}
+%On utilise pile $L$ dont la méthode \texttt{pop} renvoie l'élément en haut de pile et le supprime de la pile. La pile dispose également de la méthode \texttt{push a} qui ajout $a$ en haut de pile.\\
+%Pour plus de facilité pour la suite, on ajoutera aux éléments de $L$ le \noeud dont provient l'élément. On se convaincra facilement que cet ajout ne change rien à l'algorithme.\\
+%
+%	\begin{tabular}[14.5cm]{ll}
+%		1. Initialisation 		& $L$ contient le \noeud d'entrée avec son pool 										   initial.\\
+%								& Le troisième membre est ici un \noeud muet père du\\ 								& \noeud d'entrée.\\
+%		2. Fin 					& Si $L$ est vide, on s'arrète\\
+%		3. Selection d'un \noeud & Sinon on choisi $(n, p, \_) \in L $\\
+%		4. Test d'inclusion 		& Si $p_n \subset p$ on retourne en 2. \\
+%		5. Mise à jour du Pool 	& Sinon $p_n := p_n \cap p $ \\
+%		6. Appel récursif 		& Pour tout $n'$ fils de $n$, \texttt{L.push(n', f(n, 								  p(n), n)} \\
+%						 		
+%								& On retourne en 2.
+%	\end{tabular}
+%\end{minipage}} \\
+%
+%\noind On a ainsi ordonné $L$. 
+%Utilisons cet ordre pour numéroté les éléments de $L = \left[\left(n_i, \pool_i, \pere_i\right)\right]$ de manière à ce que le bas de la pile soit d'index 0 et posons $\num$ la fonction qui associe à tout \noeud de $L$ son numéro.
+% 
+%\noind Posons également $I_n$ l'ensemble des fils de $n$ et $S_n = I_n \cup \left\{ n' \left| \exists n'' \in S_n  \mbox{ et } n' \mbox{ est fils de } n'' \right.\right\}$ l'ensemble des "petits fils" de $n$.\\
+%
+%\noind Plaçons dans la logique où le choix de l'étape 3 de fais par la méthode $\pop$ \footnote{On simule ici les appels récursifs du notre version de l'\algo.}. On notera que tout élément qui n'est pas en tète de pile doit attendre que tous les élément d'indice supérieurs à lui soit choisi par l'\algo pour être lui même choisi. Dans cette logique, on dira qu'un triplet de $\left(n_i, \pool_i, \pere_i\right) \in N\times\P\times N$ est \textit{traité} depuis le moment où il est dépilé jusqu'à ce que $\left(n_{i-1}, \pool_{i-1}, \pere_{i-1}\right)$ soit dépilé. Ce vocabulaire peut être étendu aux coupes de $N\times\P$ dans la mesure ou il n'y a pas d'ambiguités.\\
+%
+%
+%\noind Remarquons que 
+%\begin{equation}
+%\label{circ}
+%\forall i \in \N^*, \; \left(\pere_i \notin S_{n_i} \Rightarrow \pool_{i} = f(\pere_i, p_{\pere_i}) \mbox{ après traitement de } (n_i, \pool_i)\right),
+%\end{equation}
+%c'est à dire que si un \noeud $n_i$ n'a pas comme petit-fils sont père $\pere_i$, le pool $\pool_i$ qui a été associé à $n_i$ à l'étape 6 est toujours égal $f(\pere_i, p_{\pere_i})$ \imp{après traitement de $(n_i, \pool_i)$}. Autrement dit, $p_{\pere_i}$ reste inchangé pendant le traitement de $(n_i, \pool_i)$. En effet, le fait que $\pere_i$ ne soit pas petit-fils de $n_i$ implique que le graphe de flow ne comporte pas de chemin allant de $n_i$ à $\pere_i$, et donc que $\pere_i$ n'apparaîtra pas comme premier élément des couples de $L$ et donc que l'on aura pas l'occasion de changer $p_{pere_i}$ pendant le traitement de $(n_i, \pool_i)$.\\
+%
+%\noind Nous allons maintenant montrer que les deux \algos sont équivalents en montrant que lors des appels récursifs, prendre le résultat de $f(n, p_n)$ comme le fait l'\algo original ou attendre de choisir un élément de $L$ comme le fait le nôtre donne finalement le même résultat. Pour cela, il suffit de montrer que dans la logique d'utiliser L comme une pile (comme le font les deux \algos), lors de l'appel sur les différents fils de $n$, s'il existe dans ces fils un \noeud $n'$ tel que $n$ soit atteignable depuis $n'$, alors les appelles sur les autres fils sont inutiles car si $n'$ est appelé en premier, l'appel sur les autres terminera instantanément.\\
+%
+%
+%\begin{lemme}
+%Si $L$ contient  
+%\end{lemme}
+%
+%\begin{proof}
+%kjjh
+%\end{proof}
+%
+%
+%\noind En effet, soit $n$ atteignable par l'un de ses fils $n'$.
+
+\noind Nous allons montrer le lemme suivant :
+
+\begin{lemme}
+\label{lemme}
+Dans l'\algo de \textsc{Kildall}, si, au moment $t$ du choix de l'étape 3 du quadruplet $(n, \pool, \pere, t')$, le pool $f(\pere, p^t_{\pere})$ est \imp{différent} du pool $\pool = f(\pere, p^{t'}_{\pere})$, alors il existe un temps $t'' \in \ent{t',t}$ tel que la liste $L$ ait comporté l'élément $(n, f(\pere, p^t_{\pere}), \pere, t'')$.
+\end{lemme}
+
+\begin{proof}
+On sait que au moment $t$ du choix du quadruplet $(n, \pool, \pere, t')$, on a $f(\pere, p^t_{\pere}) \neq \pool$. Avant cet instant et après $t'$, on a donc choisi au temps $t''$ un élément de $L$ dont le premier élément était le \noeud $\pere$\footnote{En effet, le seul moyen pour changer le pool d'un \noeud est que ce \noeud soit choisi dans $L$.} et ce choix a conduit à modifier strictement le pool de $\pere$ en l'état $p^{t''}_{\pere} = p^t_{\pere}$. Cette modification a entrainé l'ajout à la liste $L$ des \noeuds de l'ensemble $\left\{ (n',f(\pere,p^t_{\pere}), \pere, t'' | n'\mbox{ est fils de } \pere\right\}$. Or $n$ fait partie des fils de $\pere$ ce qui achève la preuve.
+\end{proof}
+
+\noind À présent démontrons le théorème suivant
+
+\begin{theo}
+Dans l'\algo de \textsc{Kildall}, au moment $t$ de l'étape 3, on peut remplacer $\pool$ dans le quadruplet choisi $(n, \pool, \pere, t')$ par $f(\pere, p^t_{\pere})$.
+\end{theo}
+
+\begin{proof}
+Plaçons nous au choix de l'étape 3 au temps $t$ et choisissons l'élément $ \tau_1 \overset{\mathrm{def}} = (n, \pool, \pere, t')$. Si $\pool = f(\pere, p^t_{\pere})$, alors on a rien à faire.\\
+Sinon, le lemme \ref{lemme} nous dit que il existe un temps $t''$ entre la création de ce quadruplet et son choix dans la liste tel que $L$ comporte l'élément $\tau_2 \overset{\mathrm{def}} = (n, f(\pere, p^t_{\pere}), \pere, t'')$. Deux cas se présentent : 
+
+\begin{itemize}
+
+\item Si au temps $t$, $\tau_2$ n'est plus présent dans $L$, c'est à dire si il a été choisi au temps $t_3 < t$ alors, après son exécution, $p_n^{t_3} \subset f(\pere, p^{t''}_\pere) = f(\pere, p^t_\pere)$. \\
+Or $\left(p_n^t\right)_t$ est décroissant. Donc, au temps $t$ du choix de $\tau_1$,  
+$$
+p^{t-1}_n \subset p^{t_3}_n \subset f(\pere, p^t_\pere).
+$$
+Or, toujours par décroissance des $\left(p_i^t\right)_t$, $p^t_\pere \subset p^{t'}_n$ et par homomorphisme  de $f$, 
+$$
+f(\pere, p^t_\pere) \subset f(\pere, p^{t'}_\pere) = \pool.
+$$
+Le test d'inclusion de l'étape 4 est donc valide et on retourne à l'étape 2 sans avoir modifié les valeurs des pools des \noeuds à $t+1$. Mais on aurait obtenu exactement le même résultat si on avait remplacé $\pool$ par $f(\pere, p^t_\pere)$.
+
+\item Si au temps $t$, $\tau_2$ est encore présent, remplacer $\pool$ par $f(\pere, p^t_\pere)$ dans $\tau_1$ puis choisir $\tau_1$(qui est maintenant égal à $\tau_2$) dans la liste revient à choisir $\tau_2$ avant $\tau_1$ (car on a vu dans le point précédent que la liste $L$ contenant deux fois $\tau_2$ ou $\tau_1$ revient au même) ce qui est valide. On se ramène donc au cas précédent.
+
+\end{itemize}
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

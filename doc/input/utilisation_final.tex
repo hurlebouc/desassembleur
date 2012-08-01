@@ -1,0 +1,321 @@
+% !TEX root = ../main_final.tex
+
+\noind Nous avons essayé d'implémenter le désassembleur d'une manière la plus modulaire possible.
+Bien que notre désassembleur ne prenne en compte pour l'instant que peu d'instructions assembleur, nous avons fait en sorte
+que l'implémentation future de nouvelles instructions soit simple. D'autre part nous avons essayé de rendre son utilisation assez souple (chargement d'un programme et analyse pour Mach-o et ELF automatique) et surtout transparente. C'est pour cela que le code est très commenté.
+
+\subsection{Organisation des fichiers sources}
+
+\subsubsection{Contenu des fichiers}
+
+
+\noind Chaque fichier \texttt{.c} autre que \texttt{main.c} et \texttt{test.c} est accompagné d'un fichier header donnant le prototype des fonctions réutilisables dans les autres fichiers. Il y a également quelques fichiers header supplémentaires comprenant 
+\begin{itemize}
+\item l'ensemble des constantes du programme (\texttt{macro.h})
+\item des macros permettant d'accéder à la saisie de code uniquement (et donc \textit{a priori} inutile après compilation de la bibliothèque) (dans le fichier \texttt{\_macro\_Build.h}). Ces macros permettent entre autres d'accéder facilement au registre d'un processeur simplement en invoquant son nom (par exemple invoquer le registre eax par \texttt{\_EAX}) pourvu que le processeur s'appelle \texttt{proc}.
+\end{itemize}
+
+\subsubsection{Dépendances}
+
+\noind Le projet ne dépend que des bibliothèques \bea et \texttt{libelf} pour son utilisation. Les classes de test requièrent en plus la bibliothèque C-unit.
+
+
+\subsection{Machine virtuelle}
+
+\noind Afin d'avoir le maximum d'informations sur les effets du programme sans pour autant l'exécuter, nous essayons de faire virtuellement toutes les opérations faites par un programme sur un processeur simulé.
+
+\subsubsection{Classe}
+
+\noind En accord avec l'\algo de \textsc{Kildall}, chaque variable doit être associée à une classe. Dans le simple cas de la propagation des constantes, les deux classes sont \classedef et \classendef\!. C'est pourquoi chaque variable définie par la suite devra se rapporter à une classe.
+
+\subsubsection{Registres}
+
+\noind La difficulté pour les registres a été de pouvoir gérer l'appel de n'importe quel sous-registre, tout en garantissant que la modification d'un registre d'une famille (par exemple la famille \texttt{RAX}, \texttt{EAX}, \texttt{AX}, \texttt{AH}, \texttt{AL}) modifie de manière adéquate les autres registres de la famille. On voulait également que l'appel à un registre soit simple et puisse se faire directement. Pour cela, nous avons choisi (comme on peut le voir avec les registres filsl(ow) et filsh(igh) dans la structure) de représenter les registres par un arbre binaire. On peut donc adapter la taille des registres et le nombre et/ou la taille de ses subdivisions.
+
+\begin{lstlisting}[caption=Structure de registre, label=prop]
+typedef struct _registre{ // 32 bytes
+    int                 taille;
+    uint64_t            valeur; 
+    int                 classe;
+    struct _registre*   filsl;
+    struct _registre*   filsh;
+}Registre;
+\end{lstlisting}
+
+\noind Les fonctions principales permettant de gérer les registres sont les suivantes :\\
+\begin{itemize}
+\item \texttt{uint64\_t getRegVal(const Registre* reg)} permet d'accéder à la valeur d'un registre et ce quelle que soit la classe de ce registre.
+\item \texttt{uint64\_t setRegVal(Registre* reg, uint64\_t n)} permet d'affecter une valeur à un registre. Si le registre ou l'un de ses fils est de classe \classendef, ce registre ou ce fils passe à la classe \classedef\!.
+\item \texttt{int getRegClassRec(Registre*)} donne la valeur de la classe du registre ainsi que celle de fils. Ainsi, cette fonction renvoie \classendef \ssi le registre ou l'un de ses fils est de la classe \classendef\!.
+\item \texttt{void setRegClassRec(Registre*, int classe)} affecte au registre et à l'ensemble de ses fils la classe \texttt{classe}.
+\end{itemize}
+
+\subsubsection{Mémoire}
+
+\noind Nos préoccupations en ce qui concerne la gestion de la mémoire virtuelle ont été les mêmes que celles au sujet des registres : l'accès à n'importe quel segment mémoire devait être simple et devait tenir compte des cases mémoire et les changer correctement s'il le fallait. Pour cela, il a fallu mettre en place plusieurs structures, à commencer par la mémoire de la machine. Elle est codée en \C \! comme le montre le listing \ref{mem_def}.
+
+\begin{lstlisting}[caption=Structure de la mémoire, label=mem_def]
+typedef struct _byte{
+    uint64_t virtualAddr;
+    uint8_t val;
+    uint8_t classe;
+}Byte;
+
+typedef  struct _memoire {
+    uint64_t size;
+    uint64_t sizeAllocatedMemory;
+    Byte** tabBytes;
+}Memoire;
+\end{lstlisting}
+
+\noind Une mémoire est un tableau de \texttt{Byte}s \imp{triés par adresse mémoire}, chacun connaissant cette adresse. Cette représentation permet une gestion relativement aisée de la mémoire, les accès se faisant par recherche dichotomique du \texttt{Byte} recherché, et l'écriture écrivant sur chacun des \texttt{Byte}s concernés, les créant si nécessaire.\\
+
+\noind La seconde structure est l'équivalent des registres pour la mémoire. Il s'agit des segments mémoire :
+
+\begin{lstlisting}[caption=Segment mémoire]
+typedef struct _segment{
+    Memoire* mem;
+    uint64_t virtualAddr;
+    uint8_t taille; // en octet
+}Segment;
+\end{lstlisting}
+
+\noind Les fonctions importantes pour la gestion mémoire sont les suivantes :\\
+
+\begin{itemize}
+\item \texttt{int* getSegClassRec(Segment seg)} donne la classe d'un segment mémoire. Si le segment comporte des \texttt{Byte}s non définis dans le tableau, la fonction renvoie l'entier \classendef\!.
+\item \texttt{uint64\_t getSegVal(Segment seg)} donne la valeur du segment donné. Cette fonction ne peut être utilisée sur un segment de classe \classendef car les cases mémoires ne sont peut-être même pas définies dans le tableau.
+\item \texttt{void setSegClassRec(Segment, int classe)} attribue à tous les \texttt{Byte}s du segment la classe \texttt{classe}. Si besoin la fonction crée les \texttt{Byte}s qui manquent.
+\item \texttt{uint64\_t setSegVal(Segment seg, uint64\_t val)} assigne à tous les \texttt{Byte}s d'un segment la valeur donnée et fait passer ces bytes à la classe \classedef si ils sont à la classe \classendef\!. De même, si besoin il y a, la fonction crée les \texttt{Byte}s manquants.
+\end{itemize}
+
+\subsubsection{Variable}
+
+\noind Le type \texttt{Variable} est un \textit{wrapper} permettant de manipuler indépendamment les \texttt{Registre}s et les \texttt{Segment}s. Il est défini en \C de cette manière :
+
+\begin{lstlisting}[caption=Structure d'une Variable]
+typedef struct _variable{
+    uint8_t type;
+    Registre* reg;
+    Segment seg;
+}Variable;
+\end{lstlisting}
+
+\noind Les fonctions utiles sont elles mêmes pour la plupart des \textit{wrappers} des fonctions des \texttt{Registre}s et des \texttt{Variable}s : \\
+
+\begin{itemize}
+\item \texttt{uint64\_t getVarVal(Variable)}
+
+\item \texttt{int getVarClassRec(Variable)}
+
+\item \texttt{uint64\_t setVarVal(Variable, uint64\_t)}
+
+\item \texttt{int getVarTaille(Variable)} donne la taille de la variable \imp{en bits}\!.
+
+\item \texttt{void setVarClassRec(Variable, int classe)}
+\end{itemize}
+
+\subsubsection{Pile d'appel}
+
+\noind Pour finir la simulation hardware, on a créé un modèle de pile d'appel. Elle utilise la \texttt{Memoire} pour stocker les informations sous forme d'une liste chaînée de \texttt{Segment}s. Les fonctions essentielles sont :\\
+
+\begin{itemize}
+\item \texttt{void pushStack(Stack*, Variable, Registre* \_RSP)}
+\item \texttt{void popStack(Stack*, Variable, Registre* \_RSP)}
+\end{itemize}
+
+\subsubsection{Processeur}
+
+\noind Comme nous nous intéressons aux changement d'état de l'ordinateur nous avons du simuler le processeur. Nous avons choisi de représenter le processeur par 3 attributs, la structure de pile, un tableau de registres de flag contenant 9 flags, et un tableau de registres contenant 80 registres. Ce choix de représentation par tableau, permet de réutiliser le programme avec des processeurs avec différents flags, registres; donc différents types de processeurs.
+
+
+\begin{lstlisting}[caption=structure du processeur, label=prop]
+typedef struct _Processeur{ // 664 bytes
+    Stack* stack;
+    Registre*   tabRegistre[NOMBRE_REGISTRES];
+    uint8_t     tabFlags[NOMBRE_FLAGS]
+}Processeur;
+\end{lstlisting}
+
+\noind Le diagramme de classe du hardware de la machine virtuelle est donné dans la figure \ref{struct_proc}.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=7cm]{input/struct___processeur__coll__graph.eps}
+\caption{Diagramme de classe du hardware de la machine virtuelle}
+\label{struct_proc}
+\end{figure}
+
+\subsection{Implémentation des instructions}
+
+\subsubsection{Mode de représentation}
+
+\noind Afin de pourvoir suivre l'état des registres, il faut connaitre l'effet des Instructions assembleur sur ces registres. Nous avons 
+donc du créer une structure en mémoire qui permet de simuler l'action des instructions sur les différents registres. 
+Nous avons essayé de simuler le paradigme de la POO dans la création de nouvelles fonctions d'instructions afin que l'on puisse en rajouter facilement. 
+Pour prendre en compte les actions d'une nouvelle instruction, il suffit de créer les fonctions qui vont modifier les registres de flags de la même manière que l'instruction va le faire.
+
+\begin{lstlisting}[caption=structure d'instructions, label=prop,numbers=left, numberstyle=\tiny]
+typedef struct _instruction{
+    int(*of_aux)(const Registre*,const Registre*,const Registre*);
+    int(*cf_aux)(const Registre*,const Registre*,const Registre*);
+    int(*af_aux)(const Registre*,const Registre*,const Registre*);
+    int zf_aux;         
+    int pf_aux;         
+    int sf_aux; 
+    Registre* (*f)(Registre*,Registre*,Registre*,Processeur*,int);
+}Instruction;
+\end{lstlisting}
+
+\subsubsection{Ajout d'une instruction}
+
+\noind La création des instruction doit s'appuyer sur la documentation Intel\cite{intel}. L'exemple suivant, va illustrer la procédure à suivre pour rajouter au désassembleur une Instruction. \\
+
+ 
+\begin{lstlisting}[caption=Création de l'instruction add, label=prop,numbers=left, numberstyle=\tiny]
+/* ----------------------- ADD -----------------------*/
+
+static int of_add(const Registre* a, const Registre* b, const Registre* stub){
+    uint64_t aa = getValeur(a);
+    uint64_t bb = getValeur(b);
+    uint64_t c = aa+bb;
+    uint64_t p = pow(2, a->taille);
+    if (p!= 0) {
+        c = c % p;
+    }
+    if (c<aa) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+//Création ci-dessus de la fonction qui va modifier le flag d'overflow.
+
+static int cf_add(const Registre* a, const Registre* b, const Registre* stub){
+    uint64_t aa = getValeur(a);
+    uint64_t bb = getValeur(b);
+    uint64_t c = aa+bb;
+    uint64_t p = pow(2, a->taille);
+    if (p!= 0) {
+        c = c \% p;
+    }
+    if (c<aa) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+//Création ci-dessus de la fonction qui va modifier le flag carry.
+
+static int af_add(const Registre* a, const Registre* b, const Registre* stub){
+    uint64_t aa = getValeur(a) \% 8; // donne les 3 bits les plus faibles
+    uint64_t bb = getValeur(b) \% 8;
+    
+    return (aa + bb)/ 8;
+}
+
+//Création ci-dessus de la fonction qui va modifier le flag adjust.
+
+static Registre* f_add(Registre* destination, Registre* masque, Registre* stub , Processeur* proc, int lenInstr){
+    incr(_RIP, lenInstr);
+    uint64_t a = getValeur(destination);
+    uint64_t b = getValeur(masque);
+    uint64_t c = a+b;
+    setValeur(destination, c);
+    return destination;
+}
+//f est la fonction qui va effectuer virtuellement la même action que l'instruction sur le processeur.
+
+Instruction* init_add(){
+    return newInstruction(of_add, cf_add, af_add, 1, 1, 1, f_add);
+}
+\end{lstlisting}
+
+
+\noind On crée donc les fonctions qui modifient chaque flag que l'on a décidé de considérer. Ensuite nous créons la nouvelle instruction. Dans la fonction \texttt{newInstruction}, les trois constantes prennent 1 si les flags (dans l'ordre) zéro, de parité et de signe peuvent être modifiés par l'instruction et 0 sinon.
+La fonction \texttt{f}, effectue elle la même action que l'instruction mais sur le processeur virtuel (quand cela est possible). 
+
+\noind Cependant, pour que le suivi de l'exécution du programme soit efficace et utile, il faut que toutes les instructions rencontrées aient été créées auparavant. Tant que cela n'a pas été fait, dès que le désassembleur rencontrera une instruction inconnue, le calcul virtuel sera dénué de sens. 
+
+\subsection{Fonctions utilisateur}
+
+\noind Nous allons présenter ici les fonctions à utiliser lorsque l'on veut désassembler et rassembler des informations sur un exécutable. 
+
+\noind Notons au passage que certaines fonctions produisent d'elles mêmes des fichiers \texttt{log} dont les adresses peuvent être changées dans le fichier \texttt{macro.h}.
+
+\subsubsection{L'objet \texttt{Desas}}
+
+\noind Cette structure est un \textit{wrapper} de la structure \texttt{DISASM} apportée par \bea\!. Elle a pour but de réunir les informations recueillies lors du chargement en  mémoire d'un fichier exécutable. Elle contient :
+\begin{itemize}
+\item La structure \texttt{DISASM}
+\item Un pool (du type \texttt{Processeur*})
+\item le début virtuel du bloc
+\end{itemize}
+
+\noind Tout ses champs sont normalement initialisés lors de l'ouverture d'un exécutable.
+
+\subsubsection{Ouverture d'un fichier exécutable}
+
+\noind La calibration de la structure \texttt{Desas} est effectuée grâce à la fonction
+$$\mathtt{void\; load(Desasembleur*, Fichier*, int)} $$
+qui prend en paramètres 
+\begin{itemize}
+\item le désassembleur à initialiser
+\item le fichier exécutable à ouvrir
+\item le type de fichier exécutable.
+\end{itemize}
+
+
+\noind Ce dernier paramètre est un des entiers de l'énumération 
+
+\begin{lstlisting}
+enum TypeSystem{
+        MACHO_64,
+        ELF_32,
+    };
+\end{lstlisting}
+
+\noind Actuellement, la fonction d'ouverture ne gère que les fichiers Linux 32-bits et les fichiers Apple 64-bits.
+
+\subsubsection{Construction du graphe de flow}
+
+\noind Une fois le désassembleur initialisé, l'étape suivante est de construire le graphe de flow du programme. Pour cela on invoque la fonction 
+
+$$ \mathtt{Graphe* ControleFlow\_entier(Desasembleur*)} $$
+qui prend en paramètre le désassembleur fraîchement initialisé. Si le travail du désassembleur s'arrête là, on peut appeler une fonction de simplification du graphe qui supprimera tous les \noeuds ayant un unique père et au plus un fils et dont ni le père ni le fils n'ont respectivement qu'un seul père et qu'un seul fils. Cette fonction raccourcit les branches linéaires. On l'invoque par 
+
+$$ \mathtt{Graphe* simplifieGraphe(Desasembleur*, Graphe*)} $$
+ou directement par 
+
+$$ \mathtt{Graphe* ControleFlow\_simplifie(Desasembleur*)} $$
+
+\noind On peut représenter ce graphe en appelant la fonction
+
+$$ \mathtt{void \; enregistreGraphe(Graphe*, Fichier*)} $$
+qui prend en paramètres le graphe que l'on veut afficher et le fichier sur lequel on souhaite écrire.
+
+\subsubsection{Traitement du graphe}
+
+\noind L'étape suivante consiste à utiliser le graphe de flow pour tirer des informations sur le programme. On peut par exemple invoquer la fonction 
+$$ \mathtt{void \; optimizePool2(Graphe*, const Processeur* initialPool)}$$
+prenant en paramètre un pool d'entrée et appliquant au graphe l'\algo de propagation des constantes. Le résultat peut être affiché par la fonction 
+
+$$ \mathtt{void \; enregistrePropagation(Fichier*, Graphe*)} $$
+qui enregistre dans un fichier la valeur du pool de chaque \noeud\!. Dans ce fichier, nous avons numéroter les registres et nous n'utilisons pas la dénominations habituel. Cependant, la correspondance est faite dans le fichier \texttt{macro.h}\footnote{Par exemple le registre eax correspond au registre n°1 et ebx au n°6.}.
+
+\noind On peut aussi directement demander au programme de supprimer les branches inutiles en appelant la fonction 
+
+
+$$ \mathtt{void \; elagage(Graphe*, Processeur* poolInit)} $$
+
+Nous avons beaucoup commenté notre code et géneré une documentation Doxygen fourni où l'on peut trouver le descriptif détaillé de toutes les structures et fonctions. On le trouve à l'adresse suivante: http://hurlebouc.github.com/desassembleur/.
+
+\subsection{Portabilité}
+
+\noind Le fait d'utiliser différents OS a eu pour avantage de nous obliger à réaliser un désassembleur fonctionnant avec Mach-o et
+sur ELF. La principale difficulté a été lors de la réalisation de la fonction de chargement du point d'entrée en mémoire du programme. 
+En effet, les structures des fichiers Mach-o et ELF n'étant pas les mêmes, il a fallu adapter cette fonction de chargement aux 2 types de fichier. 
+
+
+
+\noind 

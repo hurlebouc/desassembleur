@@ -1,0 +1,263 @@
+% !TEX root = ../main_final.tex
+\subsection*{Méthodes d'analyse d'un programme désassemblé}
+
+\noind Parmi les nombreuses méthodes qui permettent de faciliter la compréhension d'un code désassemblé, nous allons utiliser la propagation des constantes dans l'optique d'ensuite permettre d'utiliser l'extraction des sous-expressions. La méthode que nous allons expliciter est issue de l'article de Gary A. \textsc{Kildall} \cite{kildall}.
+
+\subsubsection*{Propagation des constantes}
+
+\noind Ce que l'on appelle "propagation des constantes" est en fait quelque chose de facile à imaginer: c'est le recensement de toutes les variables utilisées par un programme dont on connait l'état à une étape de calcul donnée. Ce qui va nous intéresser dans la méthode c'est de pouvoir considérer les registres de flags, de travail, les cases mémoire comme des variables. On aura alors, pour chaque étape une idée de ce que va contenir les cases mémoire ciblées.\\
+
+\noind Nous allons utiliser tout le long de l'explication l'exemple de graphe de flow suivant (nous n'avons pas précisé ici les conditions de saut etc.).
+\begin{figure}[hbtp]
+\begin{center}
+\scalebox{0.8}
+{
+\begin{pspicture}(0,-3.96)(9.301894,3.96)
+\psellipse[linewidth=0.04,dimen=outer](1.79,3.5)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-3.5)(0.95,0.46)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.84,3.04)(1.84,2.48)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,1.64)(1.82,1.08)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,0.22)(1.82,-0.32)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-1.18)(1.8,-1.7)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-2.58)(1.8,-3.1)
+\psbezier[linewidth=0.04,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(0.8,-3.52)(0.0,-3.52)(0.0,0.72)(0.8,0.72)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,3.465){\texttt{a:=1}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8743359,2.065){\texttt{c:=0}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.784336,0.685){\texttt{b:=2}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8243359,-0.735){\texttt{d:=a+b}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8343359,-2.155){\texttt{e:=b+c}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,-3.555){\texttt{c:=4}}
+\end{pspicture} 
+}
+\end{center}
+
+\end{figure}
+
+
+\noind L'\algo que nous allons utiliser est celui décrit dans \cite{kildall}. Nous le redonnons ici pour mémoire. Pour pouvoir utiliser en pratique l'\algo décrit par \cite{kildall}, on va considérer le flow d'instructions (l'enchaînement), donc le programme comme un graphe. Les noeuds de ce graphe seront donc les instructions.
+
+\noind Posons quelques notations. $\n$ est l'ensemble des \noeuds du graphe. Soit $V$ et $C$ les ensembles des variables et des valeurs possibles. Soit $U \supset V\times C$ et $U \neq V\times C $. On appelle \textit{pool} tout élément de $ \P = \mathcal{P} ( U )$.
+En pratique un pool est donc l'ensemble des couples (variable,valeur prise) que l'on connait à une étape précise du déroulement du programme.
+
+\noind Notons $f : \n \times \P \rightarrow \P$ la fonction \textit{calcul} qui à tout \noeud $n$ et à tout pool $p$ associe le pool des variables calculées au \noeud $n$ à partir du pool $p$. $f$ correspond donc à l'approche que l'on va utiliser pour déterminer le pool lié à l'instruction qui va suivre à partir de l'instruction courante.\\
+
+\noind \fbox{\begin{minipage}{14.5cm}
+\noind On pose $L$ le "front de propagation" du programme, c'est à dire la liste des couples $(n,p) \in N\times \P $ à évaluer. On pose $p_i$ le pool associé au \noeud $i$. Le pool $p_i$ est initialisé à $U$.\\
+
+	\begin{tabular}{ll}
+		1. Initialisation 		& $L$ contient l'ensemble des \noeuds associés à leur 									  pool initial \\
+		2. Fin 					& Si $L$ est vide, on s'arrête\\
+		3. Sélection d'un \noeud & Sinon on choisit $(n, p) \in L$ et on pose $ L 										  \overset{\mathrm{def}}= L										  					  \setminus (n,p) $ \\
+		4. Test d'inclusion 		& Si $p_n \subset p$ on retourne en 2. \\
+		5. Mise à jour du Pool 	& Sinon $p_n \overset{\mathrm{def}}= p_n \cap p $ \\
+		6. Appel récursif 		& On pose $L \overset{\mathrm{def}}= L \cup 											  \left\{ (n',f(n,p_n) | n' 										  					  \mbox{ est fils de } n\right\}$. \\
+								& On retourne en 2.
+	\end{tabular}
+
+\end{minipage}} \\
+
+%\noind Nous allons définir pour chaque noeud du graphe de flow (ce qui correspond à chaque instruction) un ensemble P de constantes qui sont propagés. Pour faire cela, on considère que l'on ne connait le contenu d'aucune variable à l'entrée du programme et que dès que l'on rencontre une définition on l'enregistre dans l'ensemble P des constantes propagés (ce sont des couples ('nom de la variable',valeur)). Il faut également remplacer dans P les couples lorsque la variable est redéfini ou supprimer quand le contenu d'une variable devient inconnu. D'autre part, il faut parcourir toute les branches et s'assurer que lorsque plusieurs branches se coupent notre information est exact: ce qui correspond à faire l'intersection des ensembles P issues des différente branches.
+
+\noind On peut prouver que cet \algo termine et que le résultat ne dépend pas du choix effectué à l'étape 3.\\
+
+\noind Cela donne dans le cas de l'exemple le graphe de la figure \ref{prop_pool}
+\begin{figure}[hbtp]
+\begin{center}
+\scalebox{0.8}
+{
+\begin{pspicture}(0,-3.96)(9.301894,3.96)
+\psellipse[linewidth=0.04,dimen=outer](1.79,3.5)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-3.5)(0.95,0.46)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.84,3.04)(1.84,2.48)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,1.64)(1.82,1.08)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,0.22)(1.82,-0.32)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-1.18)(1.8,-1.7)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-2.58)(1.8,-3.1)
+\psbezier[linewidth=0.04,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(0.8,-3.52)(0.0,-3.52)(0.0,0.72)(0.8,0.72)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,3.465){\texttt{a:=1}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8743359,2.065){\texttt{c:=0}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.784336,0.685){\texttt{b:=2}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8243359,-0.735){\texttt{d:=a+b}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8343359,-2.155){\texttt{e:=b+c}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,-3.555){\texttt{c:=4}}
+
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,3.425){$\emptyset$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,3.52)(3.18,3.52)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,2.025){$\{a=1\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.16,2.14)(3.16,2.14)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,0.625){\textcolor{red}{$\{a=1,c=0\} \cap \{a=1, b=2, d=3, e=2, c=4\}$}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,0.72)(3.18,0.72)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-0.775){\textcolor{red}{$\{a=1, b=2\} \cap \{a=1, b=2\}$}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-0.68)(3.18,-0.68)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-2.175){\textcolor{red}{$\{a=1, b=2, d=3\} \cap \{a=1, b=2, d=3\}$}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-2.08)(3.18,-2.08)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-3.575){\textcolor{red}{$\{a=1, b=2, d=3, e=2\} \cap \{a=1, b=2, d=3\}$}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-3.48)(3.18,-3.48)
+\end{pspicture} 
+}
+\end{center}
+\caption{En rouge les intersections des pools sur la boucle de retour lors du deuxième passage.}
+\label{prop_pool}
+\end{figure}
+
+
+\begin{figure}[hbtp]
+\begin{center}
+\scalebox{0.8}
+{
+\begin{pspicture}(0,-3.96)(9.301894,3.96)
+\psellipse[linewidth=0.04,dimen=outer](1.79,3.5)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-0.7)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-2.1)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.79,-3.5)(0.95,0.46)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.84,3.04)(1.84,2.48)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,1.64)(1.82,1.08)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,0.22)(1.82,-0.32)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-1.18)(1.8,-1.7)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.8,-2.58)(1.8,-3.1)
+\psbezier[linewidth=0.04,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(0.8,-3.52)(0.0,-3.52)(0.0,0.72)(0.8,0.72)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,3.465){\texttt{a:=1}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8743359,2.065){\texttt{c:=0}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.784336,0.685){\texttt{b:=2}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8243359,-0.735){\texttt{d:=a+b}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.8343359,-2.155){\texttt{e:=b+c}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.814336,-3.555){\texttt{c:=4}}
+
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,3.425){$\emptyset$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,3.52)(3.18,3.52)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,2.025){$\{a=1\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.16,2.14)(3.16,2.14)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,0.625){$\{a=1\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,0.72)(3.18,0.72)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-0.775){$\{a=1, b=2\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-0.68)(3.18,-0.68)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-2.175){$\{a=1, b=2, d=3\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-2.08)(3.18,-2.08)
+\usefont{T1}{ptm}{m}{n}
+\put(4.4 ,-3.575){$\{a=1, b=2, d=3, e=2\}$}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(4.18,-3.48)(3.18,-3.48)
+\end{pspicture} 
+}
+\end{center}
+\caption{Résultat final de la propagation des constantes sur l'exemple.}
+\end{figure}
+
+\noind Cette méthode va nous permettre dans certains cas de lever des indéterminations dans le programme désassemblé. De plus, nous allons pouvoir l'appliquer aux registres de flags (dans la mesure de la connaissance en détails de l'implémentation des instructions processeur) et avoir une idée de plus en plus précise des effets du programme sans l'exécuter.
+
+\subsubsection*{Extraction des sous-expressions}
+
+\noind La méthode précédente peut être améliorée si on effectue une meilleure analyse de l'utilisation des variables. En effet, dans de nombreux programmes des calculs sont redondants de manière volontaire (obfuscation) ou involontaire. Cependant cela peut fausser les résultats de la propagation des constantes.
+
+\noind L'\algo présenté dans la partie ci-dessous est toujours valide, à la condition d'étendre les opérateurs d'inclusion, d'intersection et d'union.
+
+% EXPLIQUER MIEUX ICI
+
+%\noind Pour écarter ce problème nous allons calculer les partitions des classes d'équivalences des variables que l'on observe dans le programmes. Il faut que l'on considère alors au départ l'ensemble vide et qu'à chaque étape nous rajoutions les nouvelles définitions de variable de valeurs nouvelle dans une nouvelle classe. Contrairement à la propagation des constantes, lorsque deux branches se recoupent, il faut faire l'intersection \textit{au sens des classes d'équivalences} de leurs deux partition pour ne conserver que les informations sûres.
+
+\noind On peut rassembler les deux méthodes en un unique algorithme qui va donner pour chaque noeud du graphe l'ensemble des partitions des classes d'équivalence avec la valeur de cette classe si elle est connue. Cela va donner en pratique le graphe de la figure \ref{prop_pool_sous_expr}
+\begin{figure}[hbtp]
+\begin{center}
+% Generated with LaTeXDraw 2.0.8
+% Thu Jun 21 20:54:51 CEST 2012
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.8} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(0,-4.66)(10.759063,4.66)
+\psellipse[linewidth=0.04,dimen=outer](1.45,2.8)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.45,1.4)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.45,0.0)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.45,-1.4)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.45,-2.8)(0.95,0.46)
+\psellipse[linewidth=0.04,dimen=outer](1.45,-4.2)(0.95,0.46)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.5,2.34)(1.5,1.78)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.46,0.94)(1.48,0.38)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.46,-0.48)(1.48,-1.02)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.46,-1.88)(1.46,-2.4)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.46,-3.28)(1.46,-3.8)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.5620313,4.17){\texttt{a:=1}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.6120312,2.77){\texttt{c:=0}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.5320313,1.39){\texttt{b:=2}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.4420313,-0.03){\texttt{d:=a+b}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.6120312,-2.85){\texttt{d:=4}}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.5120312,-4.25){\texttt{b+2}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,2.82)(2.84,2.82)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.82,1.44)(2.82,1.44)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,0.02)(2.84,0.02)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,-1.38)(2.84,-1.38)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,-2.78)(2.84,-2.78)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,-4.18)(2.84,-4.18)
+\psellipse[linewidth=0.04,dimen=outer](1.45,4.2)(0.95,0.46)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.4520313,-1.43){\texttt{d-b}}
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(3.84,4.22)(2.84,4.22)
+\psline[linewidth=0.04cm,arrowsize=0.05291667cm 2.0,arrowlength=1.4,arrowinset=0.4]{->}(1.46,3.74)(1.48,3.18)
+\usefont{T1}{ptm}{m}{n}
+\rput(4.4845314,4.33){$\{a,1\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(4.9245315,2.93){$\{a, 1|c, 0\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(5.324531,1.53){$\{a, 1|c, 0|b, 2\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(6.364531,0.13){$\{a, 1 | c, 0 | b, 2 | d, 3, a+b\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(6.7745314,-1.27){$\{a, 1, d-b | c, 0 | b, 2 | d, 3, a+b\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(6.594531,-2.67){$\{a, 1 | c, 0 | b, 2 | 3, a+b |d, 4\}$}
+\usefont{T1}{ptm}{m}{n}
+\rput(7.0845313,-4.07){$\{a, 1 | c, 0 | b, 2 | 3, a+b |d, 4, b+2\}$}
+\end{pspicture} 
+}
+
+
+\end{center}
+\caption{Résultat de la propagation des constantes et de l'extraction des sous-expressions sur un exemple simple.}
+\label{prop_pool_sous_expr}
+\end{figure}
